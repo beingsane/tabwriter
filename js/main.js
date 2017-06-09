@@ -115,6 +115,46 @@ function getHeights(element){
   return [lineHeight, height];
 }
 
+function readInputString(string){
+  // creates the six strings related to each chord
+  var strings = ["", "", "", "", "", ""];
+  // add spaces so the first and last words are counted
+  string = " " + string + " ";
+  // get the indexes of spaces
+  var spaces = allIndexesOf(string, " ");
+
+  for (var i = 0; i < spaces.length - 1; i++){
+    // for each word ...
+    var word = string.slice(spaces[i] + 1, spaces[i+1]);
+    strings.forEach(function(str, i){
+      var oper = word.slice(2, word.length) + "--";
+      if (i === Number(word[0])){
+        // write the tab on the selected chord
+        strings[i] += oper;
+      } else {
+        // fill the other tabs with dashes
+        strings[i] += Array(oper.length + 1).join("-");
+      }
+    });
+  }
+  return strings;
+}
+
+function allIndexesOf(string, character){
+  var idx = [];
+  var k = 0;
+  var i = 0;
+
+  while (k !== -1){
+    var k = string.indexOf(character, i);
+    if (k !== -1) {
+      idx.push(k);
+      i = k + 1;
+    }
+  }
+  return idx;
+}
+
 // function sliceOneLine(element, string) {
 //   // element must have a lineHeight property set
 //   var initialText, text, i;
