@@ -26,14 +26,16 @@ function stringToTables(string){
     }
 
     // create new 1-line tables filled with the string
-    var cell = createTableIn(dashboard);
-    var strLength = maxStringLength(cell);
+    var cells = createTableIn(dashboard);
+    var strLength = maxStringLength(cells[0]);
     var k = 0;
     while (string.length > 0 && k < 10){
       k += 1;
-      cell.textContent = string.slice(0, strLength - 1);
+      cells.forEach(function(cell){
+        cell.textContent = string.slice(0, strLength - 1);
+      });
       string = string.slice(strLength - 1, string.length);
-      var cell = createTableIn(dashboard);
+      var cells = createTableIn(dashboard);
     }
   }
 }
@@ -42,17 +44,19 @@ function stringToTables(string){
 function createTableIn(element){
   var table = document.createElement("table"),
       tbody = document.createElement("tbody"),
-      tr = document.createElement("tr"),
-      td = document.createElement("td"),
-      text = document.createTextNode("");
-
-  td.appendChild(text);
-  tr.appendChild(td);
-  tbody.appendChild(tr);
+      cells = [];
+  for (var i = 0; i < 6; i++){
+    var tr = document.createElement("tr"),
+        td = document.createElement("td"),
+        text = document.createTextNode("");
+    td.appendChild(text);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    cells.push(td);
+  }
   table.appendChild(tbody);
   element.appendChild(table);
-
-  return td;
+  return cells;
 }
 
 function cellsFromTable(table){
