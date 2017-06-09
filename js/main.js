@@ -25,21 +25,25 @@ function stringToTables(string){
       }
     }
 
-    // create new 1-line tables filled with the string
-    var cells = createTableIn(dashboard);
-    var strLength = maxStringLength(cells[0]);
-    var k = 0;
-    while (string.length > 0 && k < 10){
-      k += 1;
-      cells.forEach(function(cell){
-        cell.textContent = string.slice(0, strLength - 1);
-      });
-      string = string.slice(strLength - 1, string.length);
+    // convert input string to tablature strings
+    var tabs = readInputString(string);
+
+    do {
+      // create table
       var cells = createTableIn(dashboard);
-    }
+      // checks for the maximum string length for one line
+      var strLength = maxStringLength(cells[0]);
+      // writes each tab on each row
+      cells.forEach(function(cell, i){
+        cell.textContent = tabs[i].slice(0, strLength - 1);
+      });
+      // removes from tabs the written part
+      tabs.forEach(function(tab, i){
+        tabs[i] = tab.slice(strLength - 1, tab.length);
+      });
+    } while(tabs[0].length > 0);
   }
 }
-
 
 function createTableIn(element){
   var table = document.createElement("table"),
