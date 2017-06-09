@@ -132,7 +132,7 @@ function readInputString(string){
     var word = string.slice(spaces[i] + 1, spaces[i+1]);
     strings.forEach(function(str, i){
       var oper = word.slice(2, word.length) + "--";
-      if (i === Number(word[0])){
+      if (i === (Number(word[0])-1)){
         // write the tab on the selected chord
         strings[i] += oper;
       } else {
