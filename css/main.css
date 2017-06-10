@@ -10,9 +10,7 @@ body {
 }
 
 textarea {
-  display: block;
   font-family: 'Nova Mono', monospace;
-  outline: none;
   resize: none;
 }
 
@@ -36,6 +34,21 @@ td {
   width: 90%;
   max-width: 700px;
   margin: 15px auto;
+}
+
+.form-control:focus {
+  border-color: #cccccc;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+#create {
+  outline: none;
+}
+
+#create:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 #create {
