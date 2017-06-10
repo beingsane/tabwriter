@@ -27,7 +27,7 @@ function stringToTables(string){
 
     // convert input string to tablature strings
     var tabs = readInputString(string);
-
+    var k = 0;
     do {
       // create table
       var cells = createTableIn(dashboard);
@@ -41,17 +41,23 @@ function stringToTables(string){
       tabs.forEach(function(tab, i){
         tabs[i] = tab.slice(strLength - 1, tab.length);
       });
-    } while(tabs[0].length > 0);
+      k += 1;
+    } while(tabs[0].length > 0 && k < 25);
+    // var tables = document.querySelectorAll("table");
+    // tables.forEach(function(table, i){
+    //   console.dir(table)
+    //   tables[i].className = "table";
+    // });
   }
 }
 
 function createTableIn(element){
-  var table = document.createElement("table"),
-      tbody = document.createElement("tbody"),
+  var table = document.createElement("TABLE"),
+      tbody = document.createElement("TBODY"),
       cells = [];
   for (var i = 0; i < 6; i++){
-    var tr = document.createElement("tr"),
-        td = document.createElement("td"),
+    var tr = document.createElement("TR"),
+        td = document.createElement("TD"),
         text = document.createTextNode("");
     td.appendChild(text);
     tr.appendChild(td);
@@ -96,7 +102,7 @@ function maxStringLength(element){
   var heights = getHeights(element),
       lineHeight = heights[0],
       height = heights[1];
-
+      
   while (height === lineHeight && text.length < 200){
     text += "a";
     element.textContent = text;
@@ -112,10 +118,20 @@ function maxStringLength(element){
 function getHeights(element){
   var style = window.getComputedStyle(element),
       lineHeight = style.lineHeight,
+      paddingTop = style.paddingTop,
+      paddingBottom = style.paddingBottom,
+      borderTop = style.borderTop,
+      borderBottom = style.borderBottom,
       height = style.height;
+
+  paddingTop = Number(paddingTop.slice(0, paddingTop.indexOf("px")));
+  paddingBottom = Number(paddingBottom.slice(0, paddingBottom.indexOf("px")));
+  borderTop = Number(borderTop.slice(0, borderTop.indexOf("px")));
+  borderBottom = Number(borderBottom.slice(0, borderBottom.indexOf("px")));
 
   lineHeight = Number(lineHeight.slice(0, lineHeight.length - 2));
   height = Number(height.slice(0, height.length - 2));
+  height -= paddingTop + paddingBottom + borderTop + borderBottom;
   return [lineHeight, height];
 }
 

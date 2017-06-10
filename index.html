@@ -3,19 +3,32 @@
   <head>
     <meta charset="utf-8">
     <title>TABriter</title>
-    <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nova+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
 
     <div class="container">
-      <textarea rows="8" cols="80"></textarea>
-      <button id="create">Create!</button>
+      <div class="jumbotron">
+        <h1>Tab-Writer</h1>
+      </div>
 
-      <div id="dashboard"></div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <textarea class="form-control" rows="4" cols="80"></textarea>
+            <button class="btn btn-success btn-block" id="create">Create!</button>
+          </div>
+        </div>
+      </div>
 
-      <div id="db"></div>
-
+      <div class="row">
+        <div class="col-md-12">
+          <div id="dashboard"></div>
+          <div id="db"></div>
+        </div>
+      </div>
     </div>
 
     <script type="text/javascript" src="js/main.js"></script>
