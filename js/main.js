@@ -8,7 +8,6 @@ var CHORDS = ["E", "B", "G", "D", "A", "E"];
 button.addEventListener("click", function(){
   var string = input.value;
   stringToTables(string);
-  input.value = "";
   db.textContent = string;
 });
 
