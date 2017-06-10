@@ -30,6 +30,10 @@ td {
   border-top: 1px solid #eee;
 }
 
+a:hover {
+  text-decoration: none;
+}
+
 .form-group {
   width: 90%;
   max-width: 700px;
@@ -42,17 +46,14 @@ td {
   box-shadow: none;
 }
 
-#create {
-  outline: none;
+div.col-md-6 button.btn {
+  margin-top: 10px;
 }
 
-#create:focus {
+div.col-md-6 button.btn:focus{
+  outline: none;
   -webkit-box-shadow: none;
   box-shadow: none;
-}
-
-#create {
-  margin-top: 10px;
 }
 
 #db {
