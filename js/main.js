@@ -3,6 +3,8 @@ var input = document.querySelector("textarea"),
     dashboard = document.querySelector("#dashboard"),
     db = document.querySelector("#db");
 
+var CHORDS = ["E", "B", "G", "D", "A", "E"];
+
 button.addEventListener("click", function(){
   var string = input.value;
   stringToTables(string);
@@ -33,14 +35,15 @@ function stringToTables(string){
       var cells = createTableIn(dashboard);
       // checks for the maximum string length for one line
       var strLength = maxStringLength(cells[0]);
-      // writes each tab on each row
+
       cells.forEach(function(cell, i){
-        cell.textContent = tabs[i].slice(0, strLength - 1);
+        // writes each tab on each row
+        var intro = CHORDS[i] + ") ";
+        cell.textContent =  intro + tabs[i].slice(0, strLength - 1 - intro.length);
+        // removes from tabs the written part
+        tabs[i] = tabs[i].slice(strLength - 1 - intro.length, tabs[i].length);
       });
-      // removes from tabs the written part
-      tabs.forEach(function(tab, i){
-        tabs[i] = tab.slice(strLength - 1, tab.length);
-      });
+
       k += 1;
     } while(tabs[0].length > 0 && k < 25);
     // var tables = document.querySelectorAll("table");
@@ -102,7 +105,7 @@ function maxStringLength(element){
   var heights = getHeights(element),
       lineHeight = heights[0],
       height = heights[1];
-      
+
   while (height === lineHeight && text.length < 200){
     text += "a";
     element.textContent = text;
