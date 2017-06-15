@@ -14,40 +14,8 @@ textarea {
   resize: none;
 }
 
-table {
-  table-layout: fixed;
-  width: 100%;
-  margin-bottom: 30px;
-}
-
-td {
-  line-height: 18px;
-  display: block;
-  padding: 0;
-  word-wrap: break-word;
-  padding: 5px;
-  vertical-align: top;
-  border-top: 1px solid #eee;
-}
-
 a:hover {
   text-decoration: none;
-}
-
-.form-group {
-  width: 90%;
-  max-width: 700px;
-  margin: 15px auto;
-}
-
-.form-control:focus {
-  border-color: #cccccc;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
-div.col-md-6 button.btn {
-  margin-top: 10px;
 }
 
 div.col-md-6 button.btn:focus{
@@ -56,6 +24,8 @@ div.col-md-6 button.btn:focus{
   box-shadow: none;
 }
 
-#db {
-  display: none;
+.form-control:focus {
+  border-color: #cccccc;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }

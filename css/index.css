@@ -1,0 +1,29 @@
+table {
+  table-layout: fixed;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+td {
+  line-height: 18px;
+  display: block;
+  padding: 0;
+  word-wrap: break-word;
+  padding: 5px;
+  vertical-align: top;
+  border-top: 1px solid #eee;
+}
+
+div.col-md-6 button.btn {
+  margin-top: 10px;
+}
+
+.form-group {
+  width: 90%;
+  max-width: 700px;
+  margin: 15px auto;
+}
+
+#db {
+  display: none;
+}
