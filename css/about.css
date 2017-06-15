@@ -2,6 +2,29 @@ li {
   margin: 5px;
 }
 
+.highlight {
+  border: 2px solid #ffb2bc;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.example{
+  margin-top: 10px;
+}
+
+.topics {
+  list-style-type: none;
+  margin-bottom: 75px;
+  text-align: justify;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
 .table {
   margin: 15px auto;
+}
+
+.text-center {
+  text-align: center;
 }
