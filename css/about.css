@@ -9,10 +9,6 @@ li {
   padding-right: 10px;
 }
 
-.example{
-  margin-top: 10px;
-}
-
 .topics {
   list-style-type: none;
   margin-bottom: 75px;
@@ -27,4 +23,8 @@ li {
 
 .text-center {
   text-align: center;
+}
+
+#example {
+  margin-top: 10px;
 }
