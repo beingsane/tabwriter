@@ -2,11 +2,17 @@ if (Clipboard.isSupported()) {
   var exBtn = document.getElementById("example");
   var clipboard = new Clipboard(exBtn);
 
+  exBtn.addEventListener("mouseleave", function(){
+    setTimeout(function(){
+      exBtn.setAttribute("tooltip", "");
+    }, 350);
+  });
+
   clipboard.on("success", function(e) {
-      console.log("success");
+    exBtn.setAttribute("tooltip", "Copiado para área de transferência!")
   });
   clipboard.on("error", function(e) {
-      console.log("error");
+    console.log("error");
   });
 }
 
