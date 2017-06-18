@@ -12,7 +12,7 @@ if (Clipboard.isSupported()) {
     exBtn.setAttribute("tooltip", "Copiado para área de transferência!")
   });
   clipboard.on("error", function(e) {
-    console.log("error");
+    exBtn.setAttribute("tooltip", "Erro ao copiar automaticamente =/")
   });
 }
 
