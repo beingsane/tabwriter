@@ -1,7 +1,7 @@
 {
   "name": "tabwriter",
   "version": "1.0.0",
-  "description": "An aplication to write tablatures\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[ web application to write tablatures\u001b[3~\u001b[3~",
+  "description": "A web application to write tablatures",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
