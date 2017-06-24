@@ -18,7 +18,9 @@ li {
 }
 
 .table {
+  table-layout: fixed;
   margin: 15px auto;
+  width: 100%;
 }
 
 .text-center {
