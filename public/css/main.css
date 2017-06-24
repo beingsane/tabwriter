@@ -26,13 +26,14 @@ body div.container {
   border-radius: 6px;
   outline: none !important;
   margin: 7px auto;
-  text-shadow: 1px 1px 4px #888;
+  text-shadow: 1px 1px 3px #999;
   box-shadow: 0 0 3px #ffab2d;
 }
 
 .btn-custom:hover,
 .btn-custom:focus {
   background-color: #ffab2d;
+  text-shadow: 1px 1px 3px #555;
 }
 
 .btn-custom:active,
