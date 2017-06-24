@@ -9,6 +9,11 @@ body {
   overflow-y: scroll;
 }
 
+h1 {
+  color: #222;
+  text-shadow: 2px 2px 5px #233;
+}
+
 .btn-custom {
   color: #000;
   text-decoration: none;
@@ -32,6 +37,12 @@ body {
   outline: 0;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+.jumbotron {
+  background-image: url("../images/guitar-cover.png");
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .form-control:focus {
