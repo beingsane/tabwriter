@@ -14,6 +14,10 @@ h1 {
   text-shadow: 2px 2px 5px #233;
 }
 
+body div.container {
+  max-width: 890px;
+}
+
 .btn-custom {
   color: #000;
   text-decoration: none;

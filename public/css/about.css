@@ -2,8 +2,12 @@ li {
   margin: 5px;
 }
 
+p {
+  text-indent: 30px;
+}
+
 .highlight {
-  border: 2px solid #ffb2bc;
+  border: 2px solid #f79022;
   border-radius: 5px;
   padding-left: 10px;
   padding-right: 10px;
@@ -30,4 +34,5 @@ li {
 #example {
   margin-top: 10px;
   width: 100%;
+  text-decoration: none;
 }
