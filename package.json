@@ -1,7 +1,7 @@
 {
   "name": "tabwriter",
   "version": "1.0.0",
-  "description": "A web application to write tablatures",
+  "description": "Uma aplicação web para escrever tablaturas",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/raphael-jorge/TabWriter.git"
+    "url": "git+https://github.com/raphael-jorge/tabwriter.git"
   },
-  "author": "Raphael Jorge",
+  "author": "Raphael de Andrade Jorge",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/raphael-jorge/TabWriter/issues"
+    "url": "https://github.com/raphael-jorge/tabwriter/issues"
   },
-  "homepage": "https://github.com/raphael-jorge/TabWriter#readme",
+  "homepage": "https://tabwriter.herokuapp.com/",
   "dependencies": {
     "express": "^4.15.3"
   }
