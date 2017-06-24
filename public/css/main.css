@@ -9,17 +9,27 @@ body {
   overflow-y: scroll;
 }
 
-textarea {
-  font-family: 'Nova Mono', monospace;
-  resize: none;
-}
-
-a:hover {
+.btn-custom {
+  color: #000;
   text-decoration: none;
+  background-color: #ffce7f;
+  border: 3px solid #f79022;
+  border-radius: 6px;
+  outline: none !important;
+  margin: 7px auto;
 }
 
-div.col-md-6 button.btn:focus{
-  outline: none;
+.btn-custom:hover,
+.btn-custom:focus {
+  background-color: #ffab2d;
+}
+
+.btn-custom:active,
+.btn-custom:focus,
+.btn-custom.active,
+.btn-custom:active:focus {
+  background-image: none;
+  outline: 0;
   -webkit-box-shadow: none;
   box-shadow: none;
 }

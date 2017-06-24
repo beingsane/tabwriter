@@ -14,8 +14,9 @@ td {
   border-top: 1px solid #eee;
 }
 
-div.col-md-6 button.btn {
-  margin-top: 10px;
+textarea {
+  font-family: 'Nova Mono', monospace;
+  resize: none;
 }
 
 .form-group {
