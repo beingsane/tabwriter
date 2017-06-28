@@ -1,15 +1,16 @@
 var express = require("express"),
     app = express();
 
+app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.set('port', (process.env.PORT || 3000));
 
 app.get("/", function(req, res){
-  res.sendFile(__dirname + "/views/index.html");
+  res.render("index");
 });
 
 app.get("/about", function(req, res){
-  res.sendFile(__dirname + "/views/about.html");
+  res.render("about");
 });
 
 app.get("*", function(req, res){

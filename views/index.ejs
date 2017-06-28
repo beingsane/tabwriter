@@ -1,0 +1,39 @@
+<% include partials/header %>
+  <div class="jumbotron">
+    <div class="container">
+      <h1><span class="glyphicon glyphicon-music" aria-hidden="true"></span> Tab-Writer</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <textarea class="form-control" rows="4" placeholder="Escreva aqui as instruções para gerar sua tablatura"></textarea>
+          <div class="row">
+            <div class="col-md-6">
+              <button class="btn btn-custom btn-block" id="create">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Criar!
+              </button>
+            </div>
+            <div class="col-md-6">
+              <a class="btn btn-custom btn-block" href="/about" role="button">
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Saber Mais
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div id="dashboard"></div>
+        <div id="db"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="js/main.js"></script>
+
+<% include partials/footer %>
