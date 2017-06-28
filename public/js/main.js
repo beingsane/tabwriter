@@ -1,12 +1,12 @@
-var input = document.querySelector("textarea"),
-    button = document.querySelector("#create"),
+var textarea = document.querySelector("textarea"),
+    createBtn = document.querySelector("#create"),
     dashboard = document.querySelector("#dashboard"),
     db = document.querySelector("#db");
 
 var CHORDS = ["E", "B", "G", "D", "A", "E"];
 
-button.addEventListener("click", function(){
-  var string = input.value;
+createBtn.addEventListener("click", function(){
+  var string = textarea.value;
   stringToTables(string);
   db.textContent = string;
 });
@@ -27,7 +27,7 @@ function stringToTables(string){
     }
 
     // convert input string to tablature strings
-    var tabs = readInputString(string);
+    var tabs = readInstructions(string);
     var k = 0;
     do {
       // create table
@@ -45,11 +45,6 @@ function stringToTables(string){
 
       k += 1;
     } while(tabs[0].length > 0 && k < 25);
-    // var tables = document.querySelectorAll("table");
-    // tables.forEach(function(table, i){
-    //   console.dir(table)
-    //   tables[i].className = "table";
-    // });
   }
 }
 
@@ -71,73 +66,41 @@ function createTableIn(element){
   return cells;
 }
 
-function cellsFromTable(table){
-  var cells = [];
-  for (var i = 0; i < table.children.length; i++) {
-    if (table.children[i].tagName === "TBODY") {
-      var tbody = table.children[i];
-      break
-    }
-  }
-
-  for (var row = 0; row < tbody.children.length; row++){
-    if (tbody.children[row].tagName === "TR") {
-      var tr = tbody.children[row];
-      cells.push([]);
-      for (var col = 0; col < tr.children.length; col++){
-        if (tr.children[col].tagName === "TD"){
-          var td = tr.children[col];
-          cells[cells.length - 1].push(td);
-        }
-      }
-    }
-  }
-  return cells;
-}
-
-function maxStringLength(element){
+function maxStringLength(row){
   var initialText, text;
-  initialText = element.textContent;
-  text = "a";
-  element.textContent = text;
+  initialText = row.textContent;
+  text = "=";
 
-  var heights = getHeights(element),
-      lineHeight = heights[0],
-      height = heights[1];
+  do{
+    row.textContent = text;
+    var heights = getHeights(row),
+        lineHeight = heights[0],
+        rowHeight = heights[1];
+    text += "=";
+  } while (rowHeight === lineHeight && text.length < 200);
 
-  while (height === lineHeight && text.length < 200){
-    text += "a";
-    element.textContent = text;
-
-    var heights = getHeights(element)
-    lineHeight = heights[0],
-    height = heights[1];
-  }
-  element.textContent = initialText;
+  row.textContent = initialText;
   return (text.length - 1);
 }
 
 function getHeights(element){
   var style = window.getComputedStyle(element),
-      lineHeight = style.lineHeight,
-      paddingTop = style.paddingTop,
-      paddingBottom = style.paddingBottom,
-      borderTop = style.borderTop,
-      borderBottom = style.borderBottom,
-      height = style.height;
+      lineHeight = pixelToNumber(style.lineHeight),
+      paddingTop = pixelToNumber(style.paddingTop),
+      paddingBottom = pixelToNumber(style.paddingBottom),
+      borderTop = pixelToNumber(style.borderTop),
+      borderBottom = pixelToNumber(style.borderBottom),
+      height = pixelToNumber(style.height);
 
-  paddingTop = Number(paddingTop.slice(0, paddingTop.indexOf("px")));
-  paddingBottom = Number(paddingBottom.slice(0, paddingBottom.indexOf("px")));
-  borderTop = Number(borderTop.slice(0, borderTop.indexOf("px")));
-  borderBottom = Number(borderBottom.slice(0, borderBottom.indexOf("px")));
-
-  lineHeight = Number(lineHeight.slice(0, lineHeight.length - 2));
-  height = Number(height.slice(0, height.length - 2));
   height -= paddingTop + paddingBottom + borderTop + borderBottom;
   return [lineHeight, height];
 }
 
-function readInputString(string){
+function pixelToNumber(pix){
+  return Number(pix.slice(0,pix.indexOf("px")));
+}
+
+function readInstructions(string){
   // creates the six strings related to each chord
   var strings = ["", "", "", "", "", ""];
   // add spaces so the first and last words are counted
