@@ -5,13 +5,8 @@
 }
 
 body {
-  font-family: 'Nova Mono', monospace;
+  font-family: 'Noto Sans', sans-serif;
   overflow-y: scroll;
-}
-
-h1 {
-  color: #222;
-  text-shadow: 2px 2px 5px #233;
 }
 
 textarea {
@@ -36,9 +31,15 @@ body div.container {
 }
 
 .jumbotron {
+  font-family: 'Rubik Mono One', sans-serif;
   background-image: url("../images/guitar-cover.png");
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.jumbotron h1 {
+  color: #280b0b;
+  text-shadow: 1px 1px 2px #583b3b;
 }
 
 .form-control:focus {
@@ -54,7 +55,7 @@ body div.container {
 }
 
 .highlight {
-  border: 2px solid #f79022;
+  border: 2px solid #aa0f0f;
   border-radius: 5px;
   padding-left: 10px;
   padding-right: 10px;
@@ -79,21 +80,24 @@ body div.container {
 }
 
 .btn-custom {
-  color: #000;
+  font-family: 'Rubik Mono One', sans-serif;
+  color: #e8e8e8;
   text-decoration: none;
-  background-color: #ffce7f;
-  border: 3px solid #f79022;
-  border-radius: 6px;
+  background-color: #ce1212;
+  border-radius: 0px;
   outline: none !important;
   margin: 7px auto;
-  text-shadow: 1px 1px 3px #999;
-  box-shadow: 0 0 3px #ffab2d;
+  box-shadow: 0px 0px 2px #555555,
+              1px 1px 3px #aa0f0f;
+  text-transform: uppercase;
+  font-size: 16px;
+  transition: all 0.3s;
 }
 
 .btn-custom:hover,
 .btn-custom:focus {
-  background-color: #ffab2d;
-  text-shadow: 1px 1px 3px #555;
+  background-color: #aa0f0f;
+  color: #e8e8e8;
 }
 
 .btn-custom:active,
@@ -111,12 +115,19 @@ body div.container {
 }
 
 #example {
+  color: inherit;
+  font-family: 'Nova Mono', monospace;
   margin-top: 10px;
   width: 100%;
   text-decoration: none;
 }
 
+#example:hover {
+  border: 1px solid #aa0f0f;
+}
+
 #dashboard table {
+  font-family: 'Nova Mono', monospace;
   table-layout: fixed;
   width: 100%;
   margin-bottom: 30px;
@@ -129,4 +140,16 @@ body div.container {
   padding: 5px;
   vertical-align: top;
   border-top: 1px solid #eee;
+}
+
+#check-instructions {
+  cursor: pointer;
+}
+
+#check-instructions:hover{
+  text-decoration: none;
+}
+
+#logo {
+  margin-right: 15px;
 }
