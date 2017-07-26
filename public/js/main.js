@@ -54,12 +54,26 @@ function stringToTables(string){
       // checks for the maximum string length for one line
       var strLength = maxStringLength(cells[0]);
 
+      // writes each tab on each row
       cells.forEach(function(cell, i){
-        // writes each tab on each row
+
+        // get string to be write
         var intro = CHORDS[i] + ") ";
-        cell.textContent =  intro + tabs[i].slice(0, strLength - 1 - intro.length);
+        var border = "--";
+        var content = tabs[i].slice(0, strLength - 1 - intro.length - border.length);
+        var fullContent = intro + border + content;
+
+        // fill the string with dashes if it is the last table
+        if (fullContent.length < strLength - 1){
+          let filler = Array(strLength - fullContent.length).join("-");
+          fullContent += filler;
+        }
+
+        // write string to cell
+        cell.textContent = fullContent;
+
         // removes from tabs the written part
-        tabs[i] = tabs[i].slice(strLength - 1 - intro.length, tabs[i].length);
+        tabs[i] = tabs[i].slice(strLength - 1 - intro.length - border.length, tabs[i].length);
       });
 
       k += 1;
