@@ -110,10 +110,6 @@ body div.container {
   box-shadow: none;
 }
 
-#db {
-  display: none;
-}
-
 #example {
   color: inherit;
   font-family: 'Nova Mono', monospace;

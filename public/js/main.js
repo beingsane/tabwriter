@@ -1,19 +1,38 @@
 var textarea = document.querySelector("textarea"),
     createBtn = document.querySelector("#create"),
-    dashboard = document.querySelector("#dashboard"),
-    db = document.querySelector("#db");
+    dashboard = document.querySelector("#dashboard");
 
 var CHORDS = ["E", "B", "G", "D", "A", "E"];
+
+var tabCreated = false;
 
 createBtn.addEventListener("click", function(){
   var string = textarea.value;
   stringToTables(string);
-  db.textContent = string;
+  tabCreated = true;
+  sessionStorage.setItem("tabwriter-tab", string);
+  this.blur();
+  document.querySelector("body").focus();
+
 });
 
 window.addEventListener("resize", function(){
-  var string = db.textContent;
-  stringToTables(string);
+  if (tabCreated && sessionStorage.getItem("tabwriter-tab")) {
+    var string = sessionStorage.getItem("tabwriter-tab");
+    stringToTables(string);
+  }
+});
+
+window.addEventListener("load", function(){
+  if (sessionStorage.getItem("tabwriter-tab")) {
+    var string = sessionStorage.getItem("tabwriter-tab");
+    textarea.value = string;
+  }
+});
+
+textarea.addEventListener("input", function(){
+  var string = textarea.value;
+  sessionStorage.setItem("tabwriter-tab", string);
 });
 
 function stringToTables(string){
