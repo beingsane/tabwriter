@@ -74,6 +74,26 @@ function stringToTables(string){
 
         // removes from tabs the written part
         tabs[i] = tabs[i].slice(strLength - 1 - intro.length - border.length, tabs[i].length);
+        
+        // check if the remaining tabs isn't empty
+        if (i == 5){
+
+          let empty = [0, 0, 0, 0, 0, 0];
+          tabs.forEach(function(tab, i){
+            if (tab === Array(tab.length + 1).join("-")){
+              empty[i] = 1;
+            }
+          });
+
+          let emptySum = 0;
+          empty.forEach(function(ept, i){
+            emptySum += ept;
+          });
+
+          if (emptySum === 6){
+            tabs[0] = "";
+          }
+        }
       });
 
       k += 1;
