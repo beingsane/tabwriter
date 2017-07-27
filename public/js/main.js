@@ -45,11 +45,11 @@ downloadBtn.addEventListener("click", function(){
 
   // initialize jsPDF document
   var doc = new jsPDF();
+  var pdfPages = 1;
   doc.setFont("courier");
   doc.setFontType("normal");
   doc.setFontSize(12);
-
-  let docY = 20;
+  let docY = 35;
 
   do {
     // writes each chord tabs in one line
@@ -94,16 +94,33 @@ downloadBtn.addEventListener("click", function(){
 
         // add space between tabs and check if a new page is required
         if (tabs[0] != ""){
-          if (docY + PDF_Y_SPACE * 7 < 275){
+          if (docY + PDF_Y_SPACE * 6 < 275){
             docY += PDF_Y_SPACE;
           } else {
             doc.addPage();
-            docY = 20;
+            docY = 35;
+            pdfPages += 1;
           }
         }
       }
     }
   } while(tabs[0].length > 0);
+
+  var date = new Date();
+
+  doc.setFont("helvetica");
+  doc.setFontSize(9);
+
+  for (var i = 0; i < pdfPages; i++){
+    doc.setPage(i+1);
+    // header
+    doc.addImage(logoURL, 'JPEG', 20, 15, 10 * 320/48, 10);
+    doc.text(181, 23, (i+1).toString() + "/" + pdfPages.toString())
+
+    // footer
+    doc.text(20, 280, "Criado com Tab-Writer (tabwriter.herokuapp.com) em " +
+             date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + ".")
+  }
 
   doc.save('tabwriter.pdf');
 });
