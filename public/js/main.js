@@ -1,7 +1,10 @@
 var textarea = document.querySelector("textarea"),
     createBtn = document.querySelector("#create"),
-    dashboard = document.querySelector("#dashboard");
+    dashboard = document.querySelector("#dashboard"),
+    downloadBtn = document.querySelector("#download");
 
+const PDF_MAX_STRING_LENGTH = 66;
+const PDF_Y_SPACE = 5;
 var CHORDS = ["E", "B", "G", "D", "A", "E"];
 
 var tabCreated = false;
@@ -33,6 +36,76 @@ window.addEventListener("load", function(){
 textarea.addEventListener("input", function(){
   var string = textarea.value;
   sessionStorage.setItem("tabwriter-tab", string);
+});
+
+downloadBtn.addEventListener("click", function(){
+  // convert input string to tablature strings
+  var instructions = textarea.value;
+  var tabs = readInstructions(instructions);
+
+  // initialize jsPDF document
+  var doc = new jsPDF();
+  doc.setFont("courier");
+  doc.setFontType("normal");
+  doc.setFontSize(12);
+
+  let docY = 20;
+
+  do {
+    // writes each chord tabs in one line
+    for (var i = 0; i < CHORDS.length; i++){
+
+      // get string to be write
+      var intro = CHORDS[i] + ") ";
+      var border = "--";
+      var content = tabs[i].slice(0, PDF_MAX_STRING_LENGTH - 1 - intro.length - border.length);
+      var fullContent = intro + border + content;
+
+      // fill the string with dashes if it is the last table
+      if (fullContent.length < PDF_MAX_STRING_LENGTH - 1){
+        let filler = Array(PDF_MAX_STRING_LENGTH - fullContent.length).join("-");
+        fullContent += filler;
+      }
+
+      // write string to doc
+      doc.text(20, docY, fullContent);
+      docY += PDF_Y_SPACE;
+
+      // removes from tabs the written part
+      tabs[i] = tabs[i].slice(PDF_MAX_STRING_LENGTH - 1 - intro.length - border.length, tabs[i].length);
+
+      if (i == 5){
+        // check if the remaining tabs isn't empty
+        let empty = [0, 0, 0, 0, 0, 0];
+        tabs.forEach(function(tab, i){
+          if (tab === Array(tab.length + 1).join("-")){
+            empty[i] = 1;
+          }
+        });
+
+        let emptySum = 0;
+        empty.forEach(function(ept, i){
+          emptySum += ept;
+        });
+
+        if (emptySum === 6){
+          tabs[0] = "";
+        }
+
+        // add space between tabs and check if a new page is required
+        if (tabs[0] != ""){
+          if (docY + PDF_Y_SPACE * 7 < 275){
+            docY += PDF_Y_SPACE;
+          } else {
+            doc.addPage();
+            docY = 20;
+          }
+        }
+      }
+    }
+  } while(tabs[0].length > 0);
+
+  doc.save('tabwriter.pdf');
 });
 
 function stringToTables(string){
@@ -74,7 +147,7 @@ function stringToTables(string){
 
         // removes from tabs the written part
         tabs[i] = tabs[i].slice(strLength - 1 - intro.length - border.length, tabs[i].length);
-        
+
         // check if the remaining tabs isn't empty
         if (i == 5){
 
