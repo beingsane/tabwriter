@@ -11,7 +11,7 @@ var tabCreated = false;
 
 createBtn.addEventListener("click", function(){
   var string = textarea.value;
-  stringToTables(string);
+  instrToTables(string);
   tabCreated = true;
   sessionStorage.setItem("tabwriter-tab", string);
   this.blur();
@@ -22,7 +22,7 @@ createBtn.addEventListener("click", function(){
 window.addEventListener("resize", function(){
   if (tabCreated && sessionStorage.getItem("tabwriter-tab")) {
     var string = sessionStorage.getItem("tabwriter-tab");
-    stringToTables(string);
+    instrToTables(string);
   }
 });
 
@@ -39,78 +39,79 @@ textarea.addEventListener("input", function(){
 });
 
 downloadBtn.addEventListener("click", function(){
-  // convert input string to tablature strings
-  var instructions = textarea.value;
-  var tabs = readInstructions(instructions);
+  let instr = textarea.value;
+  instrToPdf(instr);
+});
 
-  // initialize jsPDF document
-  var doc = new jsPDF();
-  var pdfPages = 1;
-  doc.setFont("courier");
-  doc.setFontType("normal");
-  doc.setFontSize(12);
-  let docY = 35;
+function instrToTables(instr){
+  if (instr) {
+    // measure max tab length
+    let table = createTableIn(dashboard);
+    let maxLength = maxStringLength(table[0]);
+    console.log("max len", maxLength)
 
-  do {
-    // writes each chord tabs in one line
-    for (var i = 0; i < CHORDS.length; i++){
-
-      // get string to be write
-      var intro = CHORDS[i] + ") ";
-      var border = "--";
-      var content = tabs[i].slice(0, PDF_MAX_STRING_LENGTH - 1 - intro.length - border.length);
-      var fullContent = intro + border + content;
-
-      // fill the string with dashes if it is the last table
-      if (fullContent.length < PDF_MAX_STRING_LENGTH - 1){
-        let filler = Array(PDF_MAX_STRING_LENGTH - fullContent.length).join("-");
-        fullContent += filler;
-      }
-
-      // write string to doc
-      doc.text(20, docY, fullContent);
-      docY += PDF_Y_SPACE;
-
-      // removes from tabs the written part
-      tabs[i] = tabs[i].slice(PDF_MAX_STRING_LENGTH - 1 - intro.length - border.length, tabs[i].length);
-
-      if (i == 5){
-        // check if the remaining tabs isn't empty
-        let empty = [0, 0, 0, 0, 0, 0];
-        tabs.forEach(function(tab, i){
-          if (tab === Array(tab.length + 1).join("-")){
-            empty[i] = 1;
-          }
-        });
-
-        let emptySum = 0;
-        empty.forEach(function(ept, i){
-          emptySum += ept;
-        });
-
-        if (emptySum === 6){
-          tabs[0] = "";
-        }
-
-        // add space between tabs and check if a new page is required
-        if (tabs[0] != ""){
-          if (docY + PDF_Y_SPACE * 6 < 275){
-            docY += PDF_Y_SPACE;
-          } else {
-            doc.addPage();
-            docY = 35;
-            pdfPages += 1;
-          }
-        }
+    // delete all tables
+    for (var i = 0; i < dashboard.children.length; i++) {
+      if (dashboard.children[i].tagName === 'TABLE') {
+        dashboard.removeChild(dashboard.children[i]);
+        i -= 1;
       }
     }
-  } while(tabs[0].length > 0);
 
-  var date = new Date();
+    // convert instructions to tab blocks
+    let tabs = readInstructions(instr);
+    tabs = wrapTabs(tabs, '--', maxLength);
 
+    for (var i = 0; i < tabs.length; i++){
+      // create table
+      let table = createTableIn(dashboard);
+
+      // write tab lines on table
+      for (var j = 0; j < CHORDS.length; j++){
+        table[j].textContent = tabs[i][j];
+      }
+    }
+  }
+}
+
+function instrToPdf(instr){
+  // convert instructions to tab blocks
+  let tabs = readInstructions(instr);
+  tabs = wrapTabs(tabs, '--', PDF_MAX_STRING_LENGTH);
+
+  // initialize jsPDF document
+  let doc = new jsPDF();
+  doc.setFont('courier');
+  doc.setFontType('normal');
+  doc.setFontSize(12);
+
+  // initialize writing parameters
+  let pdfPages = 1;
+  let docY = 35;
+
+  // write tabs to pdf
+  for (var i = 0; i < tabs.length; i++){
+    for (var j = 0; j < CHORDS.length; j++){
+      doc.text(20, docY, tabs[i][j]);
+      docY += PDF_Y_SPACE;
+    }
+
+    // check if a new page is required
+    if (docY + PDF_Y_SPACE * CHORDS.length < 275){
+      docY += PDF_Y_SPACE;
+    } else {
+      doc.addPage();
+      docY = 35;
+      pdfPages += 1;
+    }
+  }
+
+  // set parameters to write header and footer
+  let date = new Date();
   doc.setFont("helvetica");
   doc.setFontSize(9);
 
+  // write header and footer on each page
   for (var i = 0; i < pdfPages; i++){
     doc.setPage(i+1);
     // header
@@ -122,73 +123,8 @@ downloadBtn.addEventListener("click", function(){
              date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + ".")
   }
 
+  // save pdf
   doc.save('tabwriter.pdf');
-});
-
-function stringToTables(string){
-  if (string) {
-    // delete all tables
-    for (var i = 0; i < dashboard.children.length; i++) {
-      if (dashboard.children[i].tagName === "TABLE") {
-        dashboard.removeChild(dashboard.children[i]);
-        i -= 1;
-      }
-    }
-
-    // convert input string to tablature strings
-    var tabs = readInstructions(string);
-    var k = 0;
-    do {
-      // create table
-      var cells = createTableIn(dashboard);
-      // checks for the maximum string length for one line
-      var strLength = maxStringLength(cells[0]);
-
-      // writes each tab on each row
-      cells.forEach(function(cell, i){
-
-        // get string to be write
-        var intro = CHORDS[i] + ") ";
-        var border = "--";
-        var content = tabs[i].slice(0, strLength - 1 - intro.length - border.length);
-        var fullContent = intro + border + content;
-
-        // fill the string with dashes if it is the last table
-        if (fullContent.length < strLength - 1){
-          let filler = Array(strLength - fullContent.length).join("-");
-          fullContent += filler;
-        }
-
-        // write string to cell
-        cell.textContent = fullContent;
-
-        // removes from tabs the written part
-        tabs[i] = tabs[i].slice(strLength - 1 - intro.length - border.length, tabs[i].length);
-
-        // check if the remaining tabs isn't empty
-        if (i == 5){
-
-          let empty = [0, 0, 0, 0, 0, 0];
-          tabs.forEach(function(tab, i){
-            if (tab === Array(tab.length + 1).join("-")){
-              empty[i] = 1;
-            }
-          });
-
-          let emptySum = 0;
-          empty.forEach(function(ept, i){
-            emptySum += ept;
-          });
-
-          if (emptySum === 6){
-            tabs[0] = "";
-          }
-        }
-      });
-
-      k += 1;
-    } while(tabs[0].length > 0 && k < 25);
-  }
 }
 
 function createTableIn(element){
@@ -212,7 +148,7 @@ function createTableIn(element){
 function maxStringLength(row){
   var initialText, text;
   initialText = row.textContent;
-  text = "=";
+  text = "0";
 
   do{
     row.textContent = text;
@@ -231,9 +167,18 @@ function getHeights(element){
       lineHeight = pixelToNumber(style.lineHeight),
       paddingTop = pixelToNumber(style.paddingTop),
       paddingBottom = pixelToNumber(style.paddingBottom),
-      borderTop = pixelToNumber(style.borderTop),
-      borderBottom = pixelToNumber(style.borderBottom),
-      height = pixelToNumber(style.height);
+      height = pixelToNumber(style.height),
+      borderTor,
+      borderBottom;
+
+  if(/Edge\/\d./i.test(navigator.userAgent)){
+    // is Edge
+    borderTop = pixelToNumber(style.borderTopWidth);
+    borderBottom = pixelToNumber(style.borderBottomWidth);
+  } else {
+    borderTop = pixelToNumber(style.borderTop);
+    borderBottom = pixelToNumber(style.borderBottom);
+  }
 
   height -= paddingTop + paddingBottom + borderTop + borderBottom;
   return [lineHeight, height];
@@ -266,6 +211,55 @@ function readInstructions(string){
     });
   }
   return strings;
+}
+
+function wrapTabs(tab, border, maxLength){
+  // create structure to store each block
+  let tabs = [];
+  let k = 0;
+  // break tab into blocks
+  do {
+    k += 1;
+    // create a new block
+    let block = [];
+
+    // push each wrapped tab to block
+    for (var i = 0; i < CHORDS.length; i++){
+      let intro = CHORDS[i] + ") ";
+      let content = tab[i].slice(0, maxLength - 1 - intro.length - 2 * border.length);
+      let blockLine = intro + border + content + border;
+
+      // fill the blockLine with dashes if necessary
+      if (blockLine.length < maxLength - 1){
+        let filler = Array(maxLength - blockLine.length).join("-");
+        blockLine += filler;
+      }
+
+      block.push(blockLine);
+
+      // removes the written part from the tab
+      tab[i] = tab[i].slice(maxLength - 1 - intro.length - 2 * border.length, tab[i].length);
+    }
+
+    // store block on tabs
+    tabs.push(block);
+
+    // check if the remaining lines in tab aren't empty
+    let empty = Array(CHORDS.length).fill(0);
+    tab.forEach(function(tabLine, i){
+      if (tabLine === Array(tabLine.length + 1).join("-")){
+        empty[i] = 1;
+      }
+    });
+
+    let emptySum = empty.reduce(function(a, b){return a + b;});
+    if (emptySum === CHORDS.length){
+      tab[0] = "";
+    }
+    console.log(tab[0], tab[0].length)
+  } while(tab[0].length > 0 && k < 25);
+
+  return tabs;
 }
 
 function allIndexesOf(string, character){
