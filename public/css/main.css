@@ -9,11 +9,6 @@ body {
   overflow-y: scroll;
 }
 
-textarea {
-  font-family: 'Nova Mono', monospace;
-  resize: none;
-}
-
 ul {
   padding-left: 20px;
 }
@@ -108,6 +103,11 @@ body div.container {
   outline: 0;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+#input {
+  font-family: 'Nova Mono', monospace;
+  resize: none;
 }
 
 #example {

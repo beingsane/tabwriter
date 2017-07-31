@@ -1,26 +1,22 @@
 if (Clipboard.isSupported()) {
-  var exBtn = document.getElementById("example");
-  var clipboard = new Clipboard(exBtn);
+  let clipboard = new Clipboard('#example');
 
-  exBtn.addEventListener("mouseleave", function(){
-    setTimeout(function(){
-      exBtn.setAttribute("tooltip", "");
+  $('#example').on('mouseleave', function() {
+    setTimeout(function() {
+      $('#example').attr('tooltip', '');
     }, 350);
   });
 
   clipboard.on("success", function(e) {
-    exBtn.setAttribute("tooltip", "Copiado para área de transferência!")
+    $('#example').attr('tooltip', 'Copiado para área de transferência!');
   });
   clipboard.on("error", function(e) {
-    exBtn.setAttribute("tooltip", "Erro ao copiar automaticamente =/")
+    $('#example').attr('tooltip', 'Erro ao tentar copiar automaticamente');
   });
 }
 
-var checkBtn = document.getElementById("check-instructions");
-var instructions = document.getElementById("instructions");
-
-checkBtn.addEventListener("click", function(){
-  instructions.classList.add("highlight");
-  var rect = instructions.getBoundingClientRect();
+$('#instructions-go').on('click', function() {
+  $('#instructions').addClass('highlight');
+  let rect = $('#instructions').get(0).getBoundingClientRect();
   window.scrollBy(0, rect.top);
 });
