@@ -29,3 +29,24 @@
 
 </head>
   <body>
+    <nav class="nav">
+      <div class="nav-container">
+        <span class="nav-header">
+          <a class="nav-brand" href="/">Tab-Writer</a>
+        </span>
+        <span class="nav-body-left">
+          <a class="<%= active === 'index' ? 'nav-active' : '' %>" href="/">Home</a>
+        </span>
+        <span class="nav-body-right">
+          <a class="<%= active === 'about' ? 'nav-active' : '' %>" href="/about">Sobre</a>
+        </span>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="jumbotron">
+        <div class="container">
+          <h1><i id="logo" class="fa fa-file-audio-o" aria-hidden="true"></i>Tab-Writer</h1>
+        </div>
+      </div>
+    </div>

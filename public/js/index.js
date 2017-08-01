@@ -1,9 +1,12 @@
 $(window).ready(function() {
+  setBodyMargin();
+
   let input = '#input';
   let dashboard = '#dashboard';
   let tabWriter = new TabWriter(input, dashboard);
 
   $(window).on('resize', function() {
+    setBodyMargin();
     tabWriter.instrToTables();
   });
 
@@ -42,6 +45,18 @@ String.prototype.allIndexesOf = function(character) {
   }
 
   return indexes;
+}
+
+function setBodyMargin() {
+  let navHeight = $('nav').css('height');
+  navHeight = Number(navHeight.slice(0, navHeight.indexOf("px")))
+  $('body').css('margin-top', navHeight + 15);
+}
+
+function pixelToNumber(pixelValue) {
+  let numberStr = pixelValue.slice(0, pixelValue.indexOf("px"));
+  let numberInt = Math.floor(Number(numberStr));
+  return numberInt;
 }
 
 function TabWriter(input, dashboard) {
