@@ -16,6 +16,13 @@ $(window).ready(function() {
     this.blur();
   });
 
+  $('#btn-delete').on('click', function() {
+    $(input).val('');
+    sessionStorage.setItem('tabwriter-input', '');
+    tabWriter.getInstr();
+    this.blur();
+  });
+
   $('#btn-download').on('click', function() {
     tabWriter.getInstr();
     tabWriter.instrToPdf();
