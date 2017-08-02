@@ -113,19 +113,15 @@ body div.container {
   z-index: 10;
   width: 100%;
   min-height: 45px;
-  height: auto;
   background-color: #fff;
   border-bottom: 1px solid #e8e8e8;
-  padding: 0 10px;
 }
 
 .nav-container {
+  height: 100%;
   margin: 0 auto;
-  max-width: 85%;
-}
-
-.nav-header, .nav-body-left, .nav-body-right {
-  padding: 10px 5px;
+  max-width: 930px;
+  padding: 0 10px;
 }
 
 .nav-header, .nav-body-left {
@@ -136,33 +132,29 @@ body div.container {
   float: right;
 }
 
+.nav-header, .nav-body-left, .nav-body-right {
+  line-height: 45px;
+}
+
 .nav-header {
-  margin-right: 20px;
+  margin-right: 5%;
 }
 
 .nav a{
-  font-size: 16px;
+  color: #999;
+  font-size: 14px;
   text-decoration: none;
-  color: rgb(71, 71, 71);
-  line-height: 20px;
-  border-bottom: 1.5px solid #fff;
-  border-radius: 3px;
-  transition: border 0.3s;
-  padding: 3px;
-}
-
-.nav-body-right a, .nav-body-left a{
-  margin: 0 7px;
+  transition: color 0.3s;
+  margin: 0 10px;
 }
 
 .nav-body-right a:hover, .nav-body-left a:hover, a.nav-active{
-  border-bottom: 1.5px solid #aa0f0f;
-  border-radius: 3px;
+  color: #aa0f0f;
 }
 
-.nav a.nav-brand {
+.nav .nav-brand {
   font-size: 20px;
-  font-weight: bold;
+  color: #aa0f0f;
 }
 
 #input {
