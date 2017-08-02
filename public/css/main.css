@@ -38,18 +38,6 @@ body div.container {
   text-shadow: 1px 1px 2px #583b3b;
 }
 
-.form-control:focus {
-  border-color: #cccccc;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
-.form-group {
-  width: 90%;
-  max-width: 700px;
-  margin: 15px auto;
-}
-
 .highlight {
   border: 2px solid #aa0f0f;
   border-radius: 5px;
@@ -76,13 +64,15 @@ body div.container {
 }
 
 .btn-custom {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
   font-family: 'Rubik Mono One', sans-serif;
   color: #e8e8e8;
   text-decoration: none;
   background-color: #ce1212;
-  border-radius: 0px;
   outline: none !important;
-  margin: 7px auto;
+  margin: 5px;
   box-shadow: 0px 0px 2px #555555,
               1px 1px 3px #aa0f0f;
   text-transform: uppercase;
@@ -157,9 +147,41 @@ body div.container {
   color: #aa0f0f;
 }
 
+.form-control:focus {
+  border-color: #cccccc;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+@media (min-width: 992px) {
+  .input-area {
+    position: relative;
+    max-width: 85%;
+    margin: 10px auto;
+  }
+
+  .input-control {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 15px;
+    text-align: center;
+  }
+
+  #input {
+    min-height: 160px;
+  }
+}
+
+@media (max-width: 992px) {
+  .input-control{
+    text-align: right;
+  }
+}
+
 #input {
   font-family: 'Nova Mono', monospace;
-  resize: none;
+  resize: vertical;
 }
 
 #example {
