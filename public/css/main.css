@@ -190,11 +190,11 @@ body div.container {
   border-top: 1px solid #eee;
 }
 
-#check-instructions {
+#instructions-go {
   cursor: pointer;
 }
 
-#check-instructions:hover{
+#instructions-go:hover{
   text-decoration: none;
 }
 
