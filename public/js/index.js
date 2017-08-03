@@ -146,7 +146,7 @@ function TabWriter(input, dashboard) {
     return tabBlocks;
   }
 
-  this.instrToTables = function() {
+  this.instrToTables = function(callback) {
     this.instrToTab();
     if (this.instr == null) {
       return;
@@ -165,9 +165,12 @@ function TabWriter(input, dashboard) {
         $(table[j]).text(tabBlocks[i][j]);
       }
     }
+    if (callback) {
+      callback();
+    }
   }
 
-  this.instrToPdf = function() {
+  this.instrToPdf = function(callback) {
     this.instrToTab();
     if (this.instr == null) {
       return;
@@ -184,6 +187,10 @@ function TabWriter(input, dashboard) {
     pdfWriter.setHeaderStyle();
     pdfWriter.writeHeadersAndFooters();
     pdfWriter.save("tabwriter.pdf");
+
+    if (callback) {
+      callback();
+    }
   }
 
   this.isEmptyTab = function(tab) {
@@ -220,8 +227,11 @@ function TabWriter(input, dashboard) {
     return createdTds;
   }
 
-  this.deleteAllTables = function() {
+  this.deleteAllTables = function(callback) {
     $(this.dashboard).html('');
+    if (callback) {
+      callback();
+    }
   }
 
   this.maxStrLenNoWrap = function(element) {
