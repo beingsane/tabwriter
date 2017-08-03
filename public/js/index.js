@@ -17,9 +17,11 @@ $(window).ready(function() {
   });
 
   $('#btn-delete').on('click', function() {
-    $(input).val('');
-    sessionStorage.setItem('tabwriter-input', '');
-    tabWriter.getInstr();
+    tabWriter.deleteAllTables(function() {
+      sessionStorage.setItem('tabwriter-input', '');
+      $(this.input).val('');
+      tabWriter.getInstr();
+    });
     this.blur();
   });
 
