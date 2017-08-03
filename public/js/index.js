@@ -12,7 +12,9 @@ $(window).ready(function() {
 
   $('#btn-create').on('click', function() {
     tabWriter.getInstr();
-    tabWriter.instrToTables();
+    tabWriter.instrToTables(function() {
+      $('.output-control').css('visibility', 'visible');
+    });
     this.blur();
   });
 
@@ -21,6 +23,7 @@ $(window).ready(function() {
       sessionStorage.setItem('tabwriter-input', '');
       $(this.input).val('');
       tabWriter.getInstr();
+      $('.output-control').css('visibility', 'hidden');
     });
     this.blur();
   });
