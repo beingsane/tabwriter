@@ -21,9 +21,14 @@
       <div class="col-md-12">
         <div id="dashboard"></div>
         <div class="output-control">
-          <button title="Salvar em PDF" class="btn btn-custom" id="btn-download">
-            <i class="fa fa-download" aria-hidden="true"></i>
-          </button>
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Título (opcional, máximo 80 caracteres)" maxlength="80">
+            <span class="input-group-btn">
+              <button title="Salvar em PDF" class="btn btn-custom" id="btn-download">
+                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+              </button>
+            </span>
+          </div>
         </div>
       </div>
     </div>

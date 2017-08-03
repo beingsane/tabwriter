@@ -67,7 +67,7 @@ body div.container {
 .btn-custom {
   height: 40px;
   width: 40px;
-  border-radius: 50%;
+  border-radius: 40px;
   font-family: 'Rubik Mono One', sans-serif;
   color: #e8e8e8;
   text-decoration: none;
@@ -156,9 +156,26 @@ body div.container {
 }
 
 .output-control {
-  text-align: center;
+  max-width: 650px;
+  width: 60px;
+  padding: 0 10px;
+  margin: 0 auto;
   visibility: hidden;
 }
+
+.output-control .input-group-btn .btn-custom {
+  margin: 0;
+  border-top-left-radius: 40px;
+  border-bottom-left-radius: 40px;
+}
+
+.output-control .input-group input.form-control {
+  height: 40px;
+  border-width: 0px;
+  padding: 0;
+  display: none;
+}
+
 
 @media (min-width: 992px) {
   .input-area {

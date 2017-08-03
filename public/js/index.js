@@ -4,6 +4,7 @@ $(window).ready(function() {
   let input = '#input';
   let dashboard = '#dashboard';
   let tabWriter = new TabWriter(input, dashboard);
+  let titleFormVisible = false;
 
   $(window).on('resize', function() {
     setBodyMargin();
@@ -29,8 +30,15 @@ $(window).ready(function() {
   });
 
   $('#btn-download').on('click', function() {
-    tabWriter.getInstr();
-    tabWriter.instrToPdf();
+    if (titleFormVisible) {
+      let title = $('.output-control .input-group input').val();
+      tabWriter.getInstr();
+      tabWriter.instrToPdf(title, outputControlHideInput);
+      $('.output-control .input-group input').val('');
+    } else {
+      outputControlShowInput();
+    }
+    titleFormVisible = !titleFormVisible;
     this.blur();
   });
 
@@ -42,6 +50,44 @@ $(window).ready(function() {
     $(input).val(sessionStorage.getItem('tabwriter-input'));
   }
 });
+
+function outputControlShowInput() {
+  $('.output-control .btn-custom').animate({
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+  }, 400, function() {
+    $('.output-control').animate({
+      width: '100%'
+    }, 400);
+    $('.output-control .input-group input').css('display', 'table-cell');
+    $('.output-control .input-group input').animate({
+      borderWidth: '1px',
+      padding: '6px 12px'
+    }, 400);
+    $('.output-control .btn-custom').html(
+      '<i class="fa fa-download" aria-hidden="true"></i>'
+    );
+  });
+}
+
+function outputControlHideInput() {
+  $('.output-control').animate({
+    width: '60px'
+  }, 400);
+  $('.output-control .input-group input').animate({
+    borderWidth: '0',
+    padding: '0'
+  }, 400, function() {
+    $('.output-control .input-group input').css('display', 'none');
+    $('.output-control .btn-custom').animate({
+      borderTopLeftRadius: '40px',
+      borderBottomLeftRadius: '40px',
+    }, 400);
+    $('.output-control .btn-custom').html(
+      '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>'
+    );
+  });
+}
 
 String.prototype.allIndexesOf = function(character) {
   let indexes = [];
@@ -175,7 +221,7 @@ function TabWriter(input, dashboard) {
     }
   }
 
-  this.instrToPdf = function(callback) {
+  this.instrToPdf = function(title, callback) {
     this.instrToTab();
     if (this.instr == null) {
       return;
@@ -183,6 +229,11 @@ function TabWriter(input, dashboard) {
 
     let pdfWriter = new TabWriterJsPdf();
     let tabBlocks = this.wrapTab(pdfWriter.MAX_STRING_LENGTH);
+
+    if (title) {
+      pdfWriter.setTitleStyle();
+      pdfWriter.writeTitle(title);
+    }
 
     pdfWriter.setNormalStyle();
     for (var i = 0; i < tabBlocks.length; i++) {
@@ -316,6 +367,21 @@ function TabWriterJsPdf() {
     this.doc.setFont("helvetica");
     this.doc.setFontSize(9);
     this.style = 'header';
+  }
+
+  this.setTitleStyle = function() {
+    this.doc.setFont("helvetica");
+    this.doc.setFontSize(12);
+    this.style = 'header';
+  }
+
+  this.writeTitle = function(title) {
+    let splitTitle = this.doc.splitTextToSize(title, this.width - 40);
+    if (splitTitle.length > 2) {
+      return;
+    }
+    this.doc.text(this.xPosition, this.yPosition, splitTitle);
+    this.yPosition += this.LINE_SPACE;
   }
 
   this.writeBlock = function(block) {
