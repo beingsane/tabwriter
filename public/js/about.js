@@ -23,7 +23,7 @@ $(window).ready(function() {
     let rect = $('#instructions').get(0).getBoundingClientRect();
     let navHeight = getNavHeight();
     let offset = 10;
-    window.scrollBy(0, rect.top - (navHeight + offset));
+    scrollByAnimated(rect.top - (navHeight + offset), 400);
   });
 
   $(window).on('resize', function() {
@@ -41,4 +41,32 @@ function getNavHeight() {
   let navHeight = $('nav').css('height');
   navHeight = Number(navHeight.slice(0, navHeight.indexOf("px")));
   return navHeight;
+}
+
+function scrollByAnimated(ynum, duration, callback) {
+  let direction = (ynum < 0 ? -1 : 1);
+  ynum = Math.abs(ynum);
+
+  let dt = 10;
+  let nSteps = (duration/dt >= 15 ? duration/dt : 15);
+
+  let scrollStepFloat = ynum/(nSteps);
+  let scrollStepInt = Math.floor(scrollStepFloat);
+  let remainingToScroll = Math.floor((scrollStepFloat - scrollStepInt) * nSteps);
+  nSteps += Math.floor(remainingToScroll/scrollStepInt);
+  remainingToScroll = Math.floor(remainingToScroll % scrollStepInt);
+
+  let i = 0;
+  let scrolling = setInterval(function() {
+    if (i < nSteps) {
+      window.scrollBy(0, direction * scrollStepInt);
+      i += 1;
+    } else {
+      window.scrollBy(0, direction * remainingToScroll);
+      clearInterval(scrolling);
+      if (callback) {
+        callback();
+      }
+    }
+  }, dt);
 }
