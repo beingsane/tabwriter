@@ -374,16 +374,13 @@ TabWriterJsPdf.prototype.setHeaderStyle = function() {
 TabWriterJsPdf.prototype.setTitleStyle = function() {
   this.doc.setFont("helvetica");
   this.doc.setFontSize(12);
-  this.style = 'header';
+  this.style = 'title';
 }
 
 TabWriterJsPdf.prototype.writeTitle = function(title) {
   let splitTitle = this.doc.splitTextToSize(title, this.width - 2 * this.MARGIN);
-  if (splitTitle.length > 2) {
-    return;
-  }
   this.doc.text(this.xPosition, this.yPosition, splitTitle);
-  this.yPosition += this.LINE_SPACE;
+  this.yPosition += splitTitle.length * this.LINE_SPACE;
 }
 
 TabWriterJsPdf.prototype.writeBlock = function(block) {
