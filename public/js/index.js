@@ -89,22 +89,6 @@ function outputControlHideInput() {
   });
 }
 
-String.prototype.allIndexesOf = function(character) {
-  let indexes = [];
-  let k = 0;
-  let i = 0;
-
-  while (k !== -1) {
-    k = this.indexOf(character, i);
-    if (k !== -1) {
-      indexes.push(k);
-      i = k + 1;
-    }
-  }
-
-  return indexes;
-};
-
 function setBodyMargin() {
   let navHeight = $('nav').css('height');
   navHeight = Number(navHeight.slice(0, navHeight.indexOf("px")));
@@ -116,6 +100,22 @@ function pixelToNumber(pixelValue) {
   let numberInt = Math.floor(Number(numberStr));
   return numberInt;
 }
+
+String.prototype.allIndexesOf = function(character) {
+  let characterIndexes = [];
+  let characterIndex = 0;
+  let startIndex = 0;
+
+  while (characterIndex !== -1) {
+    characterIndex = this.indexOf(character, startIndex);
+    if (characterIndex !== -1) {
+      characterIndexes.push(characterIndex);
+      startIndex = characterIndex + 1;
+    }
+  }
+
+  return characterIndexes;
+};
 
 function TabWriter(input, dashboard) {
 
@@ -129,9 +129,9 @@ function TabWriter(input, dashboard) {
 
   this.input = input;
   this.dashboard = dashboard;
-
   this.instr = null;
   this.tab = null;
+
 }
 
 TabWriter.prototype.getInstr = function() {
@@ -141,18 +141,22 @@ TabWriter.prototype.getInstr = function() {
 };
 
 TabWriter.prototype.instrToTab = function() {
+  let tabRows = Array(this.CHORDS.length).fill('');
+  let spacesIdx = this.instr.allIndexesOf(this.NOTE_SEPARATOR_IN_INPUT);
+  let note;
+  let chord;
+  let fret;
+
   if (this.instr == null) {
     this.deleteAllTables();
     return;
   }
-  let tabRows = Array(this.CHORDS.length).fill('');
-  let spacesIdx = this.instr.allIndexesOf(this.NOTE_SEPARATOR_IN_INPUT);
 
-  for (var i = 0; i < spacesIdx.length - 1; i++) {
-    let note = this.instr.slice(spacesIdx[i] + 1, spacesIdx[i + 1]);
-    let [chord, fret] = this.getChordAndFret(note);
+  for (let i = 0; i < spacesIdx.length - 1; i++) {
+    note = this.instr.slice(spacesIdx[i] + 1, spacesIdx[i + 1]);
+    [chord, fret] = this.getChordAndFret(note);
 
-    for (var j = 0; j < tabRows.length; j++) {
+    for (let j = 0; j < tabRows.length; j++) {
       if (j === chord - 1) {
         tabRows[j] += fret + this.NOTE_SEPARATOR_IN_TAB;
       } else {
@@ -166,20 +170,25 @@ TabWriter.prototype.instrToTab = function() {
 
 TabWriter.prototype.wrapTab = function(maxLength) {
   let tabBlocks = [];
-  let k = 0;
+  let block;
+  let intro;
+  let content;
+  let blockRow;
   let tab = this.tab;
+  let k = 0;
+
   if (tab === null) {
     return null;
   }
 
   do {
+    block = [];
     k += 1;
-    let block = [];
 
-    for (var i = 0; i < this.CHORDS.length; i++) {
-      let intro = this.CHORDS[i] + this.CHORD_NAME_SEPARATOR;
-      let content = tab[i].slice(0, maxLength - intro.length - 2 * this.TAB_BORDER.length);
-      let blockRow = intro + this.TAB_BORDER + content + this.TAB_BORDER;
+    for (let i = 0; i < this.CHORDS.length; i++) {
+      intro = this.CHORDS[i] + this.CHORD_NAME_SEPARATOR;
+      content = tab[i].slice(0, maxLength - intro.length - 2 * this.TAB_BORDER.length);
+      blockRow = intro + this.TAB_BORDER + content + this.TAB_BORDER;
 
       if (blockRow.length < maxLength){
         let filler = Array(maxLength - blockRow.length + 1).join("-");
@@ -188,7 +197,8 @@ TabWriter.prototype.wrapTab = function(maxLength) {
 
       block.push(blockRow);
 
-      tab[i] = tab[i].slice(maxLength - intro.length - 2 * this.TAB_BORDER.length, tab[i].length);
+      tab[i] = tab[i].slice(maxLength - intro.length - 2 * this.TAB_BORDER.length,
+                            tab[i].length);
     }
 
     tabBlocks.push(block);
@@ -199,21 +209,28 @@ TabWriter.prototype.wrapTab = function(maxLength) {
 };
 
 TabWriter.prototype.instrToTables = function(callback) {
+  let singleCellTable;
+  let maxLength;
+  let tabBlocks;
+  let table;
+  let nRows = this.CHORDS.length;
+  let nCols = 1;
+
   this.instrToTab();
   if (this.instr == null) {
     return;
   }
 
-  let td = this.createTable(1, 1);
-  let maxLength = this.maxStrLenNoWrap($(td[0]));
+  singleCellTable = this.createTable(1, 1);
+  maxLength = this.maxStrLenNoWrap($(singleCellTable[0]));
 
   this.deleteAllTables();
-  let tabBlocks = this.wrapTab(maxLength);
+  tabBlocks = this.wrapTab(maxLength);
 
-  for (var i = 0; i < tabBlocks.length; i++) {
-    let table = this.createTable(this.CHORDS.length, 1);
+  for (let i = 0; i < tabBlocks.length; i++) {
+    table = this.createTable(nRows, nCols);
 
-    for (var j = 0; j < this.CHORDS.length; j++) {
+    for (let j = 0; j < nRows; j++) {
       $(table[j]).text(tabBlocks[i][j]);
     }
   }
@@ -223,13 +240,16 @@ TabWriter.prototype.instrToTables = function(callback) {
 };
 
 TabWriter.prototype.instrToPdf = function(title, callback) {
+  let pdfWriter;
+  let tabBlocks;
+
   this.instrToTab();
   if (this.instr == null) {
     return;
   }
 
-  let pdfWriter = new TabWriterJsPdf();
-  let tabBlocks = this.wrapTab(pdfWriter.MAX_STRING_LENGTH);
+  pdfWriter = new TabWriterJsPdf();
+  tabBlocks = this.wrapTab(pdfWriter.MAX_STRING_LENGTH);
 
   if (title) {
     pdfWriter.setTitleStyle();
@@ -237,7 +257,7 @@ TabWriter.prototype.instrToPdf = function(title, callback) {
   }
 
   pdfWriter.setNormalStyle();
-  for (var i = 0; i < tabBlocks.length; i++) {
+  for (let i = 0; i < tabBlocks.length; i++) {
     pdfWriter.writeBlock(tabBlocks[i]);
   }
 
@@ -252,8 +272,10 @@ TabWriter.prototype.instrToPdf = function(title, callback) {
 
 TabWriter.prototype.isEmptyTab = function(tab) {
   let emptyRows = 0;
-  for (var i = 0; i < tab.length; i ++) {
-    let row = tab[i];
+  let row;
+
+  for (let i = 0; i < tab.length; i++) {
+    row = tab[i];
     if (row === Array(row.length + 1).join(this.NOTE_NULL_CHARACTER)) {
       emptyRows += 1;
     }
@@ -268,11 +290,13 @@ TabWriter.prototype.getChordAndFret = function(note) {
   return [chord, fret];
 };
 
-TabWriter.prototype.createTable = function(rows, cols) {
+TabWriter.prototype.createTable = function(nRows, nCols) {
   let html = '<table><tbody>';
-  for (var i = 0; i < rows; i++) {
+  let createdTds;
+
+  for (let i = 0; i < nRows; i++) {
     html += '<tr>';
-    for (var j = 0; j < cols; j++) {
+    for (let j = 0; j < nCols; j++) {
       html += '<td></td>';
     }
     html += '</tr>';
@@ -280,7 +304,7 @@ TabWriter.prototype.createTable = function(rows, cols) {
   html += '</tbody></table>';
   $(this.dashboard).append(html);
 
-  let createdTds = $(this.dashboard + ' td').slice(-rows);
+  createdTds = $(this.dashboard + ' td').slice(-nRows);
   return createdTds;
 };
 
@@ -294,8 +318,9 @@ TabWriter.prototype.deleteAllTables = function(callback) {
 TabWriter.prototype.maxStrLenNoWrap = function(element) {
   let elementText = element.text();
   let fillText = '=';
+  let height;
+  let lineHeight;
 
-  let height, lineHeight;
   do {
     element.text(fillText);
     [lineHeight, height] = this.getElementHeights(element);
@@ -310,6 +335,7 @@ TabWriter.prototype.getElementHeights = function(element) {
   let boxSizing = element.css('box-sizing');
   let lineHeight = pixelToNumber(element.css('lineHeight'));
   let height = pixelToNumber(element.css('height'));
+  let heights;
 
   if (boxSizing === 'border-box' || boxSizing === 'padding-box') {
     let paddingTop = pixelToNumber(element.css('paddingTop'));
@@ -323,33 +349,31 @@ TabWriter.prototype.getElementHeights = function(element) {
     height -= borderTop + borderBottom;
   }
 
-  let heights = [lineHeight, height];
+  heights = [lineHeight, height];
   return heights;
 };
 
 function TabWriterJsPdf() {
+
   this.MAX_STRING_LENGTH = 66;
   this.LINE_SPACE = 5;
   this.INITIAL_Y_POSITION = 35;
   this.MARGIN = 20;
-
   this.LOGO_Y_POSITION = 15;
   this.LOGO_HEIGHT = 10;
   this.LOGO_WIDTH = this.LOGO_HEIGHT * 320/48;
-
   this.PAGE_X_POSITION = 181;
   this.PAGE_Y_POSITION = 23;
-
   this.FOOTER_Y_POSITION = 285;
+  this.WIDTH = 210;
+  this.HEIGHT = 295;
 
   this.doc = new jsPDF();
   this.pages = 1;
-
   this.style = null;
-  this.width = 210;
-  this.height = 295;
   this.xPosition = this.MARGIN;
   this.yPosition = this.INITIAL_Y_POSITION;
+
 }
 
 TabWriterJsPdf.prototype.setNormalStyle = function() {
@@ -372,13 +396,13 @@ TabWriterJsPdf.prototype.setTitleStyle = function() {
 };
 
 TabWriterJsPdf.prototype.writeTitle = function(title) {
-  let splitTitle = this.doc.splitTextToSize(title, this.width - 2 * this.MARGIN);
+  let splitTitle = this.doc.splitTextToSize(title, this.WIDTH - 2 * this.MARGIN);
   this.doc.text(this.xPosition, this.yPosition, splitTitle);
   this.yPosition += splitTitle.length * this.LINE_SPACE;
 };
 
 TabWriterJsPdf.prototype.writeBlock = function(block) {
-  if (this.yPosition + this.LINE_SPACE * block.length > this.height - this.MARGIN) {
+  if (this.yPosition + this.LINE_SPACE * block.length > this.HEIGHT - this.MARGIN) {
     this.doc.addPage();
     this.yPosition = this.INITIAL_Y_POSITION;
     this.pages += 1;

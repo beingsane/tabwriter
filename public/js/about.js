@@ -45,25 +45,24 @@ function getNavHeight() {
 
 function scrollByAnimated(ynum, duration, callback) {
   let direction = (ynum < 0 ? -1 : 1);
-  ynum = Math.abs(ynum);
-
   let dt = 10;
   let nSteps = (duration/dt >= 15 ? duration/dt : 15);
-
-  let scrollStepFloat = ynum/(nSteps);
+  let scrollStepFloat = Math.abs(ynum)/(nSteps);
   let scrollStepInt = Math.floor(scrollStepFloat);
   let remainingToScroll = Math.floor((scrollStepFloat - scrollStepInt) * nSteps);
+  let scrollingInterval;
+  let step = 0;
+
   nSteps += Math.floor(remainingToScroll/scrollStepInt);
   remainingToScroll = Math.floor(remainingToScroll % scrollStepInt);
 
-  let i = 0;
-  let scrolling = setInterval(function() {
-    if (i < nSteps) {
+  scrollingInterval = setInterval(function() {
+    if (step < nSteps) {
       window.scrollBy(0, direction * scrollStepInt);
-      i += 1;
+      step += 1;
     } else {
       window.scrollBy(0, direction * remainingToScroll);
-      clearInterval(scrolling);
+      clearInterval(scrollingInterval);
       if (callback) {
         callback();
       }
