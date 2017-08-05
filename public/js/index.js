@@ -337,6 +337,7 @@ function TabWriterJsPdf() {
   this.MAX_STRING_LENGTH = 66;
   this.LINE_SPACE = 5;
   this.INITIAL_Y_POSITION = 35;
+  this.MARGIN = 20;
 
   this.LOGO_Y_POSITION = 15;
   this.LOGO_HEIGHT = 10;
@@ -353,72 +354,71 @@ function TabWriterJsPdf() {
   this.style = null;
   this.width = 210;
   this.height = 295;
-  this.xPosition = 20;
+  this.xPosition = this.MARGIN;
   this.yPosition = this.INITIAL_Y_POSITION;
+}
 
-  this.setNormalStyle = function() {
-    this.doc.setFont('courier');
-    this.doc.setFontType('normal');
-    this.doc.setFontSize(12);
-    this.style = 'normal';
+TabWriterJsPdf.prototype.setNormalStyle = function() {
+  this.doc.setFont('courier');
+  this.doc.setFontType('normal');
+  this.doc.setFontSize(12);
+  this.style = 'normal';
+}
+
+TabWriterJsPdf.prototype.setHeaderStyle = function() {
+  this.doc.setFont("helvetica");
+  this.doc.setFontSize(9);
+  this.style = 'header';
+}
+
+TabWriterJsPdf.prototype.setTitleStyle = function() {
+  this.doc.setFont("helvetica");
+  this.doc.setFontSize(12);
+  this.style = 'header';
+}
+
+TabWriterJsPdf.prototype.writeTitle = function(title) {
+  let splitTitle = this.doc.splitTextToSize(title, this.width - 2 * this.MARGIN);
+  if (splitTitle.length > 2) {
+    return;
   }
+  this.doc.text(this.xPosition, this.yPosition, splitTitle);
+  this.yPosition += this.LINE_SPACE;
+}
 
-  this.setHeaderStyle = function() {
-    this.doc.setFont("helvetica");
-    this.doc.setFontSize(9);
-    this.style = 'header';
-  }
-
-  this.setTitleStyle = function() {
-    this.doc.setFont("helvetica");
-    this.doc.setFontSize(12);
-    this.style = 'header';
-  }
-
-  this.writeTitle = function(title) {
-    let splitTitle = this.doc.splitTextToSize(title, this.width - 40);
-    if (splitTitle.length > 2) {
-      return;
-    }
-    this.doc.text(this.xPosition, this.yPosition, splitTitle);
+TabWriterJsPdf.prototype.writeBlock = function(block) {
+  if (this.yPosition + this.LINE_SPACE * block.length > this.height - this.MARGIN) {
+    this.doc.addPage();
+    this.yPosition = this.INITIAL_Y_POSITION;
+    this.pages += 1;
+  } else {
     this.yPosition += this.LINE_SPACE;
   }
 
-  this.writeBlock = function(block) {
-    if (this.yPosition + this.LINE_SPACE * block.length > this.height - 20) {
-      this.doc.addPage();
-      this.yPosition = this.INITIAL_Y_POSITION;
-      this.pages += 1;
-    } else {
-      this.yPosition += this.LINE_SPACE;
-    }
-
-    for (var i = 0; i < block.length; i++) {
-      this.doc.text(this.xPosition, this.yPosition, block[i]);
-      this.yPosition += this.LINE_SPACE;
-    }
+  for (var i = 0; i < block.length; i++) {
+    this.doc.text(this.xPosition, this.yPosition, block[i]);
+    this.yPosition += this.LINE_SPACE;
   }
+}
 
-  this.writeHeadersAndFooters = function() {
-    let date = new Date();
-    let footer = "Criado com Tab-Writer (tabwriter.herokuapp.com) em " +
-                 date.getDate() + "/" + (date.getMonth() + 1) + "/" +
-                 date.getFullYear() + ".";
+TabWriterJsPdf.prototype.writeHeadersAndFooters = function() {
+  let date = new Date();
+  let footer = "Criado com Tab-Writer (tabwriter.herokuapp.com) em " +
+               date.getDate() + "/" + (date.getMonth() + 1) + "/" +
+               date.getFullYear() + ".";
 
-    for (var i = 0; i < this.pages; i++) {
-      this.doc.setPage(i+1);
-      this.doc.addImage(logoURL, 'JPEG', this.xPosition, this.LOGO_Y_POSITION,
-                        this.LOGO_WIDTH, this.LOGO_HEIGHT);
+  for (var i = 0; i < this.pages; i++) {
+    this.doc.setPage(i+1);
+    this.doc.addImage(logoURL, 'JPEG', this.xPosition, this.LOGO_Y_POSITION,
+                      this.LOGO_WIDTH, this.LOGO_HEIGHT);
 
-      this.doc.text(this.PAGE_X_POSITION, this.PAGE_Y_POSITION,
-                    (i+1).toString() + "/" + this.pages.toString());
+    this.doc.text(this.PAGE_X_POSITION, this.PAGE_Y_POSITION,
+                  (i+1).toString() + "/" + this.pages.toString());
 
-      this.doc.text(this.xPosition, this.FOOTER_Y_POSITION, footer);
-    }
+    this.doc.text(this.xPosition, this.FOOTER_Y_POSITION, footer);
   }
+}
 
-  this.save = function(name) {
-    this.doc.save(name);
-  }
-
+TabWriterJsPdf.prototype.save = function(name) {
+  this.doc.save(name);
 }
