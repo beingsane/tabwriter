@@ -1,5 +1,4 @@
-$(window).ready(function() {
-  setBodyMargin();
+$(document).ready(function() {
 
   let input = '#input';
   let dashboard = '#dashboard';
@@ -7,7 +6,6 @@ $(window).ready(function() {
   let titleFormVisible = false;
 
   $(window).on('resize', function() {
-    setBodyMargin();
     tabWriter.instrToTables();
   });
 
@@ -49,6 +47,7 @@ $(window).ready(function() {
   if (sessionStorage.getItem('tabwriter-input')) {
     $(input).val(sessionStorage.getItem('tabwriter-input'));
   }
+
 });
 
 function outputControlShowInput() {
@@ -87,18 +86,6 @@ function outputControlHideInput() {
       '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>'
     );
   });
-}
-
-function setBodyMargin() {
-  let navHeight = $('nav').css('height');
-  navHeight = Number(navHeight.slice(0, navHeight.indexOf("px")));
-  $('body').css('margin-top', navHeight + 15);
-}
-
-function pixelToNumber(pixelValue) {
-  let numberStr = pixelValue.slice(0, pixelValue.indexOf("px"));
-  let numberInt = Math.floor(Number(numberStr));
-  return numberInt;
 }
 
 String.prototype.allIndexesOf = function(character) {

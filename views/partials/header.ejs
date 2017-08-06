@@ -16,16 +16,30 @@
   <!-- Font-awesome -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-  <!-- Tooltips -->
-  <link rel="stylesheet" href="/css/tooltip.css">
-
   <!-- Tab-Writer stylesheet -->
   <link rel="stylesheet" href="/css/main.css">
 
-  <!-- jQuery, clipboard, jspdf -->
+  <!-- jQuery -->
   <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+
+  <!-- Tab-Writer main script -->
+  <script src="/js/main.js"></script>
+
+  <% if (active === 'index') { %>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+    <!-- Tab-Writer index script -->
+    <script src="js/logourl.js"></script>
+    <script src="/js/index.js"></script>
+  <% } else if (active === 'about') { %>
+    <!-- Tooltips -->
+    <link rel="stylesheet" href="/css/tooltip.css">
+    <!-- clipboardjs -->
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+    <!-- Tab-Writer about script -->
+    <script src="/js/about.js"></script>
+  <% } %>
+
 
 </head>
   <body>
