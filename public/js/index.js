@@ -13,6 +13,9 @@ $(document).ready(function() {
     tabWriter.getInstr();
     tabWriter.instrToTables(function() {
       $('.output-control').css('visibility', 'visible');
+    }, function() {
+      tabWriter.deleteAllTables();
+      $('.output-control').css('visibility', 'hidden');
     });
     this.blur();
   });
@@ -20,7 +23,7 @@ $(document).ready(function() {
   $('#btn-delete').on('click', function() {
     tabWriter.deleteAllTables(function() {
       sessionStorage.setItem('tabwriter-input', '');
-      $(this.input).val('');
+      $(tabWriter.input).val('');
       tabWriter.getInstr();
       $('.output-control').css('visibility', 'hidden');
     });
@@ -30,7 +33,6 @@ $(document).ready(function() {
   $('#btn-download').on('click', function() {
     if (titleFormVisible) {
       let title = $('.output-control .input-group input').val();
-      tabWriter.getInstr();
       tabWriter.instrToPdf(title, outputControlHideInput);
       $('.output-control .input-group input').val('');
     } else {
@@ -125,19 +127,23 @@ TabWriter.prototype.getInstr = function() {
   let instr = $(this.input).val();
   this.instr = (instr ? this.NOTE_SEPARATOR_IN_INPUT + instr +
                this.NOTE_SEPARATOR_IN_INPUT : null);
+  this.instrToTab();
 };
 
 TabWriter.prototype.instrToTab = function() {
-  let tabRows = Array(this.CHORDS.length).fill('');
-  let spacesIdx = this.instr.allIndexesOf(this.NOTE_SEPARATOR_IN_INPUT);
+  let tabRows;
+  let spacesIdx;
   let note;
   let chord;
   let fret;
 
-  if (this.instr == null) {
-    this.deleteAllTables();
+  if (this.instr === null) {
+    this.tab = null;
     return;
   }
+
+  tabRows = Array(this.CHORDS.length).fill('');
+  spacesIdx = this.instr.allIndexesOf(this.NOTE_SEPARATOR_IN_INPUT);
 
   for (let i = 0; i < spacesIdx.length - 1; i++) {
     note = this.instr.slice(spacesIdx[i] + 1, spacesIdx[i + 1]);
@@ -161,12 +167,14 @@ TabWriter.prototype.wrapTab = function(maxLength) {
   let intro;
   let content;
   let blockRow;
-  let tab = this.tab;
+  let tab;
   let k = 0;
 
-  if (tab === null) {
+  if (this.tab === null) {
     return null;
   }
+
+  tab = this.tab.slice();
 
   do {
     block = [];
@@ -195,7 +203,7 @@ TabWriter.prototype.wrapTab = function(maxLength) {
   return tabBlocks;
 };
 
-TabWriter.prototype.instrToTables = function(callback) {
+TabWriter.prototype.instrToTables = function(callbackSuccess, callbackFailure) {
   let singleCellTable;
   let maxLength;
   let tabBlocks;
@@ -203,8 +211,10 @@ TabWriter.prototype.instrToTables = function(callback) {
   let nRows = this.CHORDS.length;
   let nCols = 1;
 
-  this.instrToTab();
-  if (this.instr == null) {
+  if (this.tab === null) {
+    if (callbackFailure) {
+      callbackFailure();
+    }
     return;
   }
 
@@ -214,15 +224,18 @@ TabWriter.prototype.instrToTables = function(callback) {
   this.deleteAllTables();
   tabBlocks = this.wrapTab(maxLength);
 
-  for (let i = 0; i < tabBlocks.length; i++) {
-    table = this.createTable(nRows, nCols);
+  if (tabBlocks) {
+    for (let i = 0; i < tabBlocks.length; i++) {
+      table = this.createTable(nRows, nCols);
 
-    for (let j = 0; j < nRows; j++) {
-      $(table[j]).text(tabBlocks[i][j]);
+      for (let j = 0; j < nRows; j++) {
+        $(table[j]).text(tabBlocks[i][j]);
+      }
     }
   }
-  if (callback) {
-    callback();
+
+  if (callbackSuccess) {
+    callbackSuccess();
   }
 };
 
@@ -230,27 +243,28 @@ TabWriter.prototype.instrToPdf = function(title, callback) {
   let pdfWriter;
   let tabBlocks;
 
-  this.instrToTab();
-  if (this.instr == null) {
+  if (this.tab === null) {
     return;
   }
 
   pdfWriter = new TabWriterJsPdf();
   tabBlocks = this.wrapTab(pdfWriter.MAX_STRING_LENGTH);
 
-  if (title) {
-    pdfWriter.setTitleStyle();
-    pdfWriter.writeTitle(title);
-  }
+  if (tabBlocks) {
+    if (title) {
+      pdfWriter.setTitleStyle();
+      pdfWriter.writeTitle(title);
+    }
 
-  pdfWriter.setNormalStyle();
-  for (let i = 0; i < tabBlocks.length; i++) {
-    pdfWriter.writeBlock(tabBlocks[i]);
-  }
+    pdfWriter.setNormalStyle();
+    for (let i = 0; i < tabBlocks.length; i++) {
+      pdfWriter.writeBlock(tabBlocks[i]);
+    }
 
-  pdfWriter.setHeaderStyle();
-  pdfWriter.writeHeadersAndFooters();
-  pdfWriter.save("tabwriter.pdf");
+    pdfWriter.setHeaderStyle();
+    pdfWriter.writeHeadersAndFooters();
+    pdfWriter.save("tabwriter.pdf");
+  }
 
   if (callback) {
     callback();
