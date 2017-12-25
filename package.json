@@ -1,6 +1,7 @@
 {
   "name": "tabwriter",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "Uma aplicação web para escrever tablaturas",
   "main": "app.js",
   "scripts": {
