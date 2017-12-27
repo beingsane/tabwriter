@@ -1,0 +1,269 @@
+$font-default: 'Noto Sans', sans-serif;
+$font-title: 'Rubik Mono One', sans-serif;
+$font-tabs: 'Nova Mono', monospace;
+
+$color-red-default: #ce1212;
+$color-red-focus: #aa0f0f;
+$color-red-dark: #280b0b;
+
+$color-gray-light: #e8e8e8;
+$color-gray-dark: #999;
+
+$btn-custom-height: 40px;
+
+@mixin box-shadow($shadow) {
+  -webkit-box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
+@mixin transition($tr) {
+  -webkit-transition: $tr;
+  -moz-transition: $tr;
+  -ms-transition: $tr;
+  -o-transition: $tr;
+  transition: $tr;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-default;
+  overflow-y: scroll;
+  margin-top: 65px;
+  padding-bottom: 60px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+li {
+  margin: 5px;
+}
+
+p {
+  text-indent: 30px;
+}
+
+.container {
+  max-width: 890px;
+}
+
+.jumbotron {
+  font-family: $font-title;
+  background-image: url("../../images/guitar-cover.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  h1 {
+    color: $color-red-dark;
+    text-shadow: 1px 1px 2px $color-red-dark;
+  }
+}
+
+.highlight {
+  border: 2px solid $color-red-focus;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.topics {
+  list-style-type: none;
+  margin-bottom: 75px;
+  text-align: justify;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.table {
+  table-layout: fixed;
+  margin: 15px auto;
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.btn-custom {
+  height: $btn-custom-height;
+  width: $btn-custom-height;
+  border-radius: $btn-custom-height;
+  font-family: $font-title;
+  color: $color-gray-light;
+  text-decoration: none;
+  background-color: $color-red-default;
+  margin: 5px;
+  text-transform: uppercase;
+  font-size: 16px;
+  outline: none !important;
+  @include box-shadow(1px 1px 3px #aa0f0f);
+  @include transition(background-color 0.3s);
+  @include transition(color 0.3s);
+}
+
+.btn-custom:hover, .btn-custom:focus {
+  background-color: $color-red-focus;
+  color: $color-gray-light;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  min-height: 45px;
+  background-color: #fff;
+  border-bottom: 1px solid $color-gray-light;
+
+  .nav-container {
+    height: 100%;
+    margin: 0 auto;
+    max-width: 930px;
+    padding: 0 10px;
+
+    a{
+      color: $color-gray-dark;
+      font-size: 14px;
+      text-decoration: none;
+      margin: 0 10px;
+      @include transition(color 0.3s);
+    }
+
+    a:hover, a.nav-active {
+      color: $color-red-focus;
+    }
+
+    .nav-brand {
+      font-size: 20px;
+      color: $color-red-focus;
+    }
+
+    .nav-header, .nav-body-left {
+      float: left;
+    }
+
+    .nav-body-right {
+      float: right;
+    }
+
+    .nav-header, .nav-body-left, .nav-body-right {
+      line-height: 45px;
+    }
+
+    .nav-header {
+      margin-right: 5%;
+    }
+  }
+}
+
+.form-control, .form-control:focus {
+  border-color: #cccccc;
+  @include box-shadow(none);
+}
+
+.output-control {
+  max-width: 650px;
+  width: 60px;
+  padding: 0 10px;
+  margin: 0 auto;
+  visibility: hidden;
+
+  .input-group-btn .btn-custom {
+    margin: 0;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+  }
+
+  .input-group input.form-control {
+    height: 40px;
+    border-width: 0px;
+    padding: 0;
+    display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .input-area {
+    position: relative;
+    max-width: 85%;
+    margin: 10px auto;
+  }
+
+  .input-control {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 15px;
+    text-align: center;
+  }
+
+  #input {
+    min-height: 110px;
+  }
+}
+
+@media (max-width: 992px) {
+  .input-control{
+    text-align: right;
+  }
+}
+
+#input {
+  font-family: $font-tabs;
+  resize: vertical;
+}
+
+#example {
+  color: inherit;
+  font-family: $font-tabs;
+  margin-top: 10px;
+  width: 100%;
+  text-decoration: none;
+}
+
+#example:hover {
+  border: 1px solid $color-red-focus;
+}
+
+#dashboard {
+  margin-top: 30px;
+
+  table {
+    font-family: $font-tabs;
+    table-layout: fixed;
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  td {
+    line-height: 18px;
+    display: block;
+    word-wrap: break-word;
+    padding: 5px;
+    vertical-align: top;
+    border-top: 1px solid $color-gray-light;
+  }
+}
+
+#instructions-go {
+  color: inherit;
+  cursor: pointer;
+}
+
+#instructions-go:hover{
+  color: $color-red-focus;
+  text-decoration: none;
+}
+
+#logo {
+  margin-right: 15px;
+}
+
+@import 'tooltip';
