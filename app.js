@@ -14,7 +14,7 @@ app.get("/about", function(req, res){
 });
 
 app.get("*", function(req, res){
-  res.status(404).send("Not found!")
+  res.status(404).render("error404", {active:'error404'});
 });
 
 app.listen(app.get("port"), function(){
