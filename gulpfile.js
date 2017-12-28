@@ -10,6 +10,12 @@ gulp.task('default', ['watch'], function() {
 
 });
 
+gulp.task('build', function() {
+  return gulp.src('./public/css/src/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./public/css/build'));
+});
+
 gulp.task('sass', function () {
   return gulp.src('./public/css/src/**/*.scss')
     .pipe(sass().on('error', sass.logError))
