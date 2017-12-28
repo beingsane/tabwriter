@@ -20,5 +20,12 @@
   "dependencies": {
     "ejs": "^2.5.6",
     "express": "^4.15.3"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.21.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-sass": "^3.1.0"
   }
 }
