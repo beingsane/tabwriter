@@ -9,13 +9,16 @@ module.exports = {
   "globals": {
     "Clipboard": true,
     "jsPDF": true,
-    "pixelToNumber": true,
-    "scrollByAnimated": true,
-    "logoURL": true,
   },
   "rules": {
     "no-console": "warn",
     "no-unused-vars": "warn",
-    "quotes": ["warn", "single"]
+    "quotes": ["warn", "single"],
+    "semi": ["error", "always"],
+    "camelcase": ["error", {"properties": "always"}],
+    "max-len": ["warn", {
+      "code": 100,
+      "ignoreUrls": true
+    }]
   }
 }
