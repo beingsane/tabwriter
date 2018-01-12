@@ -7,10 +7,13 @@ var eslint = require('gulp-eslint');
 var browserSync = require('browser-sync').create();
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var uglify = require('gulp-uglify');
+var babelify = require('babelify');
 
 gulp.task('default', ['watch']);
 
-gulp.task('build', ['sass', 'browserify']);
+gulp.task('build', ['sass', 'build-js']);
 
 gulp.task('sass', function () {
   return gulp.src('./public/css/src/**/*.scss')
@@ -19,10 +22,13 @@ gulp.task('sass', function () {
     .pipe(browserSync.stream());
 });
 
-gulp.task('browserify', function() {
+gulp.task('build-js', function() {
   return browserify('./public/js/src/main.js')
+    .transform('babelify', {presets: ['env']})
     .bundle()
     .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
     .pipe(gulp.dest('./public/js/build'))
     .pipe(browserSync.stream());
 });
@@ -50,9 +56,9 @@ gulp.task('nodemon', function() {
   });
 });
 
-gulp.task('watch', ['browser-sync', 'sass', 'browserify'], function () {
+gulp.task('watch', ['browser-sync', 'sass', 'build-js'], function () {
   gulp.watch('./public/css/src/**/*.scss', ['sass']);
-  gulp.watch(['./public/jsv2/**/*.js', '!./public/jsv2/bundle.js'], ['browserify']);
+  gulp.watch(['./public/jsv2/**/*.js', '!./public/jsv2/bundle.js'], ['build-js']);
   gulp.watch('./public/js/**/*.js', browserSync.reload);
   gulp.watch('./views/**/*.ejs', browserSync.reload);
 });
