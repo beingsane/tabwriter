@@ -60,7 +60,6 @@ gulp.task('nodemon', function() {
 
 gulp.task('watch', ['browser-sync', 'build-css', 'build-js'], function () {
   gulp.watch('./public/css/src/**/*.scss', ['build-css']);
-  gulp.watch(['./public/jsv2/**/*.js', '!./public/jsv2/bundle.js'], ['build-js']);
-  gulp.watch('./public/js/**/*.js', browserSync.reload);
+  gulp.watch(['./public/js/src/**/*.js'], ['build-js']);
   gulp.watch('./views/**/*.ejs', browserSync.reload);
 });
