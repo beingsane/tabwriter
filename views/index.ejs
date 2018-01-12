@@ -1,11 +1,15 @@
 <% include partials/header %>
 
 <body id="index">
-  <% include partials/navbar %>
-  <% include partials/jumbotron %>
   
-  <div class="container">
+  <header>
+    <% include partials/navbar %>
+    <% include partials/jumbotron %>
+  </header>
+
+  <main class="container">
     <div class="row input-area">
+
       <div class="col-md-11">
         <textarea id="input" class="form-control" rows="4" placeholder="Escreva aqui as instruções para gerar sua tablatura"></textarea>
       </div>
@@ -18,11 +22,14 @@
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </button>
       </div>
+
     </div>
 
     <div class="row">
       <div class="col-md-12">
+
         <div id="dashboard"></div>
+
         <div class="output-control">
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Título (opcional, máximo 80 caracteres)" maxlength="80">
@@ -33,8 +40,9 @@
             </span>
           </div>
         </div>
+
       </div>
     </div>
-  </div>
+  </main>
 
 <% include partials/footer %>

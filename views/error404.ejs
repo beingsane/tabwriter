@@ -1,16 +1,21 @@
 <% include partials/header %>
+
 <body id="error404">
-  <% include partials/navbar %>
-  <% include partials/jumbotron %>
   
-  <div class="container">
+  <header>
+    <% include partials/navbar %>
+    <% include partials/jumbotron %>
+  </header>
+
+  <main class="container">
     <div class="col-md-12">
-      <div class="http-error">
+
+      <section id="http-error">
         <h1>404</h1>
         <h4>Não foi possível encontrar a página solicitada.</h4>
-      </div>
-    </div>
-  </div>
+      </section>
 
+    </div>
+  </main>
 
 <% include partials/footer %>

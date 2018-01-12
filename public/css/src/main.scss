@@ -73,7 +73,6 @@ p {
 }
 
 .topics {
-  list-style-type: none;
   margin-bottom: 75px;
   text-align: justify;
   padding-right: 5px;
@@ -110,10 +109,6 @@ p {
 .btn-custom:hover, .btn-custom:focus {
   background-color: $color-red-focus;
   color: $color-gray-light;
-}
-
-.http-error {
-  text-align: center;
 }
 
 .nav {
@@ -268,6 +263,10 @@ p {
 
 #logo {
   margin-right: 15px;
+}
+
+#http-error {
+  text-align: center;
 }
 
 @import 'tooltip';

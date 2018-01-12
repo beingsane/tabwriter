@@ -1,100 +1,103 @@
 <% include partials/header %>
+
 <body id="about">
-  <% include partials/navbar %>
-  <% include partials/jumbotron %>
-  
-  <div class="container">
+
+  <header>
+    <% include partials/navbar %>
+    <% include partials/jumbotron %>
+  </header>
+
+  <main class="container">
     <div class="row">
-      <div class="col-md-12">
-        <ul class="topics">
-          <li>
-            <h3>O que é o TabWriter?</h3>
-            <p> O TabWriter é uma aplicativo para escrever tablaturas de uma maneira fácil e rápida. Com ele tudo que você precisa saber é a sequência de notas a ser escrita na tablatura. Todo o processo de edição e formatação, característicos de uma tablatura, são feitos pelo TabWriter.</p>
-          </li>
+      <div class="col-md-12 topics">
 
-          <li id="instructions">
-            <h3>Ótimo! Como faço para escrever minhas talaturas?</h3>
-            <p>O processo é bem simples. Tudo que você precisa saber para começar a escrever suas tablaturas está descrito abaixo:</p>
-            <ul>
-              <li>Cada nota deve estar no formato <strong>&lt;corda&gt;-&lt;casa&gt;</strong>. Assim a nota <strong>3-5</strong> significa uma nota na quinta casa da terceira corda.</li>
-              <li>Todas as notas devem estar devidamente espaçadas. Assim como em um livro as diferentes palavras são identificadas por meio de espaçamentos, para que as notas determinadas por você sejam devidamente interpretadas elas precisam estar espaçadas corretamente;</li>
-              <li>Um espaço adicional entre notas será interpretado como a necessidade de um espaço entre a primeira e a segunda notas na tablatura.</li>
-              <li>
-                <em>Slide, Bend, Hammer-on, Pull-off</em> e outros efeitos podem ser adicionados à tablatura, contudo nenhuma formatação diferenciada será adicionada, ou seja, os efeitos serão adicionados à tablatura como descritos. A tabela abaixo contém alguns exemplos com os símbolos comumente utilizados.
+        <section>
+          <h3>O que é o TabWriter?</h3>
+          <p> O TabWriter é uma aplicativo para escrever tablaturas de uma maneira fácil e rápida. Com ele tudo que você precisa saber é a sequência de notas a ser escrita na tablatura. Todo o processo de edição e formatação, característicos de uma tablatura, são feitos pelo TabWriter.</p>
+        </section>
 
-                <table class="table text-center">
-                  <thead>
-                    <tr>
-                      <td>Efeito</td>
-                      <td>Exemplo no TabWriter</td>
-                      <td>Significado</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><em>Slide up</em></td>
-                      <td><strong>4-5/7</strong></td>
-                      <td>
-                        <em>Slide</em> da casa <strong>5</strong> para a casa <strong>7</strong> na corda <strong>4</strong>.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><em>Slide down</em></td>
-                      <td><strong>4-7\5</strong></td>
-                      <td>
-                        <em>Slide</em> da casa <strong>7</strong> para a casa <strong>5</strong> na corda <strong>4</strong>.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><em>Bend</em></td>
-                      <td><strong>4-5b7</strong></td>
-                      <td>
-                        <em>Bend</em> de <strong>2</strong> semitons na casa <strong>5</strong> da corda <strong>4</strong>.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><em>Hammer-on</em></td>
-                      <td><strong>4-5h7</strong></td>
-                      <td>
-                        <em>Hammer-on</em> da casa <strong>5</strong> para a casa <strong>7</strong> na corda <strong>4</strong>.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><em>Pull-off</em></td>
-                      <td><strong>4-7p5</strong></td>
-                      <td>
-                        <em>Pull-off</em> da casa <strong>7</strong> para a casa <strong>5</strong> na corda <strong>4</strong>.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+        <section id="instructions">
+          <h3>Ótimo! Como faço para escrever minhas talaturas?</h3>
+          <p>O processo é bem simples. Tudo que você precisa saber para começar a escrever suas tablaturas está descrito abaixo:</p>
+          <ul>
+            <li>Cada nota deve estar no formato <strong>&lt;corda&gt;-&lt;casa&gt;</strong>. Assim a nota <strong>3-5</strong> significa uma nota na quinta casa da terceira corda.</li>
+            <li>Todas as notas devem estar devidamente espaçadas. Assim como em um livro as diferentes palavras são identificadas por meio de espaçamentos, para que as notas determinadas por você sejam devidamente interpretadas elas precisam estar espaçadas corretamente;</li>
+            <li>Um espaço adicional entre notas será interpretado como a necessidade de um espaço entre a primeira e a segunda notas na tablatura.</li>
+            <li>
+              <em>Slide, Bend, Hammer-on, Pull-off</em> e outros efeitos podem ser adicionados à tablatura, contudo nenhuma formatação diferenciada será adicionada, ou seja, os efeitos serão adicionados à tablatura como descritos. A tabela abaixo contém alguns exemplos com os símbolos comumente utilizados.
 
-              </li>
-              <li>
-                Por fim, um exemplo de como gerar uma tablatura com o TabWriter. Copie e cole esse exemplo e veja o que acontece!
-                <a id="example" class="thumbnail text-center" data-clipboard-text="1-1 1-2 1-3 1-4 2-1 2-2 2-3 2-4 3-1 3-2 3-3 3-4 4-1 4-2 4-3 4-4 5-1 5-2 5-3 5-4 6-1 6-2 6-3 6-4">1-1 1-2 1-3 1-4 2-1 2-2 2-3 2-4 3-1 3-2 3-3 3-4 4-1 4-2 4-3 4-4 5-1 5-2 5-3 5-4 6-1 6-2 6-3 6-4</a>
-              </li>
-            </ul>
-          </li>
+              <table class="table text-center">
+                <thead>
+                  <tr>
+                    <td>Efeito</td>
+                    <td>Exemplo no TabWriter</td>
+                    <td>Significado</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><em>Slide up</em></td>
+                    <td><strong>4-5/7</strong></td>
+                    <td>
+                      <em>Slide</em> da casa <strong>5</strong> para a casa <strong>7</strong> na corda <strong>4</strong>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><em>Slide down</em></td>
+                    <td><strong>4-7\5</strong></td>
+                    <td>
+                      <em>Slide</em> da casa <strong>7</strong> para a casa <strong>5</strong> na corda <strong>4</strong>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><em>Bend</em></td>
+                    <td><strong>4-5b7</strong></td>
+                    <td>
+                      <em>Bend</em> de <strong>2</strong> semitons na casa <strong>5</strong> da corda <strong>4</strong>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><em>Hammer-on</em></td>
+                    <td><strong>4-5h7</strong></td>
+                    <td>
+                      <em>Hammer-on</em> da casa <strong>5</strong> para a casa <strong>7</strong> na corda <strong>4</strong>.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><em>Pull-off</em></td>
+                    <td><strong>4-7p5</strong></td>
+                    <td>
+                      <em>Pull-off</em> da casa <strong>7</strong> para a casa <strong>5</strong> na corda <strong>4</strong>.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
-          <li>
-            <h3>Não estou conseguindo escrever minha tablatura. O que devo fazer?</h3>
-            <p>Diferentes fatores influenciam os resultados que você poderá obter ao utilizar o TabWriter. Nesta seção vamos tentar cubrir as principais dificuldades.</p>
-            <ul>
-              <li>Você já leu <a id="instructions-go">esta seção</a>? Ela ensina como usar nosso aplicativo da forma correta.</li>
-              <li>
-                Caso já tenha lido, existem algumas funcionalidades que o TabWriter ainda não suporta. Pode ser que o que você esteja tentando fazer esteja entre uma dessas funcionalidades. São elas:
-                <ul>
-                  <li>Alterar a afinação das cordas;</li>
-                  <li>Escrever mais de uma nota por tempo;</li>
-                </ul>
-              </li>
-            </ul>
-            <!-- <p>Não conseguiu achar uma solução para o seu problema? Entre em <a>Contato</a> com a gente, será um prazer te ajudar!</p> -->
-          </li>
-        </ul>
+            </li>
+            <li>
+              Por fim, um exemplo de como gerar uma tablatura com o TabWriter. Copie e cole esse exemplo e veja o que acontece!
+              <a id="example" class="thumbnail text-center" data-clipboard-text="1-1 1-2 1-3 1-4 2-1 2-2 2-3 2-4 3-1 3-2 3-3 3-4 4-1 4-2 4-3 4-4 5-1 5-2 5-3 5-4 6-1 6-2 6-3 6-4">1-1 1-2 1-3 1-4 2-1 2-2 2-3 2-4 3-1 3-2 3-3 3-4 4-1 4-2 4-3 4-4 5-1 5-2 5-3 5-4 6-1 6-2 6-3 6-4</a>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Não estou conseguindo escrever minha tablatura. O que devo fazer?</h3>
+          <p>Diferentes fatores influenciam os resultados que você poderá obter ao utilizar o TabWriter. Nesta seção vamos tentar cubrir as principais dificuldades.</p>
+          <ul>
+            <li>Você já leu <a id="instructions-go">esta seção</a>? Ela ensina como usar nosso aplicativo da forma correta.</li>
+            <li>
+              Caso já tenha lido, existem algumas funcionalidades que o TabWriter ainda não suporta. Pode ser que o que você esteja tentando fazer esteja entre uma dessas funcionalidades. São elas:
+              <ul>
+                <li>Alterar a afinação das cordas;</li>
+                <li>Escrever mais de uma nota por tempo;</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
       </div>
     </div>
-  </div>
+  </main>
 
 <% include partials/footer %>
