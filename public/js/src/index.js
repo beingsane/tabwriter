@@ -14,17 +14,18 @@ const index = {
 
       if (sessionStorage.getItem('tabwriter-data')) {
         this.instructions = sessionStorage.getItem('tabwriter-data');
-        this.interpreter.convert(this.instructions);
       } else {
         sessionStorage.setItem('tabwriter-data', '');
         this.instructions = '';
       }
+
+      this.error = this.interpreter.convert(this.instructions);
     },
 
     reset: function() {
       sessionStorage.setItem('tabwriter-data', '');
       this.instructions = '';
-      this.interpreter.convert(this.instructions);
+      this.error = this.interpreter.convert(this.instructions);
     },
 
     update: function(data) {
@@ -33,10 +34,8 @@ const index = {
         this[key] = data[key];
       }
 
-      const error = this.interpreter.convert(this.instructions);
-      if (!error.length) {
-        sessionStorage.setItem('tabwriter-data', this.instructions);
-      }
+      this.error = this.interpreter.convert(this.instructions);
+      sessionStorage.setItem('tabwriter-data', this.instructions);
     }
 
   },
@@ -51,10 +50,12 @@ const index = {
       const tab = index.model.interpreter.tab;
       const chords = index.model.chords;
       const instructions = index.model.instructions;
+      const error = index.model.error;
       const parameters = {
         tab: tab,
         chords: chords,
-        instructions: instructions
+        instructions: instructions,
+        error: error
       };
       return parameters;
     },
@@ -70,6 +71,7 @@ const index = {
     init: function() {
       this.window = $(window);
       this.input = $('#input');
+      this.error = $('#error');
       this.dashboard = $('#dashboard');
       this.buttonCreate = $('#btn-create');
       this.buttonDelete = $('#btn-delete');
@@ -130,6 +132,7 @@ const index = {
       data.maxLength = this.maxStrLength;
       const tabBlocks = utils.wrapTab(data);
       this.dashboard.html('');
+      this.error.html('');
 
       if (tabBlocks.length) {
         tabBlocks.forEach( (block) => {
@@ -141,6 +144,18 @@ const index = {
         this.outCtrl.css('visibility', 'visible');
       } else {
         this.outCtrl.css('visibility', 'hidden');
+      }
+
+      if (data.error.length) {
+        this.error.append('<h4>Problemas foram identificados (' +
+                          data.error.length + '):</h4>');
+        data.error.forEach( (errorMsg, i) => {
+          this.error.append('<p></p>');
+          this.error.find('p').slice(-1).text((i + 1) + ') ' + errorMsg);
+        });
+        this.error.css('display', 'block');
+      } else {
+        this.error.css('display', 'none');
       }
     },
 

@@ -206,6 +206,10 @@ p {
   #input {
     min-height: 110px;
   }
+
+  #error {
+    max-width: 85%;
+  }
 }
 
 @media (max-width: 992px) {
@@ -248,6 +252,17 @@ p {
     padding: 5px;
     vertical-align: top;
     border-top: 1px solid $color-gray-light;
+  }
+}
+
+#error {
+  margin: 30px auto;
+  border: 1px solid $color-red-default;
+  border-radius: 4px;
+  padding: 0 10px 10px;
+  p {
+    margin: 10px;
+    text-align: justify;
   }
 }
 
