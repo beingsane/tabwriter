@@ -139,6 +139,32 @@ const utils = {
       pdfWriter.writeNotes();
       pdfWriter.save(filename);
     }
+  },
+
+  getCloseIndexOf(str, syms, start) {
+    // syms = {
+    //   open: '(',
+    //   close: ')'
+    // }
+    const startIdx = start || str.indexOf(syms.open) - 1;
+    let newOpens = 0;
+    let endIdx = startIdx;
+    let thisLetter;
+
+    for (let i = startIdx, n = str.length; i < n; i++) {
+      thisLetter = str[i];
+      if (thisLetter === syms.open) {
+        newOpens++;
+      }
+      if (thisLetter === syms.close && newOpens !== 0) {
+        newOpens--;
+      }
+      if (thisLetter === syms.close && newOpens === 0) {
+        endIdx = i;
+        break;
+      }
+    }
+    return endIdx;
   }
 
 };
