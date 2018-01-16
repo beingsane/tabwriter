@@ -50,12 +50,6 @@ class Interpreter {
         if (!this._isDataSet(data, {args: false, instr: true}, errorObject)) {
           return;
         }
-        // Check if there were given args
-        if (data.hasArgs) {
-          errorObject.push('Atenção ao usar o método <' + data.funcName + '>: Este método não faz '+
-                           'uso de argumentos. O argumento fornecido <' + data.args +
-                           '> não foi utilizado.');
-        }
         // Check if there is a function call nested inside
         const functionElements = data.instr.match(/[a-zA-Z]+\s*\(/g);
         if (functionElements) {
@@ -87,12 +81,6 @@ class Interpreter {
         // Check data
         if (!this._isDataSet(data, {args: true, instr: false}, errorObject)) {
           return;
-        }
-        // Check if there were given notes
-        if (data.hasInstr) {
-          errorObject.push('Atenção ao usar o método <' + data.funcName + '>: Este ' +
-                           'método não faz uso de instruções. A instrução fornecida <' +
-                           data.instr + '> não foi utilizada.');
         }
         // Check if arg is a valid number
         const newSpace = Number(data.args);
@@ -132,10 +120,18 @@ class Interpreter {
     // }
     let dataSet = true;
     for (let key in expectedData) {
-      if (expectedData[key] && key in data) {
-        if (data[key] === null || data[key] === '' ||
+      if (expectedData[key]) {
+        // key is expected to be non empty in data
+        if (!(key in data) || data[key] === null || data[key] === '' &&
             data[key] === Array(data[key].length + 1).join(' ')) {
-          dataSet = false;
+              dataSet = false;
+            }
+      } else {
+        // key is not expected to be in data
+        if (key in data && data[key] !== null) {
+          errorObject.push('Atenção ao usar o método <' + data.funcName + '>: Este ' +
+                           'método não faz uso de ' + data[key + 'Name'] + '. O valor ' +
+                           'fornecido <' + data[key] + '> não foi utilizado.');
         }
       }
     }
@@ -272,10 +268,12 @@ class Interpreter {
 
     return {
       funcName: funcName,
-      args: args,
-      instr: instr,
       hasArgs: hasArgs,
-      hasInstr: hasInstr
+      args: args,
+      argsName: 'argumento',
+      hasInstr: hasInstr,
+      instr: instr,
+      instrName: 'instrução'
     };
   }
 
