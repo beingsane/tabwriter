@@ -44,12 +44,22 @@ class PdfWriter {
     this.fontType = 'title';
   }
 
-  writeTitle(title) {
-    const splitTitle = this.doc.splitTextToSize(title, this.WIDTH - 2 * this.MARGIN);
-    this._setTitleStyle();
+  _write(content, style) {
+    const splitTitle = this.doc.splitTextToSize(content, this.WIDTH - 2 * this.MARGIN);
+    if (style) {
+      style();
+    }
     this.doc.text(this.xPosition, this.yPosition, splitTitle);
     this.yPosition += splitTitle.length * this.LINE_SPACE;
     this._setDefaultStyle();
+  }
+
+  writeTitle(title) {
+    this._write(title, this._setTitleStyle.bind(this));
+  }
+
+  writeDescription(description) {
+    this._write(description, this._setNoteStyle.bind(this));
   }
 
   writeTabBlock(block) {
@@ -83,7 +93,7 @@ class PdfWriter {
 
       this.doc.text(this.xPosition, this.FOOTER_Y_POSITION, footer);
     }
-    
+
     this._setDefaultStyle();
   }
 

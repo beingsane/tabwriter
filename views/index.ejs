@@ -11,10 +11,13 @@
     <div class="row input-area">
 
       <div class="col-md-11">
-        <textarea id="input" class="form-control" rows="4" placeholder="Escreva aqui as instruções para gerar sua tablatura"></textarea>
+        <textarea id="input" class="form-control" rows="7" placeholder="Escreva aqui as instruções para gerar sua tablatura"></textarea>
       </div>
 
       <div class="col-md-1 input-control">
+        <button title="Configurar" class="btn btn-custom" id="btn-config">
+          <i class="fa fa-cogs" aria-hidden="true"></i>
+        </button>
         <button title="Apagar" class="btn btn-custom" id="btn-delete">
           <span class="glyphicon glyphicon-erase"></span>
         </button>
@@ -25,6 +28,49 @@
 
     </div>
 
+    <div class="row input-area" id="config-area">
+      <div class="col-md-11 input-config">
+        <form id="form-config">
+          <div class="form-group">
+            <label for="tabTitle">Título da Tablatura:</label>
+            <input type="text" class="form-control" id="tab-title" placeholder="Título (Opcional)">
+          </div>
+          <div class="form-group">
+            <label for="tabDescription">Descrição e Observações Relevantes:</label>
+            <textarea class="form-control" id="tab-description" rows="3"
+            placeholder="Afinação Utilizada, Posição do Capotraste... (Opcional)"></textarea>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="tabChordsNumber">Cordas:</label>
+              <input type="number" class="form-control" min="1" max="20" id="tab-chords-number" value="6" required>
+              <div class="form-error"></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="tabSpace">Espaçamento:</label>
+              <input type="number" class="form-control" min="1" id="tab-space" value="2" required>
+              <div class="form-error"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-1 input-control">
+        <button title="Fechar Configurações sem Salvar" class="btn btn-custom"
+         id="btn-close-config">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+        <button title="Restaurar Configurações Iniciais" class="btn btn-custom"
+         id="btn-reset-config">
+          <i class="fa fa-undo" aria-hidden="true"></i>
+        </button>
+        <button title="Salvar e Fechar Configurações" class="btn btn-custom" id="btn-save-config" form="form-config">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-md-12">
 
@@ -33,14 +79,9 @@
         <div id="dashboard"></div>
 
         <div class="output-control">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Título (opcional, máximo 80 caracteres)" maxlength="80">
-            <span class="input-group-btn">
-              <button title="Salvar em PDF" class="btn btn-custom" id="btn-download">
-                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-              </button>
-            </span>
-          </div>
+          <button title="Salvar em PDF" class="btn btn-custom" id="btn-download">
+            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+          </button>
         </div>
 
       </div>

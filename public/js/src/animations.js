@@ -24,46 +24,6 @@ const animations = {
         }
       }
     }, dt);
-  },
-
-  outCtrlShow: function(duration) {
-    $('.output-control .btn-custom').animate({
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-    }, duration, function() {
-      $('.output-control').animate({
-        width: '100%'
-      }, duration);
-      $('.output-control .input-group input').css('display', 'table-cell');
-      $('.output-control .input-group input').animate({
-        borderWidth: '1px',
-        padding: '6px 12px'
-      }, duration, function() {
-        $('.output-control .btn-custom').html(
-          '<i class="fa fa-download" aria-hidden="true"></i>'
-        );
-      });
-    });
-  },
-
-  outCtrlHide: function(duration) {
-    $('.output-control').animate({
-      width: '60px'
-    }, duration);
-    $('.output-control .input-group input').animate({
-      borderWidth: '0',
-      padding: '0'
-    }, duration, function() {
-      $('.output-control .input-group input').css('display', 'none');
-      $('.output-control .btn-custom').animate({
-        borderTopLeftRadius: '40px',
-        borderBottomLeftRadius: '40px',
-      }, duration, function() {
-        $('.output-control .btn-custom').html(
-          '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>'
-        );
-      });
-    });
   }
 
 };

@@ -2,13 +2,15 @@ const utils = require('./utils.js');
 
 class Interpreter {
 
-  constructor(chords) {
+  constructor(chordsNumber, mainSpacing) {
     this.CHORD_FRET_SEPARATOR = '-';
     this.TAB_FILLER = '-';
-    this.DEFAULT_TAB_NOTE_SPACE = 2;
+    this.DEFAULT_CHORDS_NUMBER = 6;
+    this.DEFAULT_SPACING = 2;
 
-    this.tabNoteSpace = this.DEFAULT_TAB_NOTE_SPACE;
-    this.chords = chords;
+    this.mainSpacing = mainSpacing || this.DEFAULT_SPACING;
+    this.chordsNumber = chordsNumber || this.DEFAULT_CHORDS_NUMBER;
+    this.currentSpacing = this.mainSpacing;
 
     this.methods = {
       default: function(noteStr, errorObject) {
@@ -102,7 +104,7 @@ class Interpreter {
         }
         // Correct last tab space if necessary
         if (!utils.isEmptyTab(this._tab, this.TAB_FILLER = '-')) {
-          const diffSpace = newSpace - this.tabNoteSpace;
+          const diffSpace = newSpace - this.currentSpacing;
           if (diffSpace > 0) {
             this._tab.forEach( (tab, i) => {
               this._tab[i] += Array(diffSpace + 1).join(this.TAB_FILLER);
@@ -114,7 +116,7 @@ class Interpreter {
           }
         }
         // Update tab space
-        this.tabNoteSpace = newSpace;
+        this.currentSpacing = newSpace;
       },
     };
 
@@ -335,11 +337,11 @@ class Interpreter {
         const index = notesData.chords.indexOf(i + 1);
         let fillerLength;
         if (index !== -1) {
-          fillerLength = this.tabNoteSpace + 1 + notesData.maxFretLength -
+          fillerLength = this.currentSpacing + 1 + notesData.maxFretLength -
                          notesData.frets[index].length;
           this._tab[i] += notesData.frets[index] + Array(fillerLength).join(this.TAB_FILLER);
         } else {
-          fillerLength = notesData.maxFretLength + this.tabNoteSpace + 1;
+          fillerLength = notesData.maxFretLength + this.currentSpacing + 1;
           this._tab[i] += Array(fillerLength).join(this.TAB_FILLER);
         }
       });
@@ -365,7 +367,7 @@ class Interpreter {
   }
 
   convert(instructionsStr) {
-    this.tabNoteSpace = this.DEFAULT_TAB_NOTE_SPACE;
+    this.currentSpacing = this.mainSpacing;
     const error = [];
     this._tab = Array(this.chords.length).fill('');
     const instructions = this._parseInstructions(instructionsStr);
@@ -379,12 +381,29 @@ class Interpreter {
     return error;
   }
 
+  get chordsNumber() {
+    return this._chordsNumber;
+  }
+  set chordsNumber(chordsNumber) {
+    this._chordsNumber = chordsNumber;
+    this._chords = Array.from({length: chordsNumber}, (val, i) => (i + 1).toString());
+    this._tab = Array(chordsNumber).fill('');
+  }
+
+  get mainSpacing() {
+    return this._mainSpacing;
+  }
+  set mainSpacing(space) {
+    this._mainSpacing = space;
+  }
+
   get chords() {
     return this._chords;
   }
-  set chords(chords) {
-    this._chords = chords;
-    this._tab = Array(chords.length).fill('');
+  set chords(chordsArr) {
+    this._chords = chordsArr;
+    this._chordsNumber = chordsArr.length;
+    this._tab = Array(chordsArr.length).fill('');
   }
 
   get tab() {

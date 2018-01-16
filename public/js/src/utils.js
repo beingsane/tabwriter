@@ -115,7 +115,8 @@ const utils = {
   writePdf: function(data) {
     const tab = data.tab;
     const chords = data.chords;
-    const tabTitle = data.tabTitle;
+    const title = data.title;
+    const description = data.description;
     const filename = data.filename || 'tabwriter.pdf';
     const tabFiller = data.tabFiller || '-';
 
@@ -128,8 +129,12 @@ const utils = {
     });
 
     if (tabBlocks.length) {
-      if (tabTitle) {
-        pdfWriter.writeTitle(tabTitle);
+      if (title) {
+        pdfWriter.writeTitle(title);
+      }
+
+      if (description) {
+        pdfWriter.writeDescription(description);
       }
 
       tabBlocks.forEach( (block) => {

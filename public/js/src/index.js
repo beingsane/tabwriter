@@ -1,6 +1,5 @@
 const Interpreter = require('./interpreter.js');
 const utils = require('./utils.js');
-const animations = require('./animations.js');
 
 const index = {
   init: function() {
@@ -9,33 +8,38 @@ const index = {
 
   model: {
     init: function() {
-      this.chords = ['e', 'B', 'G', 'D', 'A', 'E'];
-      this.interpreter = new Interpreter(this.chords);
-
       if (sessionStorage.getItem('tabwriter-data')) {
-        this.instructions = sessionStorage.getItem('tabwriter-data');
+        this.data = JSON.parse(sessionStorage.getItem('tabwriter-data'));
+        this.interpreter = new Interpreter(this.data.chordsNumber, this.data.mainSpacing);
+        this.data.error = this.interpreter.convert(this.data.instructions);
       } else {
-        sessionStorage.setItem('tabwriter-data', '');
-        this.instructions = '';
+        this.interpreter = new Interpreter();
+        this.reset();
       }
-
-      this.error = this.interpreter.convert(this.instructions);
     },
 
     reset: function() {
-      sessionStorage.setItem('tabwriter-data', '');
-      this.instructions = '';
-      this.error = this.interpreter.convert(this.instructions);
+      this.data = {
+        instructions: '',
+        title: '',
+        description: '',
+        chordsNumber: this.interpreter.DEFAULT_CHORDS_NUMBER,
+        mainSpacing: this.interpreter.DEFAULT_SPACING,
+        error: this.interpreter.convert('')
+      };
+      sessionStorage.setItem('tabwriter-data', JSON.stringify(this.data));
     },
 
     update: function(data) {
       for (let key in data) {
-        if (key === 'instructions' || key === 'chords')
-        this[key] = data[key];
+        if (key in this.data) {
+          this.data[key] = data[key];
+        }
       }
-
-      this.error = this.interpreter.convert(this.instructions);
-      sessionStorage.setItem('tabwriter-data', this.instructions);
+      this.interpreter.chordsNumber = this.data.chordsNumber;
+      this.interpreter.mainSpacing =  this.data.mainSpacing;
+      this.data.error = this.interpreter.convert(this.data.instructions);
+      sessionStorage.setItem('tabwriter-data', JSON.stringify(this.data));
     }
 
   },
@@ -44,25 +48,21 @@ const index = {
     init: function() {
       index.model.init();
       index.view.init();
+      index.configView.init();
     },
 
     getData: function() {
-      const tab = index.model.interpreter.tab;
-      const chords = index.model.chords;
-      const instructions = index.model.instructions;
-      const error = index.model.error;
-      const parameters = {
-        tab: tab,
-        chords: chords,
-        instructions: instructions,
-        error: error
-      };
-      return parameters;
+      const data = index.model.data;
+      data.chords = index.model.interpreter.chords;
+      data.tab = index.model.interpreter.tab;
+      return data;
     },
 
     updateData: function(data) {
       index.model.update(data);
-      index.view.render();
+      if (index.model.interpreter.tab) {
+        index.view.render();
+      }
     }
 
   },
@@ -77,9 +77,6 @@ const index = {
       this.buttonDelete = $('#btn-delete');
       this.buttonDownload = $('#btn-download');
       this.outCtrl = $('.output-control');
-      this.outCtrlInput = $('.output-control .input-group input');
-      this.outCtrlVisible = false;
-      this.outCtrlAnimationTime = 400;
       this.maxStrLength = this.calibrateWindow();
 
       const data = index.control.getData();
@@ -103,24 +100,13 @@ const index = {
         index.control.updateData({
           instructions: ''
         });
-        if (this.outCtrlVisible) {
-          animations.outCtrlHide(0);
-          this.outCtrlVisible = false;
-        }
         this.buttonDelete.blur();
+        this.render();
       });
 
       this.buttonDownload.on('click', () => {
-        if (this.outCtrlVisible) {
-          const data = index.control.getData();
-          data.tabTitle = this.outCtrlInput.val();
-          utils.writePdf(data);
-          animations.outCtrlHide(this.outCtrlAnimationTime);
-        } else {
-          animations.outCtrlShow(this.outCtrlAnimationTime);
-        }
-
-        this.outCtrlVisible = !this.outCtrlVisible;
+        const data = index.control.getData();
+        utils.writePdf(data);
         this.buttonDownload.blur();
       });
 
@@ -166,6 +152,87 @@ const index = {
       return maxStrLen;
     }
 
+  },
+
+  configView: {
+    init: function() {
+      this.buttonConfig = $('#btn-config');
+      this.buttonSaveConfig = $('#btn-save-config');
+      this.buttonResetConfig = $('#btn-reset-config');
+      this.buttonCloseConfig = $('#btn-close-config');
+
+      this.configArea = $('#config-area');
+      this.configTitle = $('#tab-title');
+      this.configDescription = $('#tab-description');
+      this.configChordsNumber = $('#tab-chords-number');
+      this.configSpace = $('#tab-space');
+
+      this.buttonConfig.on('click', () => {
+        this.configArea.slideToggle();
+        this.render();
+        this.buttonConfig.blur();
+      });
+
+      this.buttonSaveConfig.on('click', (event) => {
+        const newChordsNumber = Number(this.configChordsNumber.val());
+        const newSpace = Number(this.configSpace.val());
+        const newTitle = this.configTitle.val();
+        const newDescription = this.configDescription.val();
+        let error = false;
+        if (isNaN(newChordsNumber) || newChordsNumber < 1 || newChordsNumber > 20 ) {
+          this.configChordsNumber.next('.form-error').text('Mínimo de 1 corda e máximo de 20.');
+          error = true;
+        } else {
+          this.configChordsNumber.next('.form-error').text('');
+        }
+        if (isNaN(newSpace) || newSpace < 1) {
+          this.configSpace.next('.form-error').text('Espaçamento mínimo: 1');
+          error = true;
+        } else {
+          this.configSpace.next('.form-error').text('');
+        }
+        event.preventDefault();
+        this.buttonSaveConfig.blur();
+        if (error) {
+          return;
+        } else {
+          index.control.updateData({
+            title: newTitle,
+            description: newDescription,
+            chordsNumber: newChordsNumber,
+            mainSpacing: newSpace
+          });
+        }
+        this.configArea.slideToggle();
+        this.render();
+      });
+
+      this.buttonResetConfig.on('click', () => {
+        this.configTitle.val('');
+        this.configDescription.val('');
+        this.configChordsNumber.val(6);
+        this.configSpace.val(2);
+        this.buttonResetConfig.blur();
+      });
+
+      this.buttonCloseConfig.on('click', () => {
+        this.configArea.slideToggle();
+        this.render();
+        this.buttonCloseConfig.blur();
+      });
+
+      this.render();
+    },
+
+    render: function() {
+      const data = index.control.getData();
+      this.configTitle.val(data.title);
+      this.configDescription.val(data.description);
+      this.configChordsNumber.val(data.chordsNumber);
+      this.configSpace.val(data.mainSpacing);
+      this.configSpace.next('.form-error').text('');
+      this.configChordsNumber.next('.form-error').text('');
+    }
   }
 
 };
