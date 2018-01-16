@@ -195,7 +195,7 @@ p {
   #config-area{
     .input-control {
       margin-bottom: 15px;
-    }    
+    }
   }
 
   #error {
@@ -239,6 +239,14 @@ p {
 
 #dashboard {
   margin-top: 30px;
+
+  h3 {
+    color: $color-red-focus;
+  }
+
+  p {
+    margin-bottom: 20px;
+  }
 
   table {
     font-family: $font-tabs;

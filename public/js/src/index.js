@@ -121,6 +121,14 @@ const index = {
       this.error.html('');
 
       if (tabBlocks.length) {
+        let htmlStr =  '';
+        if (data.title) {
+          htmlStr += '<h3>' + data.title + '</h3>';
+        }
+        if (data.description) {
+          htmlStr += '<p>' + data.description + '</p>';
+        }
+        this.dashboard.html(htmlStr);
         tabBlocks.forEach( (block) => {
           const table = utils.appendTable(this.dashboard, block.length, 1);
           block.forEach( (blockRow, i) => {
