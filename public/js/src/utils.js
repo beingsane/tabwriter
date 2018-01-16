@@ -2,7 +2,7 @@ const PdfWriter = require('./pdfwriter.js');
 
 const utils = {
   wrapTab: function(data) {
-    const tab = data.tab.slice();
+    const tab = data.tab.core.slice();
     const chords = data.chords;
     const maxLength = data.maxLength;
     const tabFiller = data.tabFiller || '-';
@@ -45,12 +45,12 @@ const utils = {
   },
 
   isEmptyTab: function(tab, tabFiller='-') {
-    if (tab == null || !tab.length) {
+    if (!tab.length) {
       return true;
     }
 
-    const emptyRows = tab.reduce((total, e) => {
-      const empty = (!e.length || e === Array(e.length + 1).join(tabFiller)) ? 1 : 0;
+    const emptyRows = tab.reduce((total, row) => {
+      const empty = (!row.length || row === Array(row.length + 1).join(tabFiller)) ? 1 : 0;
       return total + empty;
     }, 0);
 

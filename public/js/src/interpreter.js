@@ -13,11 +13,11 @@ class Interpreter {
     this.currentSpacing = this.mainSpacing;
 
     this.methods = {
-      default: function(noteStr, errorObject) {
-        this._writeNotes([noteStr], errorObject);
+      default: function(noteStr, tabObject, errorObject) {
+        this._writeNotes([noteStr], tabObject, errorObject);
       },
 
-      repeat: function(data, errorObject) {
+      repeat: function(data, tabObject, errorObject) {
         // Check data
         if (!this._isDataSet(data, {args: true, instr: true}, errorObject)) {
           return;
@@ -34,7 +34,7 @@ class Interpreter {
         const notes = this._parseInstructions(data.instr);
         for (let i = 0; i < n; i++) {
           notes.forEach( (note) => {
-            this._readInstruction(note, errorObject);
+            this._readInstruction(note, tabObject, errorObject);
           });
         }
         // Remove repeated error messages
@@ -45,7 +45,7 @@ class Interpreter {
         }
       },
 
-      merge: function(data, errorObject) {
+      merge: function(data, tabObject, errorObject) {
         // Check data
         if (!this._isDataSet(data, {args: false, instr: true}, errorObject)) {
           return;
@@ -80,10 +80,10 @@ class Interpreter {
           }
         }
         // Write notes
-        this._writeNotes(notesData, errorObject);
+        this._writeNotes(notesData, tabObject, errorObject);
       },
 
-      space: function(data, errorObject) {
+      space: function(data, tabObject, errorObject) {
         // Check data
         if (!this._isDataSet(data, {args: true, instr: false}, errorObject)) {
           return;
@@ -103,15 +103,15 @@ class Interpreter {
           return;
         }
         // Correct last tab space if necessary
-        if (!utils.isEmptyTab(this._tab, this.TAB_FILLER = '-')) {
+        if (!utils.isEmptyTab(tabObject.core, this.TAB_FILLER = '-')) {
           const diffSpace = newSpace - this.currentSpacing;
           if (diffSpace > 0) {
-            this._tab.forEach( (tab, i) => {
-              this._tab[i] += Array(diffSpace + 1).join(this.TAB_FILLER);
+            tabObject.core.forEach( (row, i) => {
+              tabObject.core[i] += Array(diffSpace + 1).join(this.TAB_FILLER);
             });
           } else if (diffSpace < 0) {
-            this._tab.forEach( (tab, i) => {
-              this._tab[i] = tab.slice(0, diffSpace);
+            tabObject.core.forEach( (row, i) => {
+              tabObject.core[i] = row.slice(0, diffSpace);
             });
           }
         }
@@ -329,39 +329,39 @@ class Interpreter {
     };
   }
 
-  _writeNotes(notesArr, errorObject) {
+  _writeNotes(notesArr, tabObject, errorObject) {
     let notesData = notesArr;
     if (!notesData.chords) {
       notesData = this._parseChordAndFret(notesArr, errorObject);
     }
     if (notesData.chords.length) {
       // Write notes
-      this._tab.forEach( (tab, i) => {
+      tabObject.core.forEach( (row, i) => {
         const index = notesData.chords.indexOf(i + 1);
         let fillerLength;
         if (index !== -1) {
           fillerLength = this.currentSpacing + 1 + notesData.maxFretLength -
                          notesData.frets[index].length;
-          this._tab[i] += notesData.frets[index] + Array(fillerLength).join(this.TAB_FILLER);
+          tabObject.core[i] += notesData.frets[index] + Array(fillerLength).join(this.TAB_FILLER);
         } else {
           fillerLength = notesData.maxFretLength + this.currentSpacing + 1;
-          this._tab[i] += Array(fillerLength).join(this.TAB_FILLER);
+          tabObject.core[i] += Array(fillerLength).join(this.TAB_FILLER);
         }
       });
     }
   }
 
-  _readInstruction(instructionStr, errorObject) {
+  _readInstruction(instructionStr, tabObject, errorObject) {
     // Check if instruction has a separator and expected chord is a number
     if (instructionStr.includes(this.CHORD_FRET_SEPARATOR) &&
          !isNaN(instructionStr.slice(0, instructionStr.indexOf(this.CHORD_FRET_SEPARATOR)))) {
       // Default note instruction
-      this.methods.default.apply(this, [instructionStr, errorObject]);
+      this.methods.default.apply(this, [instructionStr, tabObject, errorObject]);
     } else {
       // Read Instruction
       const method = this._parseFunction(instructionStr);
       if (method.funcName in this.methods) {
-        this.methods[method.funcName].apply(this, [method, errorObject]);
+        this.methods[method.funcName].apply(this, [method, tabObject, errorObject]);
       } else {
         errorObject.push('Erro ao usar método: Não existe correspondência para o ' +
                          'método indicado <' + method.funcName + '>.');
@@ -371,17 +371,24 @@ class Interpreter {
 
   convert(instructionsStr) {
     this.currentSpacing = this.mainSpacing;
-    const error = [];
-    this._tab = Array(this.chords.length).fill('');
     const instructions = this._parseInstructions(instructionsStr);
+    const error = [];
+    const tab = {
+      core: Array(this.chordsNumber).fill(''),
+      sections: null,
+      notes: null
+    };
 
     if (instructions.length) {
       instructions.forEach( (instruction) => {
-        this._readInstruction(instruction, error);
+        this._readInstruction(instruction, tab, error);
       });
     }
 
-    return error;
+    return {
+      tab: tab,
+      error: error
+    };
   }
 
   get chordsNumber() {
@@ -390,14 +397,6 @@ class Interpreter {
   set chordsNumber(chordsNumber) {
     this._chordsNumber = chordsNumber;
     this._chords = Array.from({length: chordsNumber}, (val, i) => (i + 1).toString());
-    this._tab = Array(chordsNumber).fill('');
-  }
-
-  get mainSpacing() {
-    return this._mainSpacing;
-  }
-  set mainSpacing(space) {
-    this._mainSpacing = space;
   }
 
   get chords() {
@@ -406,11 +405,6 @@ class Interpreter {
   set chords(chordsArr) {
     this._chords = chordsArr;
     this._chordsNumber = chordsArr.length;
-    this._tab = Array(chordsArr.length).fill('');
-  }
-
-  get tab() {
-    return this._tab;
   }
 
 }

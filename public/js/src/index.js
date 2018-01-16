@@ -8,37 +8,43 @@ const index = {
 
   model: {
     init: function() {
+      this.interpreter = new Interpreter();
+
       if (sessionStorage.getItem('tabwriter-data')) {
         this.data = JSON.parse(sessionStorage.getItem('tabwriter-data'));
-        this.interpreter = new Interpreter(this.data.chordsNumber, this.data.mainSpacing);
-        this.data.error = this.interpreter.convert(this.data.instructions);
+        this.interpreter.chordsNumber = this.data.chordsNumber;
+        this.interpreter.mainSpacing = this.data.mainSpacing;
       } else {
-        this.interpreter = new Interpreter();
-        this.reset();
+        this.data = {
+          instructions: '',
+          title: '',
+          description: '',
+          chordsNumber: this.interpreter.DEFAULT_CHORDS_NUMBER,
+          mainSpacing: this.interpreter.DEFAULT_SPACING,
+          error: null,
+          tab: null
+        };
+        sessionStorage.setItem('tabwriter-data', JSON.stringify(this.data));
       }
-    },
 
-    reset: function() {
-      this.data = {
-        instructions: '',
-        title: '',
-        description: '',
-        chordsNumber: this.interpreter.DEFAULT_CHORDS_NUMBER,
-        mainSpacing: this.interpreter.DEFAULT_SPACING,
-        error: this.interpreter.convert('')
-      };
-      sessionStorage.setItem('tabwriter-data', JSON.stringify(this.data));
+      const interpreterData = this.interpreter.convert(this.data.instructions);
+      this.data.error = interpreterData.error;
+      this.data.tab = interpreterData.tab;
     },
 
     update: function(data) {
       for (let key in data) {
-        if (key in this.data) {
+        if (key in this.data && key != 'error' && key != 'tab') {
           this.data[key] = data[key];
         }
       }
       this.interpreter.chordsNumber = this.data.chordsNumber;
       this.interpreter.mainSpacing =  this.data.mainSpacing;
-      this.data.error = this.interpreter.convert(this.data.instructions);
+
+      const interpreterData = this.interpreter.convert(this.data.instructions);
+      this.data.error = interpreterData.error;
+      this.data.tab = interpreterData.tab;
+
       sessionStorage.setItem('tabwriter-data', JSON.stringify(this.data));
     }
 
@@ -54,15 +60,13 @@ const index = {
     getData: function() {
       const data = index.model.data;
       data.chords = index.model.interpreter.chords;
-      data.tab = index.model.interpreter.tab;
       return data;
     },
 
     updateData: function(data) {
       index.model.update(data);
-      if (index.model.interpreter.tab) {
-        index.view.render();
-      }
+      index.view.render();
+      index.configView.render();
     }
 
   },
@@ -101,7 +105,6 @@ const index = {
           instructions: ''
         });
         this.buttonDelete.blur();
-        this.render();
       });
 
       this.buttonDownload.on('click', () => {
@@ -212,7 +215,6 @@ const index = {
           });
         }
         this.configArea.slideToggle();
-        this.render();
       });
 
       this.buttonResetConfig.on('click', () => {

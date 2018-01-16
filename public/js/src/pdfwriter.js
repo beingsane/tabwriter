@@ -17,7 +17,7 @@ class PdfWriter {
 
     this.doc = new jsPDF();
     this.pages = 1;
-    this.fontType = undefined;
+    this.fontType = null;
     this.xPosition = this.MARGIN;
     this.yPosition = this.INITIAL_Y_POSITION;
     this._setDefaultStyle();
