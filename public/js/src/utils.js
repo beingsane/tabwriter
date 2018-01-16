@@ -58,18 +58,20 @@ const utils = {
   },
 
   maxStrLenNoWrap: function(element) {
-    const elementText = element.text();
     const FILLER = '-';
+    const MAX_ITER = 200;
+    const elementText = element.text();
     let fillerText = FILLER;
     let height;
     let lineHeight;
+    let i = 0;
 
     do {
       element.text(fillerText);
       [lineHeight, height] = this.getElementHeights(element);
       fillerText += FILLER;
 
-    } while (height === lineHeight);
+    } while (height === lineHeight && i < MAX_ITER);
     element.text(elementText);
     return (fillerText.length - 2);
   },

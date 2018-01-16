@@ -221,11 +221,14 @@ class Interpreter {
     const instructions = [];
     let currentIdx = 0;
     let newInstruction;
-    while (currentIdx <= instructionStr.length - 1) {
+    let controlVariable = 0;
+    let n = instructionStr.length;
+    while (currentIdx <= n - 1 && controlVariable <= n - 1) {
       [newInstruction, currentIdx] = this._extractNextInstruction(instructionStr, currentIdx);
       if (newInstruction) {
         instructions.push(newInstruction);
       }
+      controlVariable++;
     }
     return instructions;
   }
