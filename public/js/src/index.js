@@ -135,7 +135,10 @@ const index = {
         tabBlocks.forEach( (block) => {
           const table = utils.appendTable(this.dashboard, block.length, 1);
           block.forEach( (blockRow, i) => {
-            $(table.find('td').get(i)).text(blockRow);
+            const td = $(table.find('td').get(i));
+            td.html('<pre></pre>');
+            const pre = td.find('pre');
+            pre.text(blockRow);
           });
         });
         this.outCtrl.css('visibility', 'visible');

@@ -5,8 +5,10 @@ class Interpreter {
   constructor(chordsNumber, mainSpacing) {
     this.CHORD_FRET_SEPARATOR = '-';
     this.TAB_FILLER = '-';
+    this.SEC_SYMBOL = '|';
     this.DEFAULT_CHORDS_NUMBER = 6;
     this.DEFAULT_SPACING = 2;
+    this.DEFAULT_SEC_SPACE = 4;
 
     this.mainSpacing = mainSpacing || this.DEFAULT_SPACING;
     this.chordsNumber = chordsNumber || this.DEFAULT_CHORDS_NUMBER;
@@ -91,27 +93,65 @@ class Interpreter {
           return;
         }
         // Correct last tab space if necessary
-        if (!utils.isEmptyTab(tabObject.core, this.TAB_FILLER = '-')) {
+        if (tabObject.core[0].length) {
           const diffSpace = newSpace - this.currentSpacing;
           if (diffSpace > 0) {
             tabObject.core.forEach( (row, i) => {
               tabObject.core[i] += Array(diffSpace + 1).join(this.TAB_FILLER);
             });
+            // correct secions
+            if (tabObject.sections !== null) {
+              tabObject.sections += Array(diffSpace + 1).join(' ');
+            }
           } else if (diffSpace < 0) {
             tabObject.core.forEach( (row, i) => {
               tabObject.core[i] = row.slice(0, diffSpace);
             });
+            // correct secions
+            if (tabObject.sections !== null) {
+              tabObject.sections = tabObject.sections.slice(0, diffSpace);
+            }
           }
         }
         // Update tab space
         this.currentSpacing = newSpace;
       },
+
+      section: function(data, tabObject, errorObject) {
+        // Check data
+        if (!this._isDataSet(data, {args: true, instr: false}, errorObject)) {
+          return;
+        }
+        const rowLength = tabObject.core[0].length;
+        if (tabObject.sections === null) {
+          // Initialize sections in tabObject
+          tabObject.sections = Array(rowLength + 1).join(' ');
+        } else {
+          // Check if tab's core has reached last sections' end
+          const secLength = tabObject.sections.length;
+          if (secLength > rowLength) {
+            const fillerLength = secLength - rowLength;
+            const filler = Array(fillerLength + 1).join(this.TAB_FILLER);
+            tabObject.core.forEach( (row, i) => {
+              tabObject.core[i] += filler;
+            });
+          }
+        }
+        // Set section symbol and spaces on core and sections
+        tabObject.sections += this.SEC_SYMBOL + ' ' + data.args +
+            Array(this.DEFAULT_SEC_SPACE + 1).join(' ');
+        tabObject.core.forEach( (row, i) => {
+          tabObject.core[i] += this.SEC_SYMBOL + Array(this.currentSpacing + 1)
+                                                      .join(this.TAB_FILLER);
+        });
+      }
     };
 
     // Set methods' short notations
     this.methods.m = this.methods.merge;
     this.methods.r = this.methods.repeat;
     this.methods.s = this.methods.space;
+    this.methods.sec = this.methods.section;
   }
 
   _isDataSet(data, expectedData, errorObject) {
@@ -346,6 +386,14 @@ class Interpreter {
           tabObject.core[i] += Array(fillerLength).join(this.TAB_FILLER);
         }
       });
+      // Update Section
+      if (tabObject.sections !== null) {
+        const rowLength = tabObject.core[0].length;
+        const secLength = tabObject.sections.length;
+        if (rowLength > secLength) {
+          tabObject.sections += Array(rowLength - secLength + 1).join(' ');
+        }
+      }
     }
   }
 
@@ -382,7 +430,7 @@ class Interpreter {
         this._readInstruction(instruction, tab, error);
       });
     }
-
+    
     return {
       tab: tab,
       error: error

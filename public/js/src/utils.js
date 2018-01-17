@@ -2,59 +2,124 @@ const PdfWriter = require('./pdfwriter.js');
 
 const utils = {
   wrapTab: function(data) {
-    const tab = data.tab.core.slice();
-    const chords = data.chords;
-    const maxLength = data.maxLength;
-    const tabFiller = data.tabFiller || '-';
-    const chordSeparator = data.chordSeparator || ') ';
-    const tabBorder = data.tabBorder || '--';
+    // Deep object cloning
+    const tab = JSON.parse(JSON.stringify(data.tab));
+    const extractionData = {
+      chords: data.chords,
+      maxLength: data.maxLength,
+      tabFiller: data.tabFiller || '-',
+      chordSeparator: data.chordSeparator || ') ',
+      tabBorder: data.tabBorder || '--'
+    };
 
     const tabBlocks = [];
-    if (this.isEmptyTab(tab)) {
+    if (this.isEmptyTab(tab, extractionData.tabFiller)) {
       return tabBlocks;
     }
 
     do {
-      const currentBlock = [];
-
-      chords.forEach( (chord, j) => {
-        const intro = chord + chordSeparator;
-        let contentLength = maxLength - intro.length - 2 * tabBorder.length;
-        let content = tab[j].slice(0, contentLength);
-        // check for a note break
-        if (tab[j][contentLength] !== tabFiller &&
-              content.lastIndexOf(tabFiller) !== content.length - 1) {
-          content = content.slice(0, content.lastIndexOf(tabFiller));
-          contentLength = content.length;
-        }
-
-        let currentBlockRow = intro + tabBorder + content + tabBorder;
-        if (currentBlockRow.length < maxLength) {
-          const filler = Array(maxLength - currentBlockRow.length + 1).join(tabFiller);
-          currentBlockRow += filler;
-        }
-
-        currentBlock.push(currentBlockRow);
-        tab[j] = tab[j].slice(contentLength, tab[j].length);
-      });
-
+      const currentBlock = this.extractTabBlock(tab, extractionData);
       tabBlocks.push(currentBlock);
-    } while (!this.isEmptyTab(tab, tabFiller));
+    } while (!this.isEmptyTab(tab, extractionData.tabFiller));
 
     return tabBlocks;
   },
 
-  isEmptyTab: function(tab, tabFiller='-') {
-    if (!tab.length) {
-      return true;
-    }
+  isEmptyTab: function(tabObject, tabFiller) {
+    let emptyTab = true;
 
-    const emptyRows = tab.reduce((total, row) => {
+    // Check number of empty rows
+    const emptyRows = tabObject.core.reduce((total, row) => {
       const empty = (!row.length || row === Array(row.length + 1).join(tabFiller)) ? 1 : 0;
       return total + empty;
     }, 0);
 
-    return (emptyRows === tab.length ? true : false);
+    if (emptyRows < tabObject.core.length) {
+      emptyTab = false;
+    } else {
+      // Check sections
+      if (tabObject.sections !== null && tabObject.sections.length &&
+          tabObject.sections !== Array(tabObject.sections.length + 1).join(' ')) {
+        emptyTab = false;
+      }
+    }
+    return emptyTab;
+  },
+
+  extractTabBlock: function(tabObject, extractionData) {
+    // extractionData {
+    //   chords: ['1', '2', '3', '4', '5', '6'],
+    //   maxLength: 100,
+    //   tabFiller: '-',
+    //   chodSeparator: ') ',
+    //   tabBorder: '--'
+    // }
+    const block = [];
+    let introLength = extractionData.chords.length.toString().length +
+        extractionData.chordSeparator.length;
+    let contentEnd = extractionData.maxLength - introLength - 2 * extractionData.tabBorder.length;
+
+    while (!this.isTabBreakable(tabObject, contentEnd - 1, extractionData.tabFiller) &&
+           contentEnd > 1) {
+      contentEnd--;
+    }
+
+    // Extract core
+    extractionData.chords.forEach( (chord, i) => {
+      let intro = chord + extractionData.chordSeparator;
+      if (intro.length < introLength) {
+        intro = Array(introLength - intro.length + 1).join(' ') + intro;
+      }
+
+      const content = tabObject.core[i].slice(0, contentEnd);
+      let blockRow = intro + extractionData.tabBorder + content + extractionData.tabBorder;
+      if (blockRow.length < extractionData.maxLength) {
+        const filler = Array(extractionData.maxLength - blockRow.length + 1)
+                           .join(extractionData.tabFiller);
+        blockRow += filler;
+      }
+      block.push(blockRow);
+      tabObject.core[i] = tabObject.core[i].slice(contentEnd, tabObject.core[i].length);
+    });
+    // Extract sections
+    if (tabObject.sections !== null) {
+      const secIntro = Array(introLength + 1).join(' ');
+      const secBorder = Array(extractionData.tabBorder.length + 1).join(' ');
+      const secContent = tabObject.sections.slice(0, contentEnd);
+      let section = secIntro + secBorder + secContent + secBorder;
+      if (section.length < extractionData.maxLength) {
+        const filler = Array(extractionData.maxLength - section.length + 1).join(' ');
+        section += filler;
+      }
+      block.unshift(section);
+      tabObject.sections = tabObject.sections.slice(contentEnd, tabObject.sections.length);
+    }
+    return block;
+  },
+
+  isTabBreakable(tabObject, idx, tabFiller) {
+    let breakable = true;
+    // Check if break point is after tab's end
+    if (idx > tabObject.core[0].length - 1) {
+      // Check if it is also after sections' end
+      if (tabObject.sections !== null && idx > tabObject.sections.length - 1) {
+        return breakable;
+      }
+    }
+    // Check sections to be breakable at idx
+    if (tabObject.sections !== null) {
+      let sectionRange = tabObject.sections.slice(idx - 1, idx + 2);
+      if (sectionRange !== Array(sectionRange.length + 1).join(' ')) {
+        breakable = false;
+      }
+    }
+    // Check core to be breakable at idx
+    tabObject.core.forEach( (row) => {
+      if (row[idx] !== tabFiller && row[idx + 1] !== tabFiller) {
+        breakable = false;
+      }
+    });
+    return breakable;
   },
 
   maxStrLenNoWrap: function(element) {

@@ -253,15 +253,33 @@ p {
     table-layout: fixed;
     width: 100%;
     margin-bottom: 30px;
-  }
 
-  td {
-    line-height: 18px;
-    display: block;
-    word-wrap: break-word;
-    padding: 5px;
-    vertical-align: top;
-    border-top: 1px solid $color-gray-light;
+    tr:first-child td {
+      border-top: none;
+
+      pre {
+        margin-bottom: 5px;
+      }
+    }
+
+    td {
+      line-height: 18px;
+      display: block;
+      word-wrap: break-word;
+      padding: 5px;
+      vertical-align: top;
+      border-top: 1px solid $color-gray-light;
+
+      pre {
+        padding: 0;
+        margin: 0;
+        font-size: inherit;
+        font-family: inherit;
+        color: inherit;
+        background-color: inherit;
+        border: none;
+      }
+    }
   }
 }
 
