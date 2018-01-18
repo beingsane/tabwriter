@@ -137,13 +137,8 @@ class Interpreter {
             });
           }
         }
-        // Set section symbol and spaces on core and sections
-        tabObject.sections += this.SEC_SYMBOL + ' ' + data.args +
-            Array(this.DEFAULT_SEC_SPACE + 1).join(' ');
-        tabObject.core.forEach( (row, i) => {
-          tabObject.core[i] += this.SEC_SYMBOL + Array(this.currentSpacing + 1)
-                                                      .join(this.TAB_FILLER);
-        });
+        // Add section notation
+        this._appendSection(tabObject, data.args);
       },
 
       note: function(data, tabObject, errorObject) {
@@ -238,6 +233,46 @@ class Interpreter {
       tabObject.notes = tabObject.notes.slice(0, lastNoteIdx + 1);
       tabObject.notes += note;
     }
+  }
+
+  _appendSection(tabObject, section) {
+    if (tabObject.sections === null) {
+      return;
+    }
+    const rowLength = tabObject.core[0].length;
+    // Check if there is a note right before
+    if (rowLength > this.currentSpacing) {
+      // Count number of | at the expected postion of a note right before
+      const vertBars = tabObject.core.reduce( (total, row) => {
+        let isVertBar = false;
+        const previousCharIdx = utils.getFirstDifferentFrom(row, this.TAB_FILLER,
+                                                            row.length - 1, -1);
+        const previousChar = row[previousCharIdx];
+        const expectVertBarIdx = row.length - 1 - this.currentSpacing;
+        if (previousCharIdx === expectVertBarIdx &&
+            previousChar === this.SEC_SYMBOL) {
+          isVertBar = true;
+        }
+        return isVertBar + total;
+      }, 0);
+      // If there is a note right before
+      if(vertBars === this.chordsNumber) {
+        // Remove note notation from core
+        tabObject.core.forEach( (row, i) => {
+          tabObject.core[i] = row.slice(0, row.length - this.currentSpacing - 1);
+        });
+        // Remove note notation spaces from section
+        tabObject.sections = tabObject.sections
+                  .slice(0, tabObject.sections.length - this.currentSpacing - 1);
+      }
+    }
+    // Set section symbol and spaces on core and sections
+    tabObject.sections += this.SEC_SYMBOL + ' ' + section +
+        Array(this.DEFAULT_SEC_SPACE + 1).join(' ');
+    tabObject.core.forEach( (row, i) => {
+      tabObject.core[i] += this.SEC_SYMBOL + Array(this.currentSpacing + 1)
+                                                  .join(this.TAB_FILLER);
+    });
   }
 
   _isDataSet(data, expectedData, errorObject) {
