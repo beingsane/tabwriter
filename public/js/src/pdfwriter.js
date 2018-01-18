@@ -12,14 +12,18 @@ class PdfWriter {
     this.PAGE_X_POSITION = 181;
     this.PAGE_Y_POSITION = 23;
     this.FOOTER_Y_POSITION = 285;
-    this.WIDTH = 210;
+    this.DEFAULT_WIDTH = 210;
+    this.TAB_SPACE = 7;
     this.HEIGHT = 295;
+    this.RED_RGB = [170, 15, 15];
+    this.GRAY_RGB = [70, 70, 70];
 
     this.doc = new jsPDF();
     this.pages = 1;
     this.fontType = null;
     this.xPosition = this.MARGIN;
     this.yPosition = this.INITIAL_Y_POSITION;
+    this.width = this.DEFAULT_WIDTH;
     this._setDefaultStyle();
   }
 
@@ -27,6 +31,7 @@ class PdfWriter {
     this.doc.setFont('courier');
     this.doc.setFontType('normal');
     this.doc.setFontSize(12);
+    this.doc.setTextColor(0, 0, 0);
     this.fontType = 'default';
   }
 
@@ -34,6 +39,7 @@ class PdfWriter {
     this.doc.setFont('helvetica');
     this.doc.setFontType('normal');
     this.doc.setFontSize(9);
+    this.doc.setTextColor(this.GRAY_RGB[0], this.GRAY_RGB[1], this.GRAY_RGB[2]);
     this.fontType = 'note';
   }
 
@@ -41,25 +47,32 @@ class PdfWriter {
     this.doc.setFont('helvetica');
     this.doc.setFontType('normal');
     this.doc.setFontSize(12);
+    this.doc.setTextColor(this.RED_RGB[0], this.RED_RGB[1], this.RED_RGB[2]);
     this.fontType = 'title';
   }
 
   _write(content, style) {
-    const splitTitle = this.doc.splitTextToSize(content, this.WIDTH - 2 * this.MARGIN);
     if (style) {
       style();
     }
+    const splitTitle = this.doc.splitTextToSize(content, this.width - 2 * this.MARGIN);
     this.doc.text(this.xPosition, this.yPosition, splitTitle);
     this.yPosition += splitTitle.length * this.LINE_SPACE;
     this._setDefaultStyle();
   }
 
   writeTitle(title) {
+    const TITLE_MARGIN = 2;
     this._write(title, this._setTitleStyle.bind(this));
+    this.yPosition += TITLE_MARGIN;
   }
 
   writeDescription(description) {
+    this.xPosition += this.TAB_SPACE;
+    this.width -= this.TAB_SPACE;
     this._write(description, this._setNoteStyle.bind(this));
+    this.xPosition -= this.TAB_SPACE;
+    this.width += this.TAB_SPACE;
   }
 
   writeTabBlock(block) {
