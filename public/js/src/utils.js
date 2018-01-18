@@ -264,6 +264,31 @@ const utils = {
       }
     }
     return endIdx;
+  },
+
+  getFirstDifferentFrom(iterable, check, start, iteration) {
+    const locStart = start || 0;
+    const iter = iteration || 1;
+    const n = iterable.length;
+    let ret = locStart;
+    if (n > 1) {
+      if (iter > 0) {
+        for (let i = locStart; i < n; i = i + iter) {
+          if (iterable[i] != check) {
+            ret = i;
+            break;
+          }
+        }
+      } else {
+        for (let i = locStart; i > 0; i = i + iter) {
+          if (iterable[i] != check) {
+            ret = i;
+            break;
+          }
+        }
+      }
+    }
+    return ret;
   }
 
 };

@@ -278,6 +278,7 @@ class Interpreter {
     let lookForEnd = false;
     let foundEnd = false;
     let nextLetter;
+    let nextLetterIdx;
 
     for (let i = start, n = instructionStr.length; i < n; i++) {
       let thisLetter = instructionStr[i];
@@ -308,19 +309,13 @@ class Interpreter {
         if (i  === (n - 1)) {
           foundEnd = true;
         } else {
-          // Loop over remaining string
-          for (let j = i + 1; j < n; j++) {
-            nextLetter = instructionStr[j];
-            // Check for first no space character
-            if (nextLetter !== ' ') {
-              // If it isn't neither ( nor {, then it's the end
-              if (nextLetter !== '(' && nextLetter !== '{') {
-                foundEnd = true;
-              }
-              break;
-            }
-            // If scan reaches string's end then it's the end
-            if (j  === (n - 1)) {
+          // Check next non space character
+          nextLetterIdx = utils.getFirstDifferentFrom(instructionStr, ' ', i);
+          if (nextLetterIdx === i) {
+            foundEnd = true;
+          } else {
+            nextLetter = instructionStr[nextLetterIdx];
+            if (nextLetter !== '(' && nextLetter !== '{') {
               foundEnd = true;
             }
           }
