@@ -1,3 +1,4 @@
+const Formatter = require('./formatter.js');
 const Interpreter = require('./interpreter.js');
 const utils = require('./utils.js');
 
@@ -59,7 +60,6 @@ const index = {
 
     getData: function() {
       const data = index.model.data;
-      data.chords = index.model.interpreter.chords;
       return data;
     },
 
@@ -73,6 +73,7 @@ const index = {
 
   view: {
     init: function() {
+      this.formatter = new Formatter();
       this.window = $(window);
       this.input = $('#input');
       this.error = $('#error');
@@ -86,40 +87,13 @@ const index = {
       const data = index.control.getData();
       this.input.val(data.instructions);
 
-      this.window.on('resize', () => {
-        this.maxStrLength = this.calibrateWindow();
-        this.render();
-      });
-
-      this.buttonCreate.on('click', () => {
-        const newInstructions = this.input.val();
-        index.control.updateData({
-          instructions: newInstructions
-        });
-        this.buttonCreate.blur();
-      });
-
-      this.buttonDelete.on('click', () => {
-        this.input.val('');
-        index.control.updateData({
-          instructions: ''
-        });
-        this.buttonDelete.blur();
-      });
-
-      this.buttonDownload.on('click', () => {
-        const data = index.control.getData();
-        utils.writePdf(data);
-        this.buttonDownload.blur();
-      });
-
+      this.setEventListeners();
       this.render();
     },
 
     render: function() {
       const data = index.control.getData();
-      data.maxLength = this.maxStrLength;
-      const tabBlocks = utils.wrapTab(data);
+      const tabBlocks = this.formatter.format(data.tab, this.maxStrLength);
       this.dashboard.html('');
       this.error.html('');
 
@@ -164,6 +138,38 @@ const index = {
       const maxStrLen = utils.maxStrLenNoWrap(singleCellTable.find('td').slice(-1));
       this.dashboard.html('');
       return maxStrLen;
+    },
+
+    setEventListeners() {
+      this.window.on('resize', () => {
+        this.maxStrLength = this.calibrateWindow();
+        this.render();
+      });
+
+      this.buttonCreate.on('click', () => {
+        const newInstructions = this.input.val();
+        index.control.updateData({
+          instructions: newInstructions
+        });
+        this.buttonCreate.blur();
+      });
+
+      this.buttonDelete.on('click', () => {
+        this.input.val('');
+        index.control.updateData({
+          instructions: ''
+        });
+        this.buttonDelete.blur();
+      });
+
+      this.buttonDownload.on('click', () => {
+        const data = index.control.getData();
+        this.formatter.formatToPdf(data.tab, {
+          title: data.title,
+          description: data.description,
+        });
+        this.buttonDownload.blur();
+      });
     }
 
   },
@@ -181,6 +187,21 @@ const index = {
       this.configChordsNumber = $('#tab-chords-number');
       this.configSpace = $('#tab-space');
 
+      this.setEventListeners();
+      this.render();
+    },
+
+    render: function() {
+      const data = index.control.getData();
+      this.configTitle.val(data.title);
+      this.configDescription.val(data.description);
+      this.configChordsNumber.val(data.chordsNumber);
+      this.configSpace.val(data.mainSpacing);
+      this.configSpace.next('.form-error').text('');
+      this.configChordsNumber.next('.form-error').text('');
+    },
+
+    setEventListeners: function() {
       this.buttonConfig.on('click', () => {
         this.configArea.slideToggle();
         this.render();
@@ -233,19 +254,8 @@ const index = {
         this.render();
         this.buttonCloseConfig.blur();
       });
-
-      this.render();
-    },
-
-    render: function() {
-      const data = index.control.getData();
-      this.configTitle.val(data.title);
-      this.configDescription.val(data.description);
-      this.configChordsNumber.val(data.chordsNumber);
-      this.configSpace.val(data.mainSpacing);
-      this.configSpace.next('.form-error').text('');
-      this.configChordsNumber.next('.form-error').text('');
     }
+    
   }
 
 };

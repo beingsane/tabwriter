@@ -1,31 +1,4 @@
-const PdfWriter = require('./pdfwriter.js');
-
 const utils = {
-  wrapTab: function(data) {
-    // Deep object cloning
-    const tab = JSON.parse(JSON.stringify(data.tab));
-    const extractionData = {
-      chords: data.chords,
-      maxLength: data.maxLength,
-      minLength: data.minLength || 15,
-      tabFiller: data.tabFiller || '-',
-      chordSeparator: data.chordSeparator || ') ',
-      tabBorder: data.tabBorder || '--'
-    };
-
-    const tabBlocks = [];
-    if (this.isEmptyTab(tab, extractionData.tabFiller)) {
-      return tabBlocks;
-    }
-
-    do {
-      const currentBlock = this.extractTabBlock(tab, extractionData);
-      tabBlocks.push(currentBlock);
-    } while (!this.isEmptyTab(tab, extractionData.tabFiller));
-
-    return tabBlocks;
-  },
-
   isEmptyTab: function(tabObject, tabFiller) {
     let emptyTab = true;
 
@@ -50,103 +23,6 @@ const utils = {
       }
     }
     return emptyTab;
-  },
-
-  extractTabBlock: function(tabObject, extractionData) {
-    // extractionData {
-    //   chords: ['1', '2', '3', '4', '5', '6'],
-    //   maxLength: 100,
-    //   tabFiller: '-',
-    //   chodSeparator: ') ',
-    //   tabBorder: '--'
-    // }
-    const block = [];
-    let introLength = extractionData.chords.length.toString().length +
-        extractionData.chordSeparator.length;
-    let contentEnd = extractionData.maxLength - introLength - 2 * extractionData.tabBorder.length;
-
-    while (!this.isTabBreakable(tabObject, contentEnd - 1, extractionData.tabFiller) &&
-           contentEnd > extractionData.minLength) {
-      contentEnd--;
-    }
-
-    // Extract core
-    extractionData.chords.forEach( (chord, i) => {
-      let intro = chord + extractionData.chordSeparator;
-      if (intro.length < introLength) {
-        intro = Array(introLength - intro.length + 1).join(' ') + intro;
-      }
-
-      const content = tabObject.core[i].slice(0, contentEnd);
-      let blockRow = intro + extractionData.tabBorder + content + extractionData.tabBorder;
-      if (blockRow.length < extractionData.maxLength) {
-        const filler = Array(extractionData.maxLength - blockRow.length + 1)
-                           .join(extractionData.tabFiller);
-        blockRow += filler;
-      }
-      block.push(blockRow);
-      tabObject.core[i] = tabObject.core[i].slice(contentEnd, tabObject.core[i].length);
-    });
-    // Extract sections
-    if (tabObject.sections !== null) {
-      const secIntro = Array(introLength + 1).join(' ');
-      const secBorder = Array(extractionData.tabBorder.length + 1).join(' ');
-      const secContent = tabObject.sections.slice(0, contentEnd);
-      let section = secIntro + secBorder + secContent + secBorder;
-      if (section.length < extractionData.maxLength) {
-        const filler = Array(extractionData.maxLength - section.length + 1).join(' ');
-        section += filler;
-      }
-      block.unshift(section);
-      tabObject.sections = tabObject.sections.slice(contentEnd, tabObject.sections.length);
-    }
-    // Extract Notes
-    if (tabObject.notes !== null) {
-      const noteIntro = Array(introLength + 1).join(' ');
-      const noteBorder = Array(extractionData.tabBorder.length + 1).join(' ');
-      const noteContent = tabObject.notes.slice(0, contentEnd);
-      let note = noteIntro + noteBorder + noteContent + noteBorder;
-      if (note.length < extractionData.maxLength) {
-        const filler = Array(extractionData.maxLength - note.length + 1).join(' ');
-        note += filler;
-      }
-      block.push(note);
-      tabObject.notes = tabObject.notes.slice(contentEnd, tabObject.notes.length);
-    }
-    return block;
-  },
-
-  isTabBreakable(tabObject, idx, tabFiller) {
-    let breakable = true;
-    // Check if break point is after tab's end
-    if (idx > tabObject.core[0].length - 1) {
-      // Check if it is also after sections' and notes' end
-      if ((tabObject.sections === null || idx > tabObject.sections.length - 1) &&
-          (tabObject.notes === null || idx > tabObject.notes.length - 1)) {
-        return breakable;
-      }
-    }
-    // Check sections to be breakable at idx
-    if (tabObject.sections !== null) {
-      let sectionRange = tabObject.sections.slice(idx - 1, idx + 2);
-      if (sectionRange !== Array(sectionRange.length + 1).join(' ')) {
-        breakable = false;
-      }
-    }
-    // Check notes to be breakable at idx
-    if (tabObject.notes !== null) {
-      let notesRange = tabObject.notes.slice(idx - 1, idx + 2);
-      if (notesRange !== Array(notesRange.length + 1).join(' ')) {
-        breakable = false;
-      }
-    }
-    // Check core to be breakable at idx
-    tabObject.core.forEach( (row) => {
-      if (row[idx] !== tabFiller && row[idx + 1] !== tabFiller) {
-        breakable = false;
-      }
-    });
-    return breakable;
   },
 
   maxStrLenNoWrap: function(element) {
@@ -204,40 +80,6 @@ const utils = {
 
     // return last element's table
     return element.find('table').slice(-1);
-  },
-
-  writePdf: function(data) {
-    const tab = data.tab;
-    const chords = data.chords;
-    const title = data.title;
-    const description = data.description;
-    const filename = data.filename || 'tabwriter.pdf';
-    const tabFiller = data.tabFiller || '-';
-
-    const pdfWriter = new PdfWriter();
-    const tabBlocks = this.wrapTab({
-      tab: tab,
-      chords: chords,
-      maxLength: pdfWriter.maxStrLength,
-      tabFiller: tabFiller
-    });
-
-    if (tabBlocks.length) {
-      if (title) {
-        pdfWriter.writeTitle(title);
-      }
-
-      if (description) {
-        pdfWriter.writeDescription(description);
-      }
-
-      tabBlocks.forEach( (block) => {
-        pdfWriter.writeTabBlock(block);
-      });
-
-      pdfWriter.writeNotes();
-      pdfWriter.save(filename);
-    }
   },
 
   getCloseIndexOf(str, syms, start) {

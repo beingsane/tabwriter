@@ -2,7 +2,7 @@ const logoURL = require('./logourl.js');
 
 class PdfWriter {
   constructor() {
-    this.MAX_STRING_LENGTH = 66;
+    this.MAX_BLOCK_LENGTH = 66;
     this.LINE_SPACE = 5;
     this.INITIAL_Y_POSITION = 35;
     this.MARGIN = 20;
@@ -114,8 +114,8 @@ class PdfWriter {
     this.doc.save(filename);
   }
 
-  get maxStrLength() {
-    return this.MAX_STRING_LENGTH;
+  get maxBlockLength() {
+    return this.MAX_BLOCK_LENGTH;
   }
 
 }

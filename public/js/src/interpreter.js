@@ -449,7 +449,7 @@ class Interpreter {
         errorObject.push('Erro ao usar a instrução padrão: A corda indicada em <' + note +
                          '> não é um número inteiro.');
       }
-      if (currentChord > this.chords.length || currentChord < 1) {
+      if (currentChord > this.chordsNumber || currentChord < 1) {
         validChord = false;
         errorObject.push('Erro ao usar a instrução padrão: A corda indicada em <' + note +
                          '> extrapola o limite de cordas disponíveis.');
@@ -553,20 +553,31 @@ class Interpreter {
     };
   }
 
-  get chordsNumber() {
-    return this._chordsNumber;
+  get chordFreatSeparator() {
+    return this.CHORD_FRET_SEPARATOR;
   }
-  set chordsNumber(chordsNumber) {
-    this._chordsNumber = chordsNumber;
-    this._chords = Array.from({length: chordsNumber}, (val, i) => (i + 1).toString());
+  set chordFreatSeparator(character) {
+    if (character.length === 1) {
+      this.CHORD_FRET_SEPARATOR = character;
+    }
   }
 
-  get chords() {
-    return this._chords;
+  get secSymbolChar() {
+    return this.SEC_SYMBOL;
   }
-  set chords(chordsArr) {
-    this._chords = chordsArr;
-    this._chordsNumber = chordsArr.length;
+  set secSymbolChar(character) {
+    if (character.length === 1) {
+      this.SEC_SYMBOL = character;
+    }
+  }
+
+  get tabFillerChar() {
+    return this.TAB_FILLER;
+  }
+  set tabFillerChar(character) {
+    if (character.length === 1) {
+      this.TAB_FILLER = character;
+    }
   }
 
 }

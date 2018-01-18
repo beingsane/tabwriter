@@ -9,8 +9,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
-var babelify = require('babelify');
-var cssnano = require('gulp-cssnano')
+var cssnano = require('gulp-cssnano');
 
 gulp.task('default', ['watch']);
 
@@ -60,6 +59,6 @@ gulp.task('nodemon', function() {
 
 gulp.task('watch', ['browser-sync', 'build-css', 'build-js'], function () {
   gulp.watch('./public/css/src/**/*.scss', ['build-css']);
-  gulp.watch(['./public/js/src/**/*.js'], ['build-js']);
+  gulp.watch('./public/js/src/**/*.js', ['build-js']);
   gulp.watch('./views/**/*.ejs', browserSync.reload);
 });
