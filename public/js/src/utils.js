@@ -42,6 +42,11 @@ const utils = {
           tabObject.sections !== Array(tabObject.sections.length + 1).join(' ')) {
         emptyTab = false;
       }
+      // Check notes
+      if (tabObject.notes !== null && tabObject.notes.length &&
+          tabObject.notes !== Array(tabObject.notes.length + 1).join(' ')) {
+        emptyTab = false;
+      }
     }
     return emptyTab;
   },
@@ -94,6 +99,19 @@ const utils = {
       block.unshift(section);
       tabObject.sections = tabObject.sections.slice(contentEnd, tabObject.sections.length);
     }
+    // Extract Notes
+    if (tabObject.notes !== null) {
+      const noteIntro = Array(introLength + 1).join(' ');
+      const noteBorder = Array(extractionData.tabBorder.length + 1).join(' ');
+      const noteContent = tabObject.notes.slice(0, contentEnd);
+      let note = noteIntro + noteBorder + noteContent + noteBorder;
+      if (note.length < extractionData.maxLength) {
+        const filler = Array(extractionData.maxLength - note.length + 1).join(' ');
+        note += filler;
+      }
+      block.push(note);
+      tabObject.notes = tabObject.notes.slice(contentEnd, tabObject.notes.length);
+    }
     return block;
   },
 
@@ -101,8 +119,9 @@ const utils = {
     let breakable = true;
     // Check if break point is after tab's end
     if (idx > tabObject.core[0].length - 1) {
-      // Check if it is also after sections' end
-      if (tabObject.sections !== null && idx > tabObject.sections.length - 1) {
+      // Check if it is also after sections' and notes' end
+      if ((tabObject.sections === null || idx > tabObject.sections.length - 1) &&
+          (tabObject.notes === null || idx > tabObject.notes.length - 1)) {
         return breakable;
       }
     }
@@ -110,6 +129,13 @@ const utils = {
     if (tabObject.sections !== null) {
       let sectionRange = tabObject.sections.slice(idx - 1, idx + 2);
       if (sectionRange !== Array(sectionRange.length + 1).join(' ')) {
+        breakable = false;
+      }
+    }
+    // Check notes to be breakable at idx
+    if (tabObject.notes !== null) {
+      let notesRange = tabObject.notes.slice(idx - 1, idx + 2);
+      if (notesRange !== Array(notesRange.length + 1).join(' ')) {
         breakable = false;
       }
     }

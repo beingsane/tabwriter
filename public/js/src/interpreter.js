@@ -144,7 +144,44 @@ class Interpreter {
           tabObject.core[i] += this.SEC_SYMBOL + Array(this.currentSpacing + 1)
                                                       .join(this.TAB_FILLER);
         });
+      },
+
+      note: function(data, tabObject, errorObject) {
+        // Check data
+        if (!this._isDataSet(data, {args: true, instr: false}, errorObject)) {
+          return;
+        }
+        const rowLength = tabObject.core[0].length;
+        const notesContent = Array(this.DEFAULT_SEC_SPACE + 1).join(' ') + data.args + ' ';
+
+        // Set section and core rows properly
+        if (tabObject.sections !== null && tabObject.sections.length > rowLength) {
+          const secLength = tabObject.sections.length;
+          tabObject.core.forEach( (row, i) => {
+            tabObject.core[i] += Array(secLength - rowLength + 1).join(this.TAB_FILLER);
+          });
+        }
+
+        if (tabObject.notes === null) {
+          // Initialize notes if the first
+          this._initializeNote(tabObject, notesContent);
+        } else {
+          // Append note if note the first
+          this._appendNote(tabObject, notesContent);
+        }
+
+        // Set symbol and spaces on core, notes and sections
+        tabObject.notes += this.SEC_SYMBOL + Array(this.currentSpacing + 1).join(' ');
+        tabObject.notesIdx.push(tabObject.notes.length);
+        tabObject.core.forEach( (row, i) => {
+          tabObject.core[i] += this.SEC_SYMBOL + Array(this.currentSpacing + 1)
+                                                      .join(this.TAB_FILLER);
+        });
+        if (tabObject.sections !== null) {
+          tabObject.sections += Array(this.currentSpacing + this.SEC_SYMBOL.length + 1).join(' ');
+        }
       }
+
     };
 
     // Set methods' short notations
@@ -152,6 +189,55 @@ class Interpreter {
     this.methods.r = this.methods.repeat;
     this.methods.s = this.methods.space;
     this.methods.sec = this.methods.section;
+  }
+
+  _initializeNote(tabObject, note) {
+    if (tabObject.notes !== null) {
+      return;
+    }
+    tabObject.notesIdx = [];
+    const rowLength = tabObject.core[0].length;
+    if (rowLength > note.length) {
+      tabObject.notes = Array(rowLength - note.length + 1).join(' ');
+      tabObject.notes += note;
+    } else {
+      // Fill core and sections to match notes' length
+      const filler = Array(note.length - rowLength + 1).join(this.TAB_FILLER);
+      tabObject.core.forEach( (row, i) => {
+        tabObject.core[i] += filler;
+      });
+      if (tabObject.sections !== null) {
+        tabObject.sections += Array(note.length - rowLength + 1).join(' ');
+      }
+      tabObject.notes = note;
+    }
+  }
+
+  _appendNote(tabObject, note) {
+    if (tabObject.notes === null) {
+      return;
+    }
+    const rowLength = tabObject.core[0].length;
+    const lastNoteIdx = tabObject.notesIdx.slice(-1)[0];
+    const expectedNoteLength = lastNoteIdx + note.length;
+    let filler;
+    if (rowLength > expectedNoteLength) {
+      // Fill between notes to match core's length
+      filler = Array(rowLength - expectedNoteLength + 1).join(' ');
+      tabObject.notes = tabObject.notes.slice(0, lastNoteIdx + 1);
+      tabObject.notes += filler + note;
+    } else {
+      // Fill core and sections to match notes' length
+      filler = Array(expectedNoteLength - rowLength + 1).join(this.TAB_FILLER);
+      tabObject.core.forEach( (row, i) => {
+        tabObject.core[i] += filler;
+      });
+      if (tabObject.sections !== null) {
+        tabObject.sections += Array(expectedNoteLength - rowLength + 1).join(' ');
+      }
+      tabObject.notes = tabObject.notes.slice(0, lastNoteIdx + 1);
+      tabObject.notes += note;
+    }
   }
 
   _isDataSet(data, expectedData, errorObject) {
@@ -430,7 +516,7 @@ class Interpreter {
         this._readInstruction(instruction, tab, error);
       });
     }
-    
+
     return {
       tab: tab,
       error: error
