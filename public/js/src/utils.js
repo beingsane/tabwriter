@@ -7,6 +7,7 @@ const utils = {
     const extractionData = {
       chords: data.chords,
       maxLength: data.maxLength,
+      minLength: data.minLength || 15,
       tabFiller: data.tabFiller || '-',
       chordSeparator: data.chordSeparator || ') ',
       tabBorder: data.tabBorder || '--'
@@ -65,7 +66,7 @@ const utils = {
     let contentEnd = extractionData.maxLength - introLength - 2 * extractionData.tabBorder.length;
 
     while (!this.isTabBreakable(tabObject, contentEnd - 1, extractionData.tabFiller) &&
-           contentEnd > 1) {
+           contentEnd > extractionData.minLength) {
       contentEnd--;
     }
 
