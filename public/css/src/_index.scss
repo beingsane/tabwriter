@@ -1,24 +1,27 @@
 body[id="index"] {
   overflow-y: scroll;
 
-  .input-area {
-    @media all and (min-width: 992px) {
+  .block-input-area {
+    .block-control {
+      @media all and (min-width: 576px) {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 2 * $btn-custom-margin + $btn-custom-height;
+      }
+    }
+
+    .block-input {
+      @media all and (min-width: 576px) {
+        padding-right: 3 * $btn-custom-margin + $btn-custom-height;
+      }
+    }
+
+    @media all and (min-width: 576px) {
       position: relative;
-      max-width: 85%;
-      margin: 10px auto;
-    }
-  }
-
-  .input-control {
-    @media all and (min-width: 992px) {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      margin-right: 15px;
-      text-align: center;
     }
 
-    @media all and (max-width: 992px) {
+    @media all and (max-width: 576px) {
       text-align: right;
     }
   }
@@ -37,12 +40,6 @@ body[id="index"] {
     textarea {
       min-height: 60px;
       resize: vertical;
-    }
-
-    @media all and (min-width: 992px) {
-      .input-control {
-        margin-bottom: 15px;
-      }
     }
   }
 
@@ -93,6 +90,7 @@ body[id="index"] {
           color: inherit;
           background-color: inherit;
           border: none;
+          overflow: hidden;
         }
       }
     }
@@ -100,13 +98,14 @@ body[id="index"] {
 
   #error {
     margin: 30px auto;
+    padding: 10px;
     display: none;
 
     p {
       margin: 10px;
     }
 
-    @media all and (min-width: 992px) {
+    @media all and (min-width: 576px) {
       max-width: 85%;
     }
   }

@@ -12,15 +12,23 @@ body[id="about"] {
   }
 
   #example {
-    color: inherit;
+    display: block;
+    margin-top: 5px;
+    padding: 5px;
     font-family: $font-tabs;
-    margin-top: 10px;
-    width: 100%;
     text-decoration: none;
+    border: 1px solid #fff;
+    border-radius: 4px;
   }
 
   #example:hover {
     border: 1px solid $color-red-focus;
+  }
+
+  #instructions {
+    table {
+      margin-top: 15px;
+    }
   }
 
   #instructions-go {

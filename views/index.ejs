@@ -7,72 +7,80 @@
     <% include partials/jumbotron %>
   </header>
 
-  <main class="container">
-    <div class="row input-area">
-
-      <div class="col-md-11">
-        <textarea id="input" class="form-control" rows="7" placeholder="Escreva aqui as instruções para gerar sua tablatura"></textarea>
-      </div>
-
-      <div class="col-md-1 input-control">
-        <button title="Configurar" class="btn btn-custom" id="btn-config">
-          <i class="fa fa-cogs" aria-hidden="true"></i>
-        </button>
-        <button title="Apagar" class="btn btn-custom" id="btn-delete">
-          <span class="glyphicon glyphicon-erase"></span>
-        </button>
-        <button title="Criar" class="btn btn-custom" id="btn-create">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-        </button>
-      </div>
-
-    </div>
-
-    <div class="row input-area" id="config-area">
-      <div class="col-md-11 input-config">
-        <form id="form-config">
-          <div class="form-group">
-            <label for="tabTitle">Título da Tablatura:</label>
-            <input type="text" class="form-control" id="tab-title" placeholder="Título (Opcional)">
-          </div>
-          <div class="form-group">
-            <label for="tabDescription">Descrição e Observações Relevantes:</label>
-            <textarea class="form-control" id="tab-description" rows="3"
-            placeholder="Afinação Utilizada, Posição do Capotraste... (Opcional)"></textarea>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="tabChordsNumber">Cordas:</label>
-              <input type="number" class="form-control" min="1" max="20" id="tab-chords-number" value="6" required>
-              <div class="form-error"></div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="tabSpace">Espaçamento:</label>
-              <input type="number" class="form-control" min="1" id="tab-space" value="2" required>
-              <div class="form-error"></div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-1 input-control">
-        <button title="Fechar Configurações sem Salvar" class="btn btn-custom"
-         id="btn-close-config">
-          <i class="fa fa-times" aria-hidden="true"></i>
-        </button>
-        <button title="Restaurar Configurações Iniciais" class="btn btn-custom"
-         id="btn-reset-config">
-          <i class="fa fa-undo" aria-hidden="true"></i>
-        </button>
-        <button title="Salvar e Fechar Configurações" class="btn btn-custom" id="btn-save-config" form="form-config">
-          <i class="fa fa-floppy-o" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
-
+  <div class="container">
     <div class="row">
-      <div class="col-md-12">
+      <main class="col">
+        <div class="container">
+          <div class="block-input-area">
+
+            <div class="block-input">
+              <textarea id="input" class="form-control" rows="7" placeholder="Escreva aqui as instruções para gerar sua tablatura"></textarea>
+            </div>
+
+            <div class="block-control">
+              <button title="Configurar" class="btn btn-custom" id="btn-config">
+                <i class="fa fa-cogs" aria-hidden="true"></i>
+              </button>
+              <button title="Apagar" class="btn btn-custom" id="btn-delete">
+                <i class="fa fa-eraser" aria-hidden="true"></i>
+              </button>
+              <button title="Criar" class="btn btn-custom" id="btn-create">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+            </div>
+
+          </div>
+
+          <div class="container" id="config-area">
+            <div class="block-input-area">
+
+              <div class="block-input">
+                <form id="form-config">
+                  <div class="form-group">
+                    <label for="tabTitle">Título da Tablatura:</label>
+                    <input type="text" class="form-control" id="tab-title" placeholder="Título (Opcional)">
+                  </div>
+                  <div class="form-group">
+                    <label for="tabDescription">Descrição e Observações Relevantes:</label>
+                    <textarea class="form-control" id="tab-description" rows="3"
+                    placeholder="Afinação Utilizada, Posição do Capotraste... (Opcional)"></textarea>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="tabChordsNumber">Cordas:</label>
+                        <input type="number" class="form-control" min="1" max="20" id="tab-chords-number" value="6" required>
+                        <div class="form-error"></div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="tabSpace">Espaçamento:</label>
+                        <input type="number" class="form-control" min="1" id="tab-space" value="2" required>
+                        <div class="form-error"></div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="block-control">
+                <button title="Fechar Configurações sem Salvar" class="btn btn-custom"
+                 id="btn-close-config">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+                <button title="Restaurar Configurações Iniciais" class="btn btn-custom"
+                 id="btn-reset-config">
+                  <i class="fa fa-undo" aria-hidden="true"></i>
+                </button>
+                <button title="Salvar e Fechar Configurações" class="btn btn-custom" id="btn-save-config" form="form-config">
+                  <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
 
         <div id="error" class="highlight text-justify"></div>
 
@@ -84,8 +92,8 @@
           </button>
         </div>
 
-      </div>
+      </main>
     </div>
-  </main>
+  </div>
 
 <% include partials/footer %>
