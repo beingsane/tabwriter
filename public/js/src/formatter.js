@@ -114,37 +114,42 @@ class Formatter {
     return breakable;
   }
 
-  format(tabObject, maxLength) {
+  format(tabArr, maxLength) {
     const blocks = [];
-    if (utils.isEmptyTab(tabObject, this.TAB_FILLER)) {
-      return blocks;
+    if (!tabArr.length) {
+      return;
     }
-    // Deep object cloning
-    const tab = JSON.parse(JSON.stringify(tabObject));
-    const chordsNumber = tab.core.length;
-    const chordsArr = Array.from({length: chordsNumber}, (val, i) => (i + 1).toString());
-    const extractData = {
-      rowLength: maxLength,
-      chords: chordsArr
-    };
 
-    let extractedBlock;
-    do {
-      extractedBlock = this._extractBlock(tab, extractData);
-      blocks.push(extractedBlock);
-    } while (!utils.isEmptyTab(tab, this.TAB_FILLER));
+    tabArr.forEach( (tabObject) => {
+      if (utils.isEmptyTab(tabObject, this.TAB_FILLER)) {
+        return;
+      }
+      // Deep object cloning
+      const tab = JSON.parse(JSON.stringify(tabObject));
+      const chordsNumber = tab.core.length;
+      const chordsArr = Array.from({length: chordsNumber}, (val, i) => (i + 1).toString());
+      const extractData = {
+        rowLength: maxLength,
+        chords: chordsArr
+      };
 
+      let extractedBlock;
+      do {
+        extractedBlock = this._extractBlock(tab, extractData);
+        blocks.push(extractedBlock);
+      } while (!utils.isEmptyTab(tab, this.TAB_FILLER));
+    });
     return blocks;
   }
 
-  formatToPdf(tabObject, data) {
+  formatToPdf(tabArr, data) {
     // data {
     //   title: Title,
     //   description: Description,
     //   filename: Filename
     // }
     const pdfWriter = new PdfWriter();
-    const tabBlocks = this.format(tabObject, pdfWriter.maxBlockLength);
+    const tabBlocks = this.format(tabArr, pdfWriter.maxBlockLength);
     const filename = data.filename || 'tabwriter.pdf';
 
     if (tabBlocks.length) {

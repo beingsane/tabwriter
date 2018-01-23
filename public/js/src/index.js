@@ -29,8 +29,8 @@ const index = {
       }
 
       const interpreterData = this.interpreter.convert(this.data.instructions);
-      this.data.error = interpreterData.error;
-      this.data.tab = interpreterData.tab;
+      this.data.errorArr = interpreterData.errorArr;
+      this.data.tabArr = interpreterData.tabArr;
     },
 
     update: function(data) {
@@ -43,9 +43,8 @@ const index = {
       this.interpreter.mainSpacing =  this.data.mainSpacing;
 
       const interpreterData = this.interpreter.convert(this.data.instructions);
-      this.data.error = interpreterData.error;
-      this.data.tab = interpreterData.tab;
-
+      this.data.errorArr = interpreterData.errorArr;
+      this.data.tabArr = interpreterData.tabArr;
       sessionStorage.setItem('tabwriter-data', JSON.stringify(this.data));
     }
 
@@ -93,44 +92,12 @@ const index = {
 
     render: function() {
       const data = index.control.getData();
-      const tabBlocks = this.formatter.format(data.tab, this.maxStrLength);
+      const tabBlocks = this.formatter.format(data.tabArr, this.maxStrLength);
       this.dashboard.html('');
       this.error.html('');
 
-      if (tabBlocks.length) {
-        let htmlStr =  '';
-        if (data.title) {
-          htmlStr += '<h3>' + data.title + '</h3>';
-        }
-        if (data.description) {
-          htmlStr += '<p>' + data.description + '</p>';
-        }
-        this.dashboard.html(htmlStr);
-        tabBlocks.forEach( (block) => {
-          const table = utils.appendTable(this.dashboard, block.length, 1);
-          block.forEach( (blockRow, i) => {
-            const td = $(table.find('td').get(i));
-            td.html('<pre></pre>');
-            const pre = td.find('pre');
-            pre.text(blockRow);
-          });
-        });
-        this.outCtrl.css('visibility', 'visible');
-      } else {
-        this.outCtrl.css('visibility', 'hidden');
-      }
-
-      if (data.error.length) {
-        this.error.append('<h4>Problemas foram identificados (' +
-                          data.error.length + '):</h4>');
-        data.error.forEach( (errorMsg, i) => {
-          this.error.append('<p></p>');
-          this.error.find('p').slice(-1).text((i + 1) + ') ' + errorMsg);
-        });
-        this.error.css('display', 'block');
-      } else {
-        this.error.css('display', 'none');
-      }
+      this.renderTabs(tabBlocks, data);
+      this.renderError(data);
     },
 
     calibrateWindow: function() {
@@ -164,12 +131,51 @@ const index = {
 
       this.buttonDownload.on('click', () => {
         const data = index.control.getData();
-        this.formatter.formatToPdf(data.tab, {
+        this.formatter.formatToPdf(data.tabArr, {
           title: data.title,
           description: data.description,
         });
         this.buttonDownload.blur();
       });
+    },
+
+    renderTabs: function(tabBlocks, data) {
+      if (tabBlocks.length) {
+        let htmlStr =  '';
+        if (data.title) {
+          htmlStr += '<h3>' + data.title + '</h3>';
+        }
+        if (data.description) {
+          htmlStr += '<p>' + data.description + '</p>';
+        }
+        this.dashboard.html(htmlStr);
+        tabBlocks.forEach( (block) => {
+          const table = utils.appendTable(this.dashboard, block.length, 1);
+          block.forEach( (blockRow, i) => {
+            const td = $(table.find('td').get(i));
+            td.html('<pre></pre>');
+            const pre = td.find('pre');
+            pre.text(blockRow);
+          });
+        });
+        this.outCtrl.css('visibility', 'visible');
+      } else {
+        this.outCtrl.css('visibility', 'hidden');
+      }
+    },
+
+    renderError: function(data) {
+      const totalErrors = data.errorArr.length;
+      if (totalErrors > 0) {
+        this.error.append('<h4>Problemas foram identificados (' + totalErrors + '):</h4>');
+        data.errorArr.forEach( (errorMsg, i) => {
+          this.error.append('<p></p>');
+          this.error.find('p').slice(-1).text((i + 1) + ') ' + errorMsg);
+        });
+        this.error.css('display', 'block');
+      } else {
+        this.error.css('display', 'none');
+      }
     }
 
   },
@@ -255,7 +261,7 @@ const index = {
         this.buttonCloseConfig.blur();
       });
     }
-    
+
   }
 
 };
