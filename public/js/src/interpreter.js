@@ -386,13 +386,14 @@ class Interpreter {
   }
 
   _parseInstructions(instructionStr){
+    let thisInstrStr = instructionStr.replace(/\n/g, ' ');
     const instructions = [];
     let currentIdx = 0;
     let newInstruction;
     let controlVariable = 0;
-    let n = instructionStr.length;
+    let n = thisInstrStr.length;
     while (currentIdx <= n - 1 && controlVariable <= n - 1) {
-      [newInstruction, currentIdx] = this._extractNextInstruction(instructionStr, currentIdx);
+      [newInstruction, currentIdx] = this._extractNextInstruction(thisInstrStr, currentIdx);
       if (newInstruction) {
         instructions.push(newInstruction);
       }
