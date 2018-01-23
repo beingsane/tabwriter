@@ -1,0 +1,35 @@
+body[id="about"] {
+  p {
+    text-indent: 30px;
+  }
+
+  ul {
+    padding-left: 20px;
+
+    li {
+      margin: 5px;
+    }
+  }
+
+  #example {
+    color: inherit;
+    font-family: $font-tabs;
+    margin-top: 10px;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  #example:hover {
+    border: 1px solid $color-red-focus;
+  }
+
+  #instructions-go {
+    color: inherit;
+    cursor: pointer;
+  }
+
+  #instructions-go:hover{
+    color: $color-red-focus;
+    text-decoration: none;
+  }
+}

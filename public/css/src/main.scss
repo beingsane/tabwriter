@@ -33,60 +33,7 @@ $btn-custom-height: 40px;
 
 body {
   font-family: $font-default;
-  overflow-y: scroll;
-  margin-top: 65px;
-  padding-bottom: 60px;
-}
-
-ul {
-  padding-left: 20px;
-}
-
-li {
-  margin: 5px;
-}
-
-p {
-  text-indent: 30px;
-}
-
-.container {
-  max-width: 890px;
-}
-
-.jumbotron {
-  font-family: $font-title;
-  background-image: url("../../images/guitar-cover.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  h1 {
-    color: $color-red-dark;
-    text-shadow: 1px 1px 2px $color-red-dark;
-  }
-}
-
-.highlight {
-  border: 2px solid $color-red-focus;
-  border-radius: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.topics {
-  margin-bottom: 75px;
-  text-align: justify;
-  padding-right: 5px;
-  padding-left: 5px;
-}
-
-.table {
-  table-layout: fixed;
-  margin: 15px auto;
-  width: 100%;
-}
-
-.text-center {
-  text-align: center;
+  margin: 65px auto;
 }
 
 .btn-custom {
@@ -95,10 +42,8 @@ p {
   border-radius: $btn-custom-height;
   font-family: $font-title;
   color: $color-gray-light;
-  text-decoration: none;
   background-color: $color-red-default;
   margin: 5px;
-  text-transform: uppercase;
   font-size: 16px;
   outline: none !important;
   @include box-shadow(1px 1px 3px #aa0f0f);
@@ -109,6 +54,42 @@ p {
 .btn-custom:hover, .btn-custom:focus {
   background-color: $color-red-focus;
   color: $color-gray-light;
+}
+
+.container {
+  max-width: 890px;
+}
+
+.form-control, .form-control:focus {
+  border-color: #cccccc;
+  @include box-shadow(none);
+}
+
+.form-error {
+  color: $color-red-default;
+}
+
+.highlight {
+  border: 2px solid $color-red-focus;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.jumbotron {
+  font-family: $font-title;
+  background-image: url("../../images/guitar-cover.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  h1 {
+    color: $color-red-dark;
+    text-shadow: 1px 1px 2px $color-red-dark;
+
+    i {
+      margin-right: 15px;
+    }
+  }
 }
 
 .nav {
@@ -162,161 +143,14 @@ p {
   }
 }
 
-.form-control, .form-control:focus {
-  border-color: #cccccc;
-  @include box-shadow(none);
-}
-
-.form-error {
-  color: $color-red-default;
-}
-
-.output-control {
-  margin: 0 auto;
+.text-center {
   text-align: center;
-  visibility: hidden;
 }
 
-@media (min-width: 992px) {
-  .input-area {
-    position: relative;
-    max-width: 85%;
-    margin: 10px auto;
-  }
-
-  .input-control {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin-right: 15px;
-    text-align: center;
-  }
-
-  #config-area{
-    .input-control {
-      margin-bottom: 15px;
-    }
-  }
-
-  #error {
-    max-width: 85%;
-  }
-}
-
-@media (max-width: 992px) {
-  .input-control{
-    text-align: right;
-  }
-}
-
-#config-area {
-  display: none;
-  padding: 15px;
-  border-bottom: 1px solid $color-gray-light;
-  textarea {
-    min-height: 60px;
-    resize: vertical;
-  }
-}
-
-#input {
-  min-height: 150px;
-  font-family: $font-tabs;
-  resize: vertical;
-}
-
-#example {
-  color: inherit;
-  font-family: $font-tabs;
-  margin-top: 10px;
-  width: 100%;
-  text-decoration: none;
-}
-
-#example:hover {
-  border: 1px solid $color-red-focus;
-}
-
-#dashboard {
-  margin-top: 30px;
-
-  h3 {
-    color: $color-red-focus;
-  }
-
-  p {
-    margin-bottom: 20px;
-  }
-
-  table {
-    font-family: $font-tabs;
-    table-layout: fixed;
-    width: 100%;
-    margin-bottom: 30px;
-
-    tr:first-child td {
-      border-top: none;
-
-      pre {
-        margin-bottom: 5px;
-      }
-    }
-
-    tr:last-child td {
-      pre {
-        margin-top: 5px;
-      }
-    }
-
-    td {
-      line-height: 18px;
-      display: block;
-      word-wrap: break-word;
-      padding: 5px;
-      vertical-align: top;
-      border-top: 1px solid $color-gray-light;
-
-      pre {
-        padding: 0;
-        margin: 0;
-        font-size: inherit;
-        font-family: inherit;
-        color: inherit;
-        background-color: inherit;
-        border: none;
-      }
-    }
-  }
-}
-
-#error {
-  margin: 30px auto;
-  border: 1px solid $color-red-default;
-  border-radius: 4px;
-  padding: 0 10px 10px;
-  display: none;
-  p {
-    margin: 10px;
-    text-align: justify;
-  }
-}
-
-#instructions-go {
-  color: inherit;
-  cursor: pointer;
-}
-
-#instructions-go:hover{
-  color: $color-red-focus;
-  text-decoration: none;
-}
-
-#logo {
-  margin-right: 15px;
-}
-
-#http-error {
-  text-align: center;
+.text-justify {
+  text-align: justify;
 }
 
 @import 'tooltip';
+@import 'index';
+@import 'about';
