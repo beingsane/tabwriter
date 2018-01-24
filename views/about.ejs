@@ -9,16 +9,32 @@
 
   <main class="container">
     <div class="row">
-      <div class="col text-justify">
 
+      <div class="d-none d-lg-block col-lg-2">
+        <div class="sticky-top">
+          <nav id="sections-nav" class="nav-side">
+            <ul class="nav-side-topic">
+              <li><a href="#introduction">Introdução</a></li>
+              <li><a href="#instruc">Instruções</a></li>
+              <li><a href="#faq">Dúvidas</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="col col-lg-10">
+        
+        <a class="anchor-link" name="introduction"></a>
         <section>
-          <h3>O que é o TabWriter?</h3>
-          <p> O TabWriter é uma aplicativo para escrever tablaturas de uma maneira fácil e rápida. Com ele tudo que você precisa saber é a sequência de notas a ser escrita na tablatura. Todo o processo de edição e formatação, característicos de uma tablatura, são feitos pelo TabWriter.</p>
+          <h4>O que é o TabWriter?</h4>
+          <p>O TabWriter é uma aplicativo para escrever tablaturas de uma maneira fácil e rápida. Com ele tudo que você precisa saber é a sequência de notas a ser escrita na tablatura. Todo o processo de edição e formatação, característicos de uma tablatura, são feitos pelo TabWriter.</p>
         </section>
 
+        <a class="anchor-link" name="instruc"></a>
         <section id="instructions">
-          <h3>Ótimo! Como faço para escrever minhas talaturas?</h3>
+          <h4>Ótimo! Como faço para escrever minhas talaturas?</h4>
           <p>O processo é bem simples. Tudo que você precisa saber para começar a escrever suas tablaturas está descrito abaixo:</p>
+
           <ul>
             <li>Cada nota deve estar no formato <strong>&lt;corda&gt;-&lt;casa&gt;</strong>. Assim a nota <strong>3-5</strong> significa uma nota na quinta casa da terceira corda.</li>
             <li>Todas as notas devem estar devidamente espaçadas. Assim como em um livro as diferentes palavras são identificadas por meio de espaçamentos, para que as notas determinadas por você sejam devidamente interpretadas elas precisam estar espaçadas corretamente;</li>
@@ -81,11 +97,12 @@
           </ul>
         </section>
 
+        <a class="anchor-link" name="faq"></a>
         <section>
-          <h3>Não estou conseguindo escrever minha tablatura. O que devo fazer?</h3>
+          <h4>Não estou conseguindo escrever minha tablatura. O que devo fazer?</h4>
           <p>Diferentes fatores influenciam os resultados que você poderá obter ao utilizar o TabWriter. Nesta seção vamos tentar cubrir as principais dificuldades.</p>
           <ul>
-            <li>Você já leu <a href="#" id="instructions-go">esta seção</a>? Ela ensina como usar nosso aplicativo da forma correta.</li>
+            <li>Você já leu <a href="#instruc" id="instructions-go">esta seção</a>? Ela ensina como usar nosso aplicativo da forma correta.</li>
             <li>
               Caso já tenha lido, existem algumas funcionalidades que o TabWriter ainda não suporta. Pode ser que o que você esteja tentando fazer esteja entre uma dessas funcionalidades. São elas:
               <ul>

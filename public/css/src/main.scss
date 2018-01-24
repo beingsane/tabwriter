@@ -45,6 +45,13 @@ a:hover {
   text-decoration: none;
 }
 
+a.anchor-link {
+  display: block;
+  position: relative;
+  top: -65px;
+  visibility: hidden;
+}
+
 body {
   font-family: $font-default;
   font-size: $font-size-default;
@@ -176,6 +183,54 @@ label {
       margin-right: 5%;
     }
   }
+}
+
+.nav-side {
+  padding: 5px;
+
+  ul{
+    list-style: none;
+    padding-left: 0;
+
+    li {
+      margin: 7px;
+      padding-left: 10px;
+
+      a {
+        color: $color-gray-dark;
+      }
+    }
+  }
+
+  ul.nav-side-topic li {
+
+    &.active {
+      border-left: 2px solid $color-red-default;
+
+      & > a:first-of-type {
+        color: $color-red-focus;
+      }
+    }
+  }
+
+  ul.nav-side-subtopic li {
+    margin: 2px;
+    padding-left: 20px;
+
+    &.active {
+      border-left: none;
+      
+      & > a:first-of-type {
+        color: black;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.sticky-top {
+  position: sticky;
+  top: 65px;
 }
 
 .text-center {
