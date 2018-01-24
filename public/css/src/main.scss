@@ -9,6 +9,7 @@ $color-red-focus: #aa0f0f;
 $color-red-dark: #280b0b;
 
 $color-gray-light: #e8e8e8;
+$color-gray-default: #ccc;
 $color-gray-dark: #999;
 
 $btn-custom-height: 40px;
@@ -34,10 +35,24 @@ $btn-custom-margin: 5px;
   box-sizing: border-box;
 }
 
+a {
+  color: $color-red-default;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $color-red-focus;
+  text-decoration: none;
+}
+
 body {
   font-family: $font-default;
   font-size: $font-size-default;
   margin: 65px auto;
+}
+
+label {
+  font-weight: bold;
 }
 
 .btn-custom {
@@ -45,23 +60,23 @@ body {
   width: $btn-custom-height;
   border-radius: $btn-custom-height;
   font-family: $font-title;
-  color: $color-gray-light;
+  color: white;
   background-color: $color-red-default;
   margin: $btn-custom-margin;
   font-size: 16px;
   outline: none !important;
-  @include box-shadow(1px 1px 3px #aa0f0f);
+  @include box-shadow(1px 1px 3px $color-red-focus);
   @include transition(background-color 0.3s);
-  @include transition(color 0.3s);
 }
 
 .btn-custom:hover, .btn-custom:focus {
   background-color: $color-red-focus;
-  color: $color-gray-light;
+  @include box-shadow(1px 1px 3px $color-red-focus);
 }
 
 .btn-custom:focus, .btn-custom:active {
   @include box-shadow(none);
+  @include box-shadow(1px 1px 3px $color-red-focus);
 }
 
 .container {
@@ -70,11 +85,14 @@ body {
 
 .form-control {
   font-size: $font-size-default;
+  border-color: $color-gray-default;
+  @include box-shadow(1px 1px 3px $color-gray-default);
+  @include transition(border-color 0.3s);
 }
 
-.form-control, .form-control:focus {
-  border-color: #cccccc;
-  @include box-shadow(none);
+.form-control:focus {
+  border-color: $color-red-focus;
+  @include box-shadow(1px 1px 3px $color-gray-default);
 }
 
 .form-error {
@@ -82,25 +100,29 @@ body {
 }
 
 .highlight {
-  border: 2px solid $color-red-focus;
-  border-radius: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
+  border: 1px solid $color-red-focus;
+  border-radius: 4px;
+  padding: 10px;
+  @include box-shadow(1px 1px 3px $color-gray-default);
 }
 
 .jumbotron {
-  font-family: $font-title;
   background-image: url("../../images/guitar-cover.png");
   background-size: cover;
   background-repeat: no-repeat;
 
   h1 {
+    font-family: $font-title;
     color: $color-red-dark;
     text-shadow: 1px 1px 2px $color-red-dark;
 
     i {
       margin-right: 15px;
     }
+  }
+
+  p {
+    text-shadow: 1px 1px 2px $color-gray-dark;
   }
 }
 

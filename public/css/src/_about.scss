@@ -1,5 +1,5 @@
 body[id="about"] {
-  p {
+  section p {
     text-indent: 30px;
   }
 
@@ -29,15 +29,5 @@ body[id="about"] {
     table {
       margin-top: 15px;
     }
-  }
-
-  #instructions-go {
-    color: inherit;
-    cursor: pointer;
-  }
-
-  #instructions-go:hover{
-    color: $color-red-focus;
-    text-decoration: none;
   }
 }

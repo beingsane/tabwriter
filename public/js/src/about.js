@@ -32,12 +32,13 @@ const about = {
         });
       }
 
-      this.instructionsBtn.on('click', () => {
+      this.instructionsBtn.on('click', (event) => {
         this.instructionsArea.addClass('highlight');
         let rect = this.instructionsArea.get(0).getBoundingClientRect();
         let navbarHeight = parseInt($('nav').css('height'));
         let offset = 10;
         animations.scrollBy(rect.top - (navbarHeight + offset), 400);
+        event.preventDefault();
       });
     }
 
