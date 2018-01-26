@@ -2,8 +2,8 @@ const logoURL = require('./logourl.js');
 
 class PdfWriter {
   constructor() {
-    this.MAX_BLOCK_LENGTH = 66;
-    this.LINE_SPACE = 5;
+    this.MAX_BLOCK_LENGTH = 78;
+    this.LINE_SPACE = 6;
     this.INITIAL_Y_POSITION = 35;
     this.MARGIN = 20;
     this.LOGO_Y_POSITION = 15;
@@ -11,7 +11,7 @@ class PdfWriter {
     this.LOGO_WIDTH = this.LOGO_HEIGHT * 297/55;
     this.PAGE_X_POSITION = 181;
     this.PAGE_Y_POSITION = 23;
-    this.FOOTER_Y_POSITION = 285;
+    this.FOOTER_Y_POSITION = 280;
     this.DEFAULT_WIDTH = 210;
     this.TAB_SPACE = 7;
     this.HEIGHT = 295;
@@ -19,6 +19,9 @@ class PdfWriter {
     this.GRAY_RGB = [70, 70, 70];
 
     this.doc = new jsPDF();
+    this.doc.addFont('NovaMono.ttf', 'NovaMono', 'normal');
+    this.doc.addFont('NotoSans-Regular.ttf', 'NotoSans', 'normal');
+    
     this.pages = 1;
     this.fontType = null;
     this.xPosition = this.MARGIN;
@@ -28,15 +31,15 @@ class PdfWriter {
   }
 
   _setDefaultStyle() {
-    this.doc.setFont('courier');
+    this.doc.setFont('NovaMono');
     this.doc.setFontType('normal');
-    this.doc.setFontSize(12);
+    this.doc.setFontSize(11);
     this.doc.setTextColor(0, 0, 0);
     this.fontType = 'default';
   }
 
   _setNoteStyle() {
-    this.doc.setFont('helvetica');
+    this.doc.setFont('NotoSans');
     this.doc.setFontType('normal');
     this.doc.setFontSize(9);
     this.doc.setTextColor(this.GRAY_RGB[0], this.GRAY_RGB[1], this.GRAY_RGB[2]);
@@ -44,7 +47,7 @@ class PdfWriter {
   }
 
   _setTitleStyle() {
-    this.doc.setFont('helvetica');
+    this.doc.setFont('NotoSans');
     this.doc.setFontType('normal');
     this.doc.setFontSize(12);
     this.doc.setTextColor(this.RED_RGB[0], this.RED_RGB[1], this.RED_RGB[2]);
@@ -76,7 +79,7 @@ class PdfWriter {
   }
 
   writeTabBlock(block) {
-    if (this.yPosition + this.LINE_SPACE * block.length > this.HEIGHT - this.MARGIN) {
+    if (this.yPosition + this.LINE_SPACE * (block.length + 1) > this.FOOTER_Y_POSITION) {
       this.doc.addPage();
       this.yPosition = this.INITIAL_Y_POSITION;
       this.pages += 1;
