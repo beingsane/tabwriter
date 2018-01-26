@@ -113,6 +113,13 @@ const index = {
         this.render();
       });
 
+      this.input.on('keypress', (event) => {
+        if (event.which === 13) {
+          this.buttonCreate.click();
+          event.preventDefault();
+        }
+      });
+
       this.buttonCreate.on('click', () => {
         const newInstructions = this.input.val();
         index.control.updateData({
