@@ -65,20 +65,25 @@ const about = {
     setEventListeners: function() {
       if (Clipboard.isSupported()) {
         $(this.exampleBtns).css('display', 'inline-block');
+        $(this.exampleBtns).attr('flow', 'left');
         const clipboard = new Clipboard(this.exampleBtns);
 
         clipboard.on('success', (event) => {
-          const trigger = $(event.trigger)
+          const trigger = $(event.trigger);
           trigger.off();
           trigger.attr('tooltip', 'Copiado para área de transferência!');
-          trigger.attr('flow', 'left');
           trigger.on('mouseleave', () => {
             trigger.attr('tooltip', '');
           });
         });
 
-        clipboard.on('error', (e) => {
-          console.log(e);
+        clipboard.on('error', (event) => {
+          const trigger = $(event.trigger);
+          trigger.off();
+          trigger.attr('tooltip', 'Erro ao copiar automaticamente :(');
+          trigger.on('mouseleave', () => {
+            trigger.attr('tooltip', '');
+          });
         });
       }
 
