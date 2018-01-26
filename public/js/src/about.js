@@ -13,10 +13,11 @@ const about = {
 
       this.sections = [];
       $('a.anchor-link').each(function () {
+        const margin = 5;
         const name = $(this).attr('name');
         const section = {
           name: name,
-          top: $(this).offset().top
+          top: $(this).offset().top - margin
         };
         about.view.sections.push(section);
       });
