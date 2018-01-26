@@ -175,9 +175,10 @@ const index = {
       const totalErrors = data.errorArr.length;
       if (totalErrors > 0) {
         this.error.append('<h4>Problemas foram identificados (' + totalErrors + '):</h4>');
-        data.errorArr.forEach( (errorMsg, i) => {
-          this.error.append('<p></p>');
-          this.error.find('p').slice(-1).text((i + 1) + ') ' + errorMsg);
+        this.error.append('<ol></ol>');
+        data.errorArr.forEach( (errorMsg) => {
+          this.error.find('ol').append('<li></li>');
+          this.error.find('li').slice(-1).text(errorMsg);
         });
         this.error.css('display', 'block');
       } else {
