@@ -8,7 +8,7 @@ class PdfWriter {
     this.MARGIN = 20;
     this.LOGO_Y_POSITION = 15;
     this.LOGO_HEIGHT = 10;
-    this.LOGO_WIDTH = this.LOGO_HEIGHT * 320/48;
+    this.LOGO_WIDTH = this.LOGO_HEIGHT * 297/55;
     this.PAGE_X_POSITION = 181;
     this.PAGE_Y_POSITION = 23;
     this.FOOTER_Y_POSITION = 285;

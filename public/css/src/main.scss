@@ -1,5 +1,5 @@
 $font-default: 'Noto Sans', sans-serif;
-$font-title: 'Rubik Mono One', sans-serif;
+$font-title: 'Gloria Hallelujah', cursive;
 $font-tabs: 'Nova Mono', monospace;
 
 $font-size-default: 14px;
@@ -219,7 +219,7 @@ label {
 
     &.active {
       border-left: none;
-      
+
       & > a:first-of-type {
         color: black;
         font-weight: bold;
