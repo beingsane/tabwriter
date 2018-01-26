@@ -35,7 +35,9 @@ gulp.task('build-js', function() {
 });
 
 gulp.task('lint', function() {
-  return gulp.src(['./**/*.js', '!node_modules/**', '!./public/js/build/**'])
+  return gulp.src(['./**/*.js', '!node_modules/**', '!./public/js/build/**',
+                   '!./public/js/src/jspdf-custom-fonts/**',
+                   '!./public/js/src/logourl.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
@@ -47,7 +49,8 @@ gulp.task('browser-sync', ['nodemon'], function() {
     port: '3001',
     ui:{
       port: '3002'
-    }
+    },
+    reloadDelay: 1000
   });
 });
 
