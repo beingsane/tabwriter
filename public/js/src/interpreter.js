@@ -314,7 +314,7 @@ class Interpreter {
     }
     if (!dataSet) {
       errorArr.push('Erro ao usar o método <' + data.funcName + '>: ' +
-                    'Verifique parâmetros e instruções.');
+                    'Verifique argumentos e instruções.');
     }
     return dataSet;
   }
@@ -463,18 +463,18 @@ class Interpreter {
       // Check if a valid chord
       if (!Number.isInteger(currentChord)) {
         validChord = false;
-        errorArr.push('Erro ao usar a instrução padrão: A corda indicada em <' + note +
+        errorArr.push('Erro ao usar a instrução típica: A corda indicada em <' + note +
                       '> não é um número inteiro.');
       }
       if (currentChord > this.chordsNumber || currentChord < 1) {
         validChord = false;
-        errorArr.push('Erro ao usar a instrução padrão: A corda indicada em <' + note +
+        errorArr.push('Erro ao usar a instrução típica: A corda indicada em <' + note +
                       '> extrapola o limite de cordas disponíveis.');
       }
       // Check for non empty fret
       if (currentFret === '') {
         validFret = false;
-        errorArr.push('Erro ao usar a instrução padrão: O parâmetro referente à ' +
+        errorArr.push('Erro ao usar a instrução típica: O parâmetro referente à ' +
                       'casa inexiste na instrução <' + note + '>.');
       }
       if (validChord && validFret) {

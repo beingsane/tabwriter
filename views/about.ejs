@@ -15,102 +15,333 @@
           <nav id="sections-nav" class="nav-side">
             <ul class="nav-side-topic">
               <li><a href="#introduction">Introdução</a></li>
-              <li><a href="#instruc">Instruções</a></li>
-              <li><a href="#faq">Dúvidas</a></li>
+              <li><a href="#instructions">Instruções</a></li>
+              <li>
+                <a href="#methods">Métodos</a>
+                <ul class="nav-side-subtopic">
+                  <li><a href="#methods-repeat"><em>repeat</em></a></li>
+                  <li><a href="#methods-merge"><em>merge</em></a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#format">Formatação</a>
+                <ul class="nav-side-subtopic">
+                  <li><a href="#format-space"><em>space</em></a></li>
+                  <li><a href="#format-break"><em>break</em></a></li>
+                  <li><a href="#format-section"><em>section</em></a></li>
+                  <li><a href="#format-note"><em>note</em></a></li>
+                </ul>
+              </li>
+
             </ul>
           </nav>
         </div>
       </div>
 
-      <div class="col col-lg-10">
-        
+      <div class="col col-lg-10 text-justify">
+
         <a class="anchor-link" name="introduction"></a>
         <section>
-          <h4>O que é o TabWriter?</h4>
-          <p>O TabWriter é uma aplicativo para escrever tablaturas de uma maneira fácil e rápida. Com ele tudo que você precisa saber é a sequência de notas a ser escrita na tablatura. Todo o processo de edição e formatação, característicos de uma tablatura, são feitos pelo TabWriter.</p>
+          <h4>Introdução: O que é o Tab-Writer?</h4>
+          <p>O Tab-Writer é uma aplicação <em>web</em> para escrever tablaturas de maneira prática e rápida. Para isso, ele interpreta as instruções fornecidas por você e as transforma em uma tablatura disponível para <em>download</em> em formato PDF.</p>
+
+          <p>Todo o processo de edição e formatação, característicos de uma tablatura, são feitos pelo Tab-Writer. Assim, tudo que você precisa saber para gerar sua tablatura é a sequência de notas a ser escrita, e como escrever essas notas de maneira que o Tab-Writer possa interpretar.</p>
         </section>
 
-        <a class="anchor-link" name="instruc"></a>
-        <section id="instructions">
-          <h4>Ótimo! Como faço para escrever minhas talaturas?</h4>
-          <p>O processo é bem simples. Tudo que você precisa saber para começar a escrever suas tablaturas está descrito abaixo:</p>
-
-          <ul>
-            <li>Cada nota deve estar no formato <strong>&lt;corda&gt;-&lt;casa&gt;</strong>. Assim a nota <strong>3-5</strong> significa uma nota na quinta casa da terceira corda.</li>
-            <li>Todas as notas devem estar devidamente espaçadas. Assim como em um livro as diferentes palavras são identificadas por meio de espaçamentos, para que as notas determinadas por você sejam devidamente interpretadas elas precisam estar espaçadas corretamente;</li>
-            <li>Um espaço adicional entre notas será interpretado como a necessidade de um espaço entre a primeira e a segunda notas na tablatura.</li>
-            <li>
-              <em>Slide, Bend, Hammer-on, Pull-off</em> e outros efeitos podem ser adicionados à tablatura, contudo nenhuma formatação diferenciada será adicionada, ou seja, os efeitos serão adicionados à tablatura como descritos. A tabela abaixo contém alguns exemplos com os símbolos comumente utilizados.
-
-              <table class="table text-center">
-                <thead>
-                  <tr>
-                    <td>Efeito</td>
-                    <td>Exemplo no TabWriter</td>
-                    <td>Significado</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><em>Slide up</em></td>
-                    <td><strong>4-5/7</strong></td>
-                    <td>
-                      <em>Slide</em> da casa <strong>5</strong> para a casa <strong>7</strong> na corda <strong>4</strong>.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><em>Slide down</em></td>
-                    <td><strong>4-7\5</strong></td>
-                    <td>
-                      <em>Slide</em> da casa <strong>7</strong> para a casa <strong>5</strong> na corda <strong>4</strong>.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><em>Bend</em></td>
-                    <td><strong>4-5b7</strong></td>
-                    <td>
-                      <em>Bend</em> de <strong>2</strong> semitons na casa <strong>5</strong> da corda <strong>4</strong>.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><em>Hammer-on</em></td>
-                    <td><strong>4-5h7</strong></td>
-                    <td>
-                      <em>Hammer-on</em> da casa <strong>5</strong> para a casa <strong>7</strong> na corda <strong>4</strong>.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><em>Pull-off</em></td>
-                    <td><strong>4-7p5</strong></td>
-                    <td>
-                      <em>Pull-off</em> da casa <strong>7</strong> para a casa <strong>5</strong> na corda <strong>4</strong>.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-            </li>
-            <li>
-              Por fim, um exemplo de como gerar uma tablatura com o TabWriter. Copie e cole esse exemplo e veja o que acontece!
-              <a id="example" class="thumbnail text-center" data-clipboard-text="1-1 1-2 1-3 1-4 2-1 2-2 2-3 2-4 3-1 3-2 3-3 3-4 4-1 4-2 4-3 4-4 5-1 5-2 5-3 5-4 6-1 6-2 6-3 6-4">1-1 1-2 1-3 1-4 2-1 2-2 2-3 2-4 3-1 3-2 3-3 3-4 4-1 4-2 4-3 4-4 5-1 5-2 5-3 5-4 6-1 6-2 6-3 6-4</a>
-            </li>
-          </ul>
-        </section>
-
-        <a class="anchor-link" name="faq"></a>
+        <a class="anchor-link" name="instructions"></a>
         <section>
-          <h4>Não estou conseguindo escrever minha tablatura. O que devo fazer?</h4>
-          <p>Diferentes fatores influenciam os resultados que você poderá obter ao utilizar o TabWriter. Nesta seção vamos tentar cubrir as principais dificuldades.</p>
+          <h4>Instruções: Como escrevo minhas tablaturas no Tab-Writer?</h4>
+          <p>Cada nota a ser escrita na tablatura deve ser passada para o Tab-Writer através de uma instrução definida como:</p>
+
+          <pre><code>&lt;corda&gt;-&lt;casa&gt;</code></pre>
+
+          <p>Assim, a instrução <strong>3-5</strong> indica ao Tab-Writer que a tablatura deve apresentar uma nota na quinta casa da terceira corda.</p>
+
+          <p>Para indicar uma sequência de notas na tablatura as instruções referentes a cada nota devem estar separadas por espaços ou quebras de linha.</p>
+
+          <h5>Exemplo de múltiplas instruções:</h5>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-instruc-1">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-instruc-1">1-0 2-0 3-0 4-0 5-0 6-0</code></pre>
+          </div>
+
+          <p><strong>Obs.</strong>: Vale ressaltar que qualquer informação presente após o elemento de separação entre os valores de corda e casa (<strong>-</strong>) será considerado como o valor do atributo casa e será escrito na tablatura. Isso permite que você utilize a notação que melhor achar adequada para escrever na tablatura efeitos como <em>bend</em>, <em>slide</em>, <em>hammer-on</em>, <em>pull-of</em> e outros. A tabela abaixo indica uma sugestão de instruções possíveis de serem utilizadas para descrever esses efeitos:</p>
+
+          <table class="table text-center">
+            <thead>
+              <tr>
+                <td>Tipo de Efeito</td>
+                <td>Exemplo de Instrução</td>
+                <td>Resultado na Corda da Tablatura</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><em>Slide up</em></td>
+                <td><strong>1-5/7</strong></td>
+                <td><span class="tab-out-example">1) ---5/7---</span></td>
+              </tr>
+              <tr>
+                <td><em>Slide down</em></td>
+                <td><strong>2-7\5</strong></td>
+                <td><span class="tab-out-example">2) ---7\5---</span></td>
+              </tr>
+              <tr>
+                <td><em>Bend</em></td>
+                <td><strong>3-5b7</strong></td>
+                <td><span class="tab-out-example">3) ---5b7---</span></td>
+              </tr>
+              <tr>
+                <td><em>Hammer-on</em></td>
+                <td><strong>4-5h7</strong></td>
+                <td><span class="tab-out-example">4) ---5h7---</span></td>
+              </tr>
+              <tr>
+                <td><em>Pull-off</em></td>
+                <td><strong>5-7p5</strong></td>
+                <td><span class="tab-out-example">5) ---7p5---</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Exemplo de múltiplas instruções com efeitos:</h5>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-instruc-2">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-instruc-2">1-1/3 2-1b3 3-0 4-3h5 5-3 6-7p5</code></pre>
+          </div>
+
+        </section>
+
+        <a class="anchor-link" name="methods"></a>
+        <section>
+          <h4>Métodos: Onde está a praticidade do Tab-Writer?</h4>
+          <p>Se você já tentou escrever uma tablatura apenas com as <a href="#instructions">instruções típicas</a> você deve ter se deparado com algumas questões como: <strong>Preciso copiar e colar toda vez que tenho uma série de instruções repetidas?</strong> ou <strong>E se eu quiser que notas sejam escritas no mesmo tempo na tablatura, não é possível?</strong></p>
+
+          <p>Os métodos foram criados para resolver esse tipo de problema e são eles que trazem praticidade ao Tab-Writer e contribuem para agilizar o processo de escrever tablaturas.</p>
+
+          <p>Tratam-se de instruções específicas que agem sobre a tablatura de alguma maneira. De forma geral os métodos podem admitir:</p>
+
           <ul>
-            <li>Você já leu <a href="#instruc" id="instructions-go">esta seção</a>? Ela ensina como usar nosso aplicativo da forma correta.</li>
-            <li>
-              Caso já tenha lido, existem algumas funcionalidades que o TabWriter ainda não suporta. Pode ser que o que você esteja tentando fazer esteja entre uma dessas funcionalidades. São elas:
-              <ul>
-                <li>Alterar a afinação das cordas;</li>
-                <li>Escrever mais de uma nota por tempo;</li>
-              </ul>
-            </li>
+            <li><strong>Argumentos</strong>: Fornecidos entre parênteses logo após o nome do método, são parâmetros necessários para a correta utilização do método.</li>
+            <li><strong>Instruções</strong>: Fornecidas entre chaves logo após os argumentos, são instruções válidas que poderiam ser utilizadas normalmente fora dos métodos.</li>
           </ul>
+
+          <p>A correta utilização dos métodos, bem como os argumentos e instruções admitidos por cada um deles, são fatores detalhados em cada um dos métodos especificamente.</p>
+
+        </section>
+
+        <a class="anchor-link" name="methods-repeat"></a>
+        <section>
+          <h4>Métodos: A praticidade do <em>repeat</em></h4>
+          <p>O método <em>repeat</em> permite que uma instrução ou uma sequência de instruções sejam repetidas na tablatura um certo número de vezes. A instrução correta para a utilização desse método é:</p>
+
+          <pre><code>repeat(número de repetições){instruções a repetir}</code></pre>
+
+          <ul>
+            <li><strong>número de repetições</strong>: Número de vezes que a instrução ou sequência de instruções indicada deve ser repetida.</li>
+            <li><strong>instruções a repetir</strong>: Instrução ou sequência de instruções, que devem ser repetidas pelo número de vezes indicado. Tanto <a href="#instructions">instruções típicas</a> como métodos são instruções válidas.</li>
+          </ul>
+
+          <p><strong>Obs.</strong>: O método <em>repeat</em> também pode ser utilizado em sua versão reduzida:</p>
+
+          <pre><code>r(número de repetições){instruções a repetir}</code></pre>
+
+          <h5>Exemplo de instruções com método <em>repeat</em>:</h5>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-repeat-1">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-repeat-1">repeat(3){1-0 2-0 3-0 4-0 5-0 6-0}</code></pre>
+          </div>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-repeat-2">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-repeat-2">r(3){1-1/3 2-1b3 3-0 4-3h5 5-3 6-7p5}</code></pre>
+          </div>
+
+
+        </section>
+
+        <a class="anchor-link" name="methods-merge"></a>
+        <section>
+          <h4>Métodos: A praticidade do <em>merge</em></h4>
+          <p>O método <em>merge</em> permite que instruções sejam escritas na tablatura ao mesmo tempo, ou seja, na mesma posição vertical. A instrução correta para a utilização desse método é:</p>
+
+          <pre><code>merge{instruções a serem mescladas}</code></pre>
+
+          <ul>
+            <li><strong>instruções a serem mescladas</strong>: Sequência de instruções a serem posicionadas na mesma posição vertical na tablatura. Apenas <a href="#instructions">instruções típicas</a> são válidas.</li>
+          </ul>
+
+          <p>Caso haja mais de uma instrução referente à mesma corda, a instrução não será interpretada corretamente e uma mensagem de erro será gerada.</p>
+
+          <p><strong>Obs.</strong>: O método <em>merge</em> também pode ser utilizado em sua versão reduzida:</p>
+
+          <pre><code>m{instruções a serem mescladas}</code></pre>
+
+          <h5>Exemplos de instruções com método <em>merge</em>:</h5>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-merge-1">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-merge-1">merge{1-2 2-3 3-2 4-0}</code></pre>
+          </div>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-merge-2">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-merge-2">repeat(5){m{1-2 2-3 3-2 4-0}}</code></pre>
+          </div>
+
+        </section>
+
+        <a class="anchor-link" name="format"></a>
+        <section>
+          <h4>Formatação: E quanto à personalização do Tab-Writer?</h4>
+          <p>Você deve ter reparado que nenhuma das instruções apresentadas acima permite ajustar a formatação da sua tablatura de maneira suficientemente prática. Para essa finalidade, uma série de métodos foi especialmente desenvolvida para que você possa obter a tablatura que você espera.</p>
+
+          <p><strong>Obs.</strong>: Uma vez que os métodos de formatação não inserem novas notas à tablatura eles não admitem instruções, de modo que, quando fornecidas elas são ignoradas.</p>
+        </section>
+
+        <a class="anchor-link" name="format-space"></a>
+        <section>
+          <h4>Formatação: A personalização do <em>space</em></h4>
+          <p>O método <em>space</em> permite que você ajuste o espaçamento entre as notas da tablatura da maneira que melhor achar necessário, aumentando ou diminuindo o número de traços entre as notas. A instrução correta para a utilização desse método é:</p>
+
+          <pre><code>space(valor do espaçamento)</code></pre>
+
+          <ul>
+            <li><strong>valor do espaçamento</strong>: Número de traços utilizados na tablatura para separar cada nota.</li>
+          </ul>
+
+          <p><strong>Obs.</strong>: O método <em>space</em> altera o espaçamento da tablatura de forma permanente, ou seja, todas as instruções seguintes à utilização do método <em>space</em> gerarão notas que serão separadas com o novo valor de espaçamento definido. Assim, se você deseja um espaçamento apenas em um determinado trecho da tablatura você deve utilizar o método <em>space</em> uma segunda vez, ao término das instruções pertinentes a esse trecho, para voltar ao espaçamento anterior.</p>
+
+          <p><strong>Obs.</strong>: O método <em>space</em> também pode ser utilizado em sua versão reduzida:</p>
+
+          <pre><code>s(valor do espaçamento)</code></pre>
+
+          <h5>Exemplos de instruções com método <em>space</em>:</h5>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-space-1">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-space-1">space(2) 1-0 1-1 space(6) 1-2 1-3 1-4 space(2) 1-5</code></pre>
+          </div>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-space-2">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-space-2">repeat(3){ 1-2 s(2) 2-3 s(6)}</code></pre>
+          </div>
+
+        </section>
+
+        <a class="anchor-link" name="format-break"></a>
+        <section>
+          <h4>Formatação: A personalização do <em>break</em></h4>
+          <p>O método <em>break</em> permite que você encerre uma linha da tablatura e inicie uma nova. Assim, instruções posicionadas após a instrução <em>break</em> gerarão notas nessa nova linha da tablatura. A instrução correta para a utilização desse método é:</p>
+
+          <pre><code>break</code></pre>
+
+          <h5>Exemplo de instruções com método <em>break</em>:</h5>
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-break-1">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-break-1">merge{1-2 2-3 3-2 4-0} break merge{1-2 2-3 3-2 4-0}</code></pre>
+          </div>
+
+        </section>
+
+        <a class="anchor-link" name="format-section"></a>
+        <section>
+          <h4>Formatação: A personalização do <em>section</em></h4>
+          <p>O método <em>section</em>, assim como o método <em>note</em>, permite que você integre textos à sua tablatura. Elementos de texto adicionados com esse método serão posicionados na parte superior da tablatura, à direita da marca de divisão, que será gerada automaticamente na tablatura, marcando o início de uma nova seção. A instrução correta para a utilização desse método é:</p>
+
+          <pre><code>section(elemento de texto)</code></pre>
+
+          <ul>
+            <li><strong>elemento de texto</strong>: O texto que será adicionado na parte superior da tablatura à direita da marca de divisão, gerada automaticamente.</li>
+          </ul>
+
+          <p><strong>Obs.</strong>: A utilização desse método em sequência à utilização do método <em>note</em> levará à união das marcas de divisão na tablatura, geradas por esses métodos.</p>
+
+          <p><strong>Obs.</strong>: O método <em>section</em> também pode ser utilizado em sua versão reduzida:</p>
+
+          <pre><code>sec(elemento de texto)</code></pre>
+
+          <h5>Exemplo de instruções com método <em>section</em>:</h5>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-sec-1">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-sec-1">section(introdução)</code></pre>
+          </div>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-sec-2">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-sec-2">section(refrão) 1-1 2-1 3-1 4-1 5-1 6-1</code></pre>
+          </div>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-sec-3">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-sec-3">sec(intro) 1-1 2-1 sec(refrão) 3-1 4-1 5-1 6-1</code></pre>
+          </div>
+
+        </section>
+
+        <a class="anchor-link" name="format-note"></a>
+        <section>
+          <h4>Formatação: A personalização do <em>note</em></h4>
+          <p>Assim como o método <em>section</em>, esse método permite que você integre elementos de texto à sua tablatura. Contudo, elementos de texto adicionados com esse método serão posicionados na parte inferior da tablatura e à esquerda da marca de divisão, que também será gerada automaticamente na tablatura. A instrução correta para a utilização desse método é:</p>
+
+          <pre><code>note(elemento de texto)</code></pre>
+
+          <ul>
+            <li><strong>elemento de texto</strong>: O texto que será adicionado na parte inferior da tablatura à esquerda da marca de divisão, gerada automaticamente.</li>
+          </ul>
+
+          <h5>Exemplo de instruções com método <em>note</em>:</h5>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-note-1">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-note-1">note(x2)</code></pre>
+          </div>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-note-2">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-note-2">section(refrão) 1-1 2-1 3-1 4-1 5-1 6-1 note(x4)</code></pre>
+          </div>
+
+          <div class="tw-example">
+            <button class="btn" title="Copiar para a área de transferência" data-clipboard-target="#example-note-3">
+              <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+            <pre><code id="example-note-3">sec(intro) 1-1 2-1 note(x2) sec(refrão) 3-1 4-1 5-1 6-1</code></pre>
+          </div>
+
         </section>
 
       </div>

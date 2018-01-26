@@ -1,25 +1,76 @@
 body[id="about"] {
-  section p {
-    text-indent: 30px;
-  }
+  section {
+    margin-bottom: 40px;
 
-  #example {
-    display: block;
-    margin-top: 5px;
-    padding: 5px;
-    font-family: $font-tabs;
-    text-decoration: none;
-    border: 1px solid #fff;
-    border-radius: 4px;
-  }
-
-  #example:hover {
-    border: 1px solid $color-red-focus;
-  }
-
-  #instructions {
-    table {
-      margin-top: 15px;
+    h4 {
+      color: $color-red-default;
     }
+
+    h5 {
+      margin-top: 40px;
+    }
+
+    p {
+      text-indent: 30px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 60px;
+
+      li {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  pre {
+    min-height: 40px;
+    padding: 5px 38px;
+    margin: 20px;
+    border: 1px solid $color-gray-dark;
+    border-radius: 4px;
+    font-family: $font-tabs;
+    font-size: 16px;
+    text-align: center;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    @include box-shadow(1px 1px 3px $color-gray-default);
+  }
+
+  .tw-example {
+    position: relative;
+
+    &:hover .btn {
+      opacity: 1;
+    }
+
+    .btn {
+      display: none;
+      opacity: 0;
+      position: absolute;
+      top: 6px;
+      right: 27px;
+      height: 28px;
+      width: 28px;
+      text-align: center;
+      padding: 0;
+      border: 1px solid $color-gray-dark;
+      border-radius: 5px;
+      background-color: white;
+      @include transition(opacity 0.3s);
+
+      &:focus, &:active {
+        @include box-shadow(none);
+      }
+
+      &:hover {
+        background-color: $color-gray-light;
+      }
+    }
+  }
+
+  .tab-out-example {
+    font-family: $font-tabs;
   }
 }

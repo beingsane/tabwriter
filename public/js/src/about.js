@@ -8,11 +8,8 @@ const about = {
       this.TOOLTIP_FADE_DELAY = 350;
       this.window = $(window);
       this.document = $(document);
-      this.exampleSel = '#example';
-      this.example = $(this.exampleSel);
-      this.instructionsBtn = $('#instructions-go');
-      this.instructionsArea = $('#instructions');
       this.sectionsNav = $('#sections-nav');
+      this.exampleBtns = document.querySelectorAll('.tw-example .btn');
 
       this.sections = [];
       $('a.anchor-link').each(function () {
@@ -67,25 +64,23 @@ const about = {
 
     setEventListeners: function() {
       if (Clipboard.isSupported()) {
-        let clipboard = new Clipboard(this.exampleSel);
+        $(this.exampleBtns).css('display', 'inline-block');
+        const clipboard = new Clipboard(this.exampleBtns);
 
-        this.example.on('mouseleave', () => {
-          setTimeout(() => {
-            this.example.attr('tooltip', '');
-          }, about.TOOLTIP_FADE_DELAY);
+        clipboard.on('success', (event) => {
+          const trigger = $(event.trigger)
+          trigger.off();
+          trigger.attr('tooltip', 'Copiado para área de transferência!');
+          trigger.attr('flow', 'left');
+          trigger.on('mouseleave', () => {
+            trigger.attr('tooltip', '');
+          });
         });
 
-        clipboard.on('success', () => {
-          this.example.attr('tooltip', 'Copiado para área de transferência!');
-        });
-        clipboard.on('error', () => {
-          this.example.attr('tooltip', 'Erro ao tentar copiar automaticamente');
+        clipboard.on('error', (e) => {
+          console.log(e);
         });
       }
-
-      this.instructionsBtn.on('click', () => {
-        this.instructionsArea.addClass('highlight');
-      });
 
       $(window).on('scroll', () => {
         this.render();
