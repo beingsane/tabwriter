@@ -30,6 +30,8 @@ $btn-custom-margin: 5px;
 $min-pre-height: 40px;
 $pre-btn-size: 28px;
 
+$footer-offset: 160px;
+
 // Border parameters
 $border-width-default: 1px;
 $border-style-default: solid;
@@ -95,4 +97,11 @@ $bts-xsmall-width: 576px;
   &:focus, &:active {
     @include box-shadow(none);
   }
+}
+
+%brand-style {
+  font-family: $font-cursive;
+  font-size: $font-size-larger;
+  color: $color-red-dark;
+  @include text-shadow-default($color-gray-light);
 }

@@ -25,7 +25,11 @@ a {
 
 body {
   @extend %default-font;
-  margin: ($nav-header-height + $nav-header-offset) auto;
+  margin: 0 auto;
+  min-height: 100%;
+  position: relative;
+  padding-top: $nav-header-height + $nav-header-offset;
+  padding-bottom: $footer-offset;
 }
 
 label {
@@ -34,6 +38,37 @@ label {
 
 html {
   @extend %default-font;
+  height: 100%;
+}
+
+footer {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin-top: $margin-larger;
+  padding: $margin-large $margin-large $margin-larger;
+  @include border-default($color-gray-light, 'top');
+
+  .brand {
+    @extend %brand-style;
+    height: 100%;
+  }
+
+  .nav-side {
+    ul {
+      margin-bottom: 0;
+      li {
+        display:inline-block;
+      }
+    }
+  }
+
+  .brand, .nav-side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .btn-custom {
@@ -147,10 +182,7 @@ html {
     }
 
     .nav-brand {
-      font-family: $font-cursive;
-      font-size: $font-size-larger;
-      color: $color-red-dark;
-      @include text-shadow-default($color-gray-light)
+      @extend %brand-style;
     }
 
     .nav-header, .nav-body-left {
