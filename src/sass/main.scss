@@ -45,6 +45,7 @@ html {
 
   &:hover, &:focus {
     background-color: $color-red-dark;
+    @include box-shadow-default($color-red-dark);
   }
 }
 
@@ -60,6 +61,7 @@ html {
   &:hover, &:focus {
     color: $color-red-dark;
     border-color: $color-red-dark;
+    @include box-shadow(0 0 5px $color-red-dark);
   }
 }
 
