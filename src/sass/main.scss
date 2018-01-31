@@ -1,33 +1,4 @@
-$font-default: 'Noto Sans', sans-serif;
-$font-title: 'Gloria Hallelujah', cursive;
-$font-tabs: 'Nova Mono', monospace;
-
-$font-size-default: 14px;
-
-$color-red-default: #ce1212;
-$color-red-focus: #aa0f0f;
-$color-red-dark: #280b0b;
-
-$color-gray-light: #e8e8e8;
-$color-gray-default: #ccc;
-$color-gray-dark: #999;
-
-$btn-custom-height: 40px;
-$btn-custom-margin: 5px;
-
-@mixin box-shadow($shadow) {
-  -webkit-box-shadow: $shadow;
-  -moz-box-shadow: $shadow;
-  box-shadow: $shadow;
-}
-
-@mixin transition($tr) {
-  -webkit-transition: $tr;
-  -moz-transition: $tr;
-  -ms-transition: $tr;
-  -o-transition: $tr;
-  transition: $tr;
-}
+@import 'variables';
 
 * {
   -webkit-box-sizing: border-box;
@@ -38,68 +9,80 @@ $btn-custom-margin: 5px;
 a {
   color: $color-red-default;
   text-decoration: none;
-}
 
-a:hover {
-  color: $color-red-focus;
-  text-decoration: none;
-}
+  &:hover {
+    color: $color-red-dark;
+    text-decoration: none;
+  }
 
-a.anchor-link {
-  display: block;
-  position: relative;
-  top: -65px;
-  visibility: hidden;
+  &.anchor-link {
+    display: block;
+    position: relative;
+    top: -($nav-header-height + $nav-header-offset);
+    visibility: hidden;
+  }
 }
 
 body {
-  font-family: $font-default;
-  font-size: $font-size-default;
-  margin: 65px auto;
+  @extend %default-font;
+  margin: ($nav-header-height + $nav-header-offset) auto;
 }
 
 label {
   font-weight: bold;
 }
 
+html {
+  @extend %default-font;
+}
+
 .btn-custom {
-  height: $btn-custom-height;
-  width: $btn-custom-height;
-  border-radius: $btn-custom-height;
-  font-family: $font-title;
-  color: white;
+  color: $color-white;
   background-color: $color-red-default;
-  margin: $btn-custom-margin;
-  font-size: 16px;
-  outline: none !important;
-  @include box-shadow(1px 1px 3px $color-red-focus);
+  @extend %btn-custom-properties;
+  @include box-shadow-default($color-red-dark);
   @include transition(background-color 0.3s);
+
+  &:hover, &:focus {
+    background-color: $color-red-dark;
+  }
 }
 
-.btn-custom:hover, .btn-custom:focus {
-  background-color: $color-red-focus;
-  @include box-shadow(1px 1px 3px $color-red-focus);
+.btn-custom-inv {
+  color: $color-red-default;
+  background-color: $color-white;
+  @extend %btn-custom-properties;
+  @include border-default($color-white);
+  @include box-shadow(0 0 5px $color-red-dark);
+  @include transition(color 0.3s);
+  @include transition(border-color 0.3s);
+
+  &:hover, &:focus {
+    color: $color-red-dark;
+    border-color: $color-red-dark;
+  }
 }
 
-.btn-custom:focus, .btn-custom:active {
-  @include box-shadow(none);
-  @include box-shadow(1px 1px 3px $color-red-focus);
+.btn-round {
+  height: $btn-round-diam;
+  width: $btn-round-diam;
+  border-radius: $btn-round-diam;
 }
 
 .container {
-  max-width: 890px;
+  max-width: $container-max-width;
 }
 
 .form-control {
   font-size: $font-size-default;
   border-color: $color-gray-default;
-  @include box-shadow(1px 1px 3px $color-gray-default);
+  @include box-shadow-default($color-gray-default);
   @include transition(border-color 0.3s);
-}
 
-.form-control:focus {
-  border-color: $color-red-focus;
-  @include box-shadow(1px 1px 3px $color-gray-default);
+  &:focus {
+    border-color: $color-red-dark;
+    @include box-shadow-default($color-gray-default);
+  }
 }
 
 .form-error {
@@ -107,29 +90,29 @@ label {
 }
 
 .highlight {
-  border: 1px solid $color-red-focus;
-  border-radius: 4px;
-  padding: 10px;
-  @include box-shadow(1px 1px 3px $color-gray-default);
+  border-radius: $border-radius-default;
+  padding: $margin-large;
+  @include border-default($color-red-dark);
+  @include box-shadow-default($color-gray-default);
 }
 
 .jumbotron {
-  background-image: url("../../images/guitar-cover.png");
+  background-image: url($cover-image-url);
   background-size: cover;
   background-repeat: no-repeat;
 
   h1 {
-    font-family: $font-title;
-    color: $color-red-dark;
-    text-shadow: 1px 1px 2px $color-red-dark;
+    font-family: $font-cursive;
+    color: $color-red-darker;
+    @include text-shadow-default($color-red-darker);
 
     i {
-      margin-right: 15px;
+      margin-right: $margin-large;
     }
   }
 
   p {
-    text-shadow: 1px 1px 2px $color-gray-dark;
+    @include text-shadow-default($color-gray-dark);
   }
 }
 
@@ -140,31 +123,30 @@ label {
   left: 0;
   z-index: 10;
   width: 100%;
-  min-height: 45px;
-  background-color: #fff;
-  border-bottom: 1px solid $color-gray-light;
+  min-height: $nav-header-height;
+  background-color: $color-white;
+  @include border-default($color-gray-light, 'bottom');
 
   .nav-container {
     height: 100%;
     margin: 0 auto;
-    max-width: 930px;
-    padding: 0 10px;
+    max-width: $container-max-width + 2 * $margin-larger;
+    padding: 0 $margin-large;
 
-    a{
+    a {
       color: $color-gray-dark;
-      font-size: $font-size-default;
       text-decoration: none;
-      margin: 0 10px;
+      margin: 0 $margin-large;
       @include transition(color 0.3s);
-    }
 
-    a:hover, a.nav-active {
-      color: $color-red-focus;
+      &:hover, &.nav-active {
+        color: $color-red-dark;
+      }
     }
 
     .nav-brand {
-      font-size: 20px;
-      color: $color-red-focus;
+      font-size: $font-size-larger;
+      color: $color-red-dark;
     }
 
     .nav-header, .nav-body-left {
@@ -176,7 +158,7 @@ label {
     }
 
     .nav-header, .nav-body-left, .nav-body-right {
-      line-height: 45px;
+      line-height: $nav-header-height;
     }
 
     .nav-header {
@@ -186,43 +168,42 @@ label {
 }
 
 .nav-side {
-  padding: 5px;
+  padding: $margin-default;
 
-  ul{
+  ul {
     list-style: none;
     padding-left: 0;
 
     li {
-      margin: 7px;
-      padding-left: 10px;
+      margin: $margin-default;
+      padding-left: $margin-default;
 
       a {
         color: $color-gray-dark;
       }
     }
-  }
 
-  ul.nav-side-topic li {
+    &.nav-side-topic li {
+      &.active {
+        border-left: 2px solid $color-red-default;
 
-    &.active {
-      border-left: 2px solid $color-red-default;
-
-      & > a:first-of-type {
-        color: $color-red-focus;
+        & > a:first-of-type {
+          color: $color-red-dark;
+        }
       }
     }
-  }
 
-  ul.nav-side-subtopic li {
-    margin: 2px;
-    padding-left: 20px;
+    &.nav-side-subtopic li {
+      margin: $margin-default/2;
+      padding-left: $margin-large;
 
-    &.active {
-      border-left: none;
+      &.active {
+        border-left: none;
 
-      & > a:first-of-type {
-        color: black;
-        font-weight: bold;
+        & > a:first-of-type {
+          color: $color-black;
+          font-weight: bold;
+        }
       }
     }
   }
@@ -230,7 +211,7 @@ label {
 
 .sticky-top {
   position: sticky;
-  top: 65px;
+  top: $nav-header-height + $nav-header-offset;
 }
 
 .text-center {

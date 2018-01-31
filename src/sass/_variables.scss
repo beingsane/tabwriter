@@ -1,0 +1,98 @@
+// Fonts
+$font-text: 'Noto Sans', sans-serif;
+$font-cursive: 'Gloria Hallelujah', cursive;
+$font-mono: 'Nova Mono', monospace;
+
+$font-size-default: 14px;
+$font-size-large: 1.2rem;
+$font-size-larger: 1.5rem;
+
+// Colors
+$color-red-default: #ce1212;
+$color-red-dark: #aa0f0f;
+$color-red-darker: #280b0b;
+
+$color-white: #fff;
+$color-gray-light: #e8e8e8;
+$color-gray-default: #ccc;
+$color-gray-dark: #999;
+$color-black: #000;
+
+// Components
+$container-max-width: 890px;
+
+$nav-header-height: 45px;
+$nav-header-offset: 20px;
+
+$btn-round-diam: 40px;
+$btn-custom-margin: 5px;
+
+$min-pre-height: 40px;
+$pre-btn-size: 28px;
+
+// Border parameters
+$border-width-default: 1px;
+$border-style-default: solid;
+$border-radius-default: 4px;
+
+// Shadow parameters
+$box-shadow-default: 1px 1px 3px;
+$text-shadow-default: 1px 1px 2px;
+
+// Margin variables
+$margin-default: 5px;
+$margin-large: 15px;
+$margin-larger: 30px;
+
+// Images
+$cover-image-url: '../../images/guitar-cover.png';
+
+// Bootstrap
+$bts-xsmall-width: 576px;
+
+// Mixins
+@mixin box-shadow($shadow) {
+  -webkit-box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+
+@mixin transition($tr) {
+  -webkit-transition: $tr;
+  -moz-transition: $tr;
+  -ms-transition: $tr;
+  -o-transition: $tr;
+  transition: $tr;
+}
+
+@mixin border-default($color, $direction: 'all') {
+  @if $direction == 'all' {
+    border: $border-width-default $border-style-default $color;
+  } @else {
+    border-#{$direction}: $border-width-default $border-style-default $color;
+  }
+}
+
+@mixin box-shadow-default($color) {
+  @include box-shadow($box-shadow-default $color);
+}
+
+@mixin text-shadow-default($color) {
+  text-shadow: $text-shadow-default $color;
+}
+
+// Extended
+%default-font {
+  font-family: $font-text;
+  font-size: $font-size-default;
+}
+
+%btn-custom-properties {
+  border-radius: $border-radius-default;
+  outline: none !important;
+  margin: $btn-custom-margin;
+
+  &:focus, &:active {
+    @include box-shadow(none);
+  }
+}

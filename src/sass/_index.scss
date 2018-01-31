@@ -3,25 +3,25 @@ body[id="index"] {
 
   .block-input-area {
     .block-control {
-      @media all and (min-width: 576px) {
+      @media all and (min-width: $bts-xsmall-width) {
         position: absolute;
         bottom: 0;
         right: 0;
-        width: 2 * $btn-custom-margin + $btn-custom-height;
+        width: 2 * $btn-custom-margin + $btn-round-diam;
       }
     }
 
     .block-input {
-      @media all and (min-width: 576px) {
-        padding-right: 3 * $btn-custom-margin + $btn-custom-height;
+      @media all and (min-width: $bts-xsmall-width) {
+        padding-right: 3 * $btn-custom-margin + $btn-round-diam;
       }
     }
 
-    @media all and (min-width: 576px) {
+    @media all and (min-width: $bts-xsmall-width) {
       position: relative;
     }
 
-    @media all and (max-width: 576px) {
+    @media all and (max-width: $bts-xsmall-width) {
       text-align: right;
     }
   }
@@ -34,19 +34,19 @@ body[id="index"] {
 
   #config-area {
     display: none;
-    padding: 15px;
+    padding: $margin-large;
 
     textarea {
-      min-height: 60px;
+      min-height: 2 * $margin-larger;
       resize: vertical;
     }
   }
 
   #dashboard {
-    margin-top: 30px;
+    margin-top: $margin-larger;
 
     h3 {
-      color: $color-red-focus;
+      color: $color-red-dark;
     }
 
     p {
@@ -55,22 +55,22 @@ body[id="index"] {
     }
 
     table {
-      font-family: $font-tabs;
+      font-family: $font-mono;
       table-layout: fixed;
       width: 100%;
-      margin-bottom: 30px;
+      margin-bottom: $margin-larger;
 
       tr:first-child td {
         border-top: none;
 
         pre {
-          margin-bottom: 5px;
+          margin-bottom: $margin-default;
         }
       }
 
       tr:last-child td {
         pre {
-          margin-top: 5px;
+          margin-top: $margin-default;
         }
       }
 
@@ -78,9 +78,9 @@ body[id="index"] {
         line-height: 18px;
         display: block;
         word-wrap: break-word;
-        padding: 5px;
+        padding: $margin-default;
         vertical-align: top;
-        border-top: 1px solid $color-gray-light;
+        @include border-default($color-gray-light, 'top');
 
         pre {
           padding: 0;
@@ -97,26 +97,26 @@ body[id="index"] {
   }
 
   #error {
-    margin: 30px auto;
-    padding: 10px;
+    margin: $margin-larger auto;
+    padding: $margin-large;
     display: none;
 
     ol {
-      padding-right: 10px;
+      padding-right: $margin-default;
 
       li {
-        margin-bottom: 10px;
+        margin-bottom: $margin-default;
       }
     }
 
-    @media all and (min-width: 576px) {
+    @media all and (min-width: $bts-xsmall-width) {
       max-width: 85%;
     }
   }
 
   #input {
-    min-height: 150px;
-    font-family: $font-tabs;
+    min-height: 3 * ($btn-round-diam + 2 * $btn-custom-margin);
+    font-family: $font-mono;
     resize: vertical;
   }
 }
