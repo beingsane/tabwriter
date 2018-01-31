@@ -61,18 +61,7 @@ body[id="about"] {
       height: $pre-btn-size;
       width: $pre-btn-size;
       text-align: center;
-      background-color: $color-white;
-      border-radius: $border-radius-default;
-      @include border-default($color-gray-dark);
-      @include transition(opacity 0.3s);
-
-      &:focus, &:active {
-        @include box-shadow(none);
-      }
-
-      &:hover {
-        background-color: $color-gray-light;
-      }
+      @include transition(all 0.3s);
     }
   }
 
