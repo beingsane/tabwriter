@@ -16,28 +16,26 @@ gulp.task('default', ['watch']);
 gulp.task('build', ['build-css', 'build-js']);
 
 gulp.task('build-css', function () {
-  return gulp.src('./public/css/src/**/*.scss')
+  return gulp.src('./src/sass/**/*.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(cssnano())
-    .pipe(gulp.dest('./public/css/build'))
+    .pipe(gulp.dest('./public/css'))
     .pipe(browserSync.stream());
 });
 
 gulp.task('build-js', function() {
-  return browserify('./public/js/src/main.js')
+  return browserify('./src/js/main.js')
     .transform('babelify', {presets: ['env']})
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
     .pipe(uglify())
-    .pipe(gulp.dest('./public/js/build'))
+    .pipe(gulp.dest('./public/js'))
     .pipe(browserSync.stream());
 });
 
 gulp.task('lint', function() {
-  return gulp.src(['./**/*.js', '!node_modules/**', '!./public/js/build/**',
-                   '!./public/js/src/jspdf-custom-fonts/**',
-                   '!./public/js/src/logourl.js'])
+  return gulp.src(['./**/*.js', '!node_modules/**', '!./public/**', '!./src/js/logourl.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
@@ -61,7 +59,7 @@ gulp.task('nodemon', function() {
 });
 
 gulp.task('watch', ['browser-sync', 'build-css', 'build-js'], function () {
-  gulp.watch('./public/css/src/**/*.scss', ['build-css']);
-  gulp.watch('./public/js/src/**/*.js', ['build-js']);
+  gulp.watch('./src/sass/**/*.scss', ['build-css']);
+  gulp.watch('./src/js/**/*.js', ['build-js']);
   gulp.watch('./views/**/*.ejs', browserSync.reload);
 });
