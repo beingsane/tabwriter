@@ -147,8 +147,10 @@ html {
     }
 
     .nav-brand {
+      font-family: $font-cursive;
       font-size: $font-size-larger;
       color: $color-red-dark;
+      @include text-shadow-default($color-gray-light)
     }
 
     .nav-header, .nav-body-left {
