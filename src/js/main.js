@@ -1,3 +1,4 @@
+require('babel-polyfill');
 const index = require('./index.js');
 const about = require('./about.js');
 
@@ -15,7 +16,7 @@ const tabwriter = {
   index: index,
 
   about: about
-  
+
 };
 
 $(function() {
