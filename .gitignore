@@ -1,4 +1,4 @@
 node_modules
-.sass-cache
-public/js/bundle.js
-public/css
+build
+coverage
+.env
