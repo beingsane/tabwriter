@@ -2,11 +2,13 @@ import fs from 'fs';
 import { tabwriterConfig } from '../config';
 
 export class WebService {
-  public static getWebPagePath(): string | null {
-    if (fs.existsSync(tabwriterConfig.clientDistEntryPath)) {
-      return tabwriterConfig.clientDistEntryPath;
-    } else {
-      return null;
-    }
+  public static getWebPagePath(): Promise<string | null> {
+    return new Promise(resolve => {
+      if (fs.existsSync(tabwriterConfig.clientDistEntryPath)) {
+        resolve(tabwriterConfig.clientDistEntryPath);
+      } else {
+        resolve(null);
+      }
+    });
   }
 }

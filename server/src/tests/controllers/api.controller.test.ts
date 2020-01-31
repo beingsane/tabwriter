@@ -1,15 +1,19 @@
-import request from 'supertest';
+import httpStatusCodes from 'http-status-codes';
+import { Request, Response } from 'express';
 import { ApiController } from './../../controllers/api.controller';
-import { TabwriterServer } from './../../server';
 
-describe('api', () => {
-  it('[get] /api should return OK', async () => {
-    const app = new TabwriterServer({
-      controllers: [new ApiController()],
+describe('[ApiController]', () => {
+  describe('[test]', () => {
+    it('should return OK', async () => {
+      const apiController = new ApiController();
+
+      const requestObj = {} as Request;
+      const responseObj = {} as Response;
+      responseObj.sendStatus = jest.fn();
+
+      await apiController.test(requestObj, responseObj);
+
+      expect(responseObj.sendStatus).toHaveBeenCalledWith(httpStatusCodes.OK);
     });
-
-    const res = await request(app.server).get('/api');
-
-    expect(res.status).toBe(200);
   });
 });
