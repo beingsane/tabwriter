@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import express from 'express';
 import { Request, Response, NextFunction, Handler } from 'express';
-import { ControllerBase } from './../interfaces/ControllerBase.interface';
-import { TabwriterServer } from './../server';
-import { TabwriterConfig } from './../config';
+import { ControllerBase } from './interfaces/ControllerBase.interface';
+import { TabwriterServer } from './server';
+import { TabwriterConfig } from './config';
 
 const getTestMiddleware = (): Handler => (_req: Request, _res: Response, next: NextFunction): void => {
   next();
@@ -21,7 +21,7 @@ const getServerListenMock = (): jest.Mock =>
     cb();
   });
 
-describe('[TabwriterServer]', () => {
+describe(`[${TabwriterServer.name}]`, () => {
   it('should use a given middleware', () => {
     const twServer = new TabwriterServer();
     twServer.app.use = jest.fn();
@@ -56,21 +56,26 @@ describe('[TabwriterServer]', () => {
 
   it('should listen for requests on the given port when provided', () => {
     const expectedPort = 1234;
+    const startupCallback = jest.fn();
     const twServer = new TabwriterServer(expectedPort);
-    twServer.app.listen = getServerListenMock();
 
+    twServer.app.listen = getServerListenMock();
+    twServer.onStartup = startupCallback;
     twServer.start();
 
-    expect(twServer.app.listen).toHaveBeenCalledWith(expectedPort, expect.any(Function));
+    expect(twServer.app.listen).toHaveBeenCalledWith(expectedPort, startupCallback);
   });
 
   it('should listen for requests on the default port if none is provided', () => {
+    const startupCallback = jest.fn();
     const twServer = new TabwriterServer();
+
     twServer.app.listen = getServerListenMock();
+    twServer.onStartup = startupCallback;
 
     twServer.start();
 
-    expect(twServer.app.listen).toHaveBeenCalledWith(TabwriterConfig.DEFAULT_SERVER_PORT, expect.any(Function));
+    expect(twServer.app.listen).toHaveBeenCalledWith(TabwriterConfig.DEFAULT_SERVER_PORT, startupCallback);
   });
 
   it('should call method onStartup once server is started', () => {
@@ -81,5 +86,14 @@ describe('[TabwriterServer]', () => {
     twServer.start();
 
     expect(twServer.onStartup).toHaveBeenCalled();
+  });
+
+  it('should log server initialization on onStartup call', () => {
+    const twServer = new TabwriterServer();
+    console.log = jest.fn();
+
+    twServer.onStartup();
+
+    expect(console.log).toHaveBeenCalled();
   });
 });

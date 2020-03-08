@@ -1,9 +1,9 @@
 import httpStatusCodes from 'http-status-codes';
 import { Request, Response } from 'express';
-import { ApiController } from './../../controllers/api.controller';
+import { ApiController } from './api.controller';
 
-describe('[ApiController]', () => {
-  describe('[test]', () => {
+describe(`[${ApiController.name}]`, () => {
+  describe(`[${ApiController.prototype.test.name}]`, () => {
     it('should return OK', async () => {
       const apiController = new ApiController();
 

@@ -1,9 +1,9 @@
 import fs from 'fs';
-import { WebService } from './../../services/web.service';
-import { tabwriterConfig } from '../../config';
+import { WebService } from './web.service';
+import { tabwriterConfig } from '../config';
 
-describe('[WebService]', () => {
-  describe('[getWebPagePath]', () => {
+describe(`[${WebService.name}]`, () => {
+  describe(`[${WebService.getWebPagePath.name}]`, () => {
     it('should return the client index path if found', async () => {
       const expectedPath = '/test';
       tabwriterConfig.clientDistEntryPath = expectedPath;

@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
-import { WebController } from './../../controllers/web.controller';
-import { WebService } from './../../services/web.service';
+import { WebController } from './web.controller';
+import { WebService } from '../services/web.service';
 
-describe('[WebController]', () => {
-  describe('[sendWebPage]', () => {
+describe(`[${WebController.name}]`, () => {
+  describe(`[${WebController.prototype.sendWebPage.name}]`, () => {
     it('should return not found if client index is not found', async () => {
       WebService.getWebPagePath = jest.fn(() => Promise.resolve(null));
       const webController = new WebController();

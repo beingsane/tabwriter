@@ -26,7 +26,7 @@ export class TabwriterServer {
     this.app.use(assetHandler);
   }
 
-  public onStartup = (): void => console.log(`[server] Running at http://localhost:${this.port}`);
+  public onStartup = (): void => console.log(`[${TabwriterServer.name}] Running at http://localhost:${this.port}`);
 
   public start(): void {
     this.app.listen(this.port, this.onStartup);

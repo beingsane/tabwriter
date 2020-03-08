@@ -1,9 +1,9 @@
 import path from 'path';
-import { TabwriterConfig } from './../config';
+import { TabwriterConfig } from './config';
 
-const EXPECTED_CLIENT_DIST_FOLDER_PATH = '/../../../client/build';
+const EXPECTED_CLIENT_DIST_FOLDER_PATH = '/../../client/build';
 
-describe('[TabwriterConfig]', () => {
+describe(`[${TabwriterConfig.name}]`, () => {
   const INITIAL_ENV = process.env;
 
   beforeEach(() => {
