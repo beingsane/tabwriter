@@ -37,6 +37,52 @@ describe(`[${BracketsHelper.name}]`, () => {
     });
   });
 
+  describe(`[${BracketsHelper.hasOpeningBracket.name}]`, () => {
+    it('should return false when the string has no opening brackets', () => {
+      const str = 'some string without opening brackets';
+      const hasOpeningBrackets = BracketsHelper.hasOpeningBracket(str);
+
+      expect(hasOpeningBrackets).toBe(false);
+    });
+
+    it('should return true if the string has one opening bracket', () => {
+      const str = 'some string with a opening bracket (';
+      const hasOpeningBrackets = BracketsHelper.hasOpeningBracket(str);
+
+      expect(hasOpeningBrackets).toBe(true);
+    });
+
+    it('should return true if the string has multiple opening brackets', () => {
+      const str = 'some string with a bunch of opening brackets ((( { [[[ {(';
+      const hasOpeningBrackets = BracketsHelper.hasOpeningBracket(str);
+
+      expect(hasOpeningBrackets).toBe(true);
+    });
+  });
+
+  describe(`[${BracketsHelper.hasClosingBracket.name}]`, () => {
+    it('should return false when the string has no closing brackets', () => {
+      const str = 'some string without closing brackets';
+      const hasClosingBrackets = BracketsHelper.hasClosingBracket(str);
+
+      expect(hasClosingBrackets).toBe(false);
+    });
+
+    it('should return true if the string has one opening bracket', () => {
+      const str = 'some string with a closing bracket }';
+      const hasClosingBrackets = BracketsHelper.hasClosingBracket(str);
+
+      expect(hasClosingBrackets).toBe(true);
+    });
+
+    it('should return true if the string has multiple opening brackets', () => {
+      const str = 'some string with a bunch of closing brackets ]}) )}] ';
+      const hasClosingBrackets = BracketsHelper.hasClosingBracket(str);
+
+      expect(hasClosingBrackets).toBe(true);
+    });
+  });
+
   describe(`[${BracketsHelper.indexOfMatchingClosingBracket.name}]`, () => {
     it('should return -1 if opening bracket index is greater than provided string length', () => {
       const str = 'test';

@@ -19,6 +19,14 @@ export class BracketsHelper {
     return BracketsHelper.closingBrackets.indexOf(char) > -1;
   }
 
+  public static hasOpeningBracket(str: string): boolean {
+    return BracketsHelper.hasBrackets(str, BracketsHelper.openingBrackets);
+  }
+
+  public static hasClosingBracket(str: string): boolean {
+    return BracketsHelper.hasBrackets(str, BracketsHelper.closingBrackets);
+  }
+
   public static indexOfMatchingClosingBracket(str: string, openingBracketIndex: number): number {
     if (openingBracketIndex > str.length - 1 || !BracketsHelper.isOpeningBracket(str[openingBracketIndex])) return -1;
 
@@ -40,5 +48,12 @@ export class BracketsHelper {
     }
 
     return -1;
+  }
+
+  private static hasBrackets(str: string, brackets: string[]): boolean {
+    const bracketsIdx = brackets.map(bracket => str.indexOf(bracket)).filter(bracketIdx => bracketIdx > -1);
+    const firstBracketIdx = bracketsIdx.length > 0 ? Math.min(...bracketsIdx) : -1;
+
+    return firstBracketIdx > -1;
   }
 }
