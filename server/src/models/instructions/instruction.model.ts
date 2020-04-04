@@ -1,5 +1,5 @@
 import { Operation, OperationContext } from './../../enums/index.enum';
-import { InstructionMetadata } from './instructionMetadata.model';
+import { InstructionMetadataFactory, InstructionMetadata } from './instructionMetadata.model';
 import { InstructionWriteBehavior } from './instructionWriteBehavior.model';
 import { InstructionDefaultWriteBehavior } from './instructionDefaultWriteBehavior.model';
 import { OperationErrorManager } from '../errors/operationErrorManager.model';
@@ -13,7 +13,7 @@ export class Instruction {
 
   constructor(source: string, public readonly startsAt: number, public readonly endsAt: number) {
     this.source = source.trim();
-    this.metadata = InstructionMetadata.getInstructionMetadata(this.source);
+    this.metadata = InstructionMetadataFactory.getInstructionMetadata(this.source);
     this.setWriteBehavior();
   }
 

@@ -1,31 +1,31 @@
-import { InstructionMetadata } from './instructionMetadata.model';
+import { InstructionMetadataFactory } from './instructionMetadata.model';
 
-describe(`[${InstructionMetadata.name}]`, () => {
-  describe(`[${InstructionMetadata.getInstructionMetadata.name}]`, () => {
+describe(`[${InstructionMetadataFactory.name}]`, () => {
+  describe(`[${InstructionMetadataFactory.getInstructionMetadata.name}]`, () => {
     it('should set isRead property to false if the instruction pattern cannot be determined', () => {
       const instructionStr = '/-34';
-      const instructionMetadata = InstructionMetadata.getInstructionMetadata(instructionStr);
+      const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.isRead).toBe(false);
     });
 
     it('should set readFailDescription property if the instruction pattern cannot be determined', () => {
       const instructionStr = '/-34';
-      const instructionMetadata = InstructionMetadata.getInstructionMetadata(instructionStr);
+      const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.readFailDescription).toBeDefined();
     });
 
     it('should set isRead property to true for non method instructions', () => {
       const instructionStr = '1-2';
-      const instructionMetadata = InstructionMetadata.getInstructionMetadata(instructionStr);
+      const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.isRead).toBe(true);
     });
 
     it('should not set readFailDescription property for non method instructions', () => {
       const instructionStr = '1-2';
-      const instructionMetadata = InstructionMetadata.getInstructionMetadata(instructionStr);
+      const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.readFailDescription).not.toBeDefined();
     });
@@ -37,7 +37,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
         'methodWithParamsAndInstructions ( params ) { instructions }',
       ];
       const instructionsMetadata = instructionsStr.map(instructionStr =>
-        InstructionMetadata.getInstructionMetadata(instructionStr),
+        InstructionMetadataFactory.getInstructionMetadata(instructionStr),
       );
 
       instructionsMetadata.forEach(metadata => {
@@ -52,7 +52,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
         'methodWithParamsAndInstructions ( params ) { instructions }',
       ];
       const instructionsMetadata = instructionsStr.map(instructionStr =>
-        InstructionMetadata.getInstructionMetadata(instructionStr),
+        InstructionMetadataFactory.getInstructionMetadata(instructionStr),
       );
 
       instructionsMetadata.forEach(metadata => {
@@ -62,7 +62,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
 
     it('should set property isMethod to false for non method instructions', () => {
       const instructionStr = '1-2';
-      const instructionMetadata = InstructionMetadata.getInstructionMetadata(instructionStr);
+      const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.isMethod).toBe(false);
     });
@@ -74,7 +74,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
         'methodWithParamsAndInstructions ( params ) { instructions }',
       ];
       const instructionsMetadata = instructionsStr.map(instructionStr =>
-        InstructionMetadata.getInstructionMetadata(instructionStr),
+        InstructionMetadataFactory.getInstructionMetadata(instructionStr),
       );
 
       instructionsMetadata.forEach(metadata => {
@@ -85,7 +85,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
     it('should not set properties chord and note for method instructions', () => {
       const instructionStr = 'methodWithParamsAndInstructions ( params ) { instructions }';
 
-      const instructionMetadata = InstructionMetadata.getInstructionMetadata(instructionStr);
+      const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.chord).not.toBeDefined();
       expect(instructionMetadata.note).not.toBeDefined();
@@ -93,7 +93,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
 
     it('should not set properties methodName, methodParams and methodInstructionsToApply for non method instructions', () => {
       const instructionStr = '1-2';
-      const instructionMetadata = InstructionMetadata.getInstructionMetadata(instructionStr);
+      const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.methodName).not.toBeDefined();
       expect(instructionMetadata.methodParams).not.toBeDefined();
@@ -109,7 +109,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
       ];
 
       const instructionsMetadata = instructionsStr.map(instructionStr =>
-        InstructionMetadata.getInstructionMetadata(instructionStr),
+        InstructionMetadataFactory.getInstructionMetadata(instructionStr),
       );
 
       instructionsMetadata.forEach(metadata => {
@@ -119,12 +119,12 @@ describe(`[${InstructionMetadata.name}]`, () => {
 
     it('should set property methodParams for method instructions with parameters', () => {
       const params = '1, 2 , someTextParam ';
-      const expectedParams = params.split(InstructionMetadata.METHOD_PARAMS_SEPARATOR).map(param => param.trim());
+      const expectedParams = params.split(',').map(param => param.trim());
 
       const instructionsStr = [`someMethod ( ${params} )`, `someMethod ( ${params} ) { instructions }`];
 
       const instructionsMetadata = instructionsStr.map(instructionStr =>
-        InstructionMetadata.getInstructionMetadata(instructionStr),
+        InstructionMetadataFactory.getInstructionMetadata(instructionStr),
       );
 
       instructionsMetadata.forEach(metadata => {
@@ -132,15 +132,15 @@ describe(`[${InstructionMetadata.name}]`, () => {
       });
     });
 
-    it('should not set property methodParams for method instructions without parameters', () => {
+    it('should set property methodParams to null for method instructions without parameters', () => {
       const instructionsStr = ['someMethod', `someMethod { instructions }`];
 
       const instructionsMetadata = instructionsStr.map(instructionStr =>
-        InstructionMetadata.getInstructionMetadata(instructionStr),
+        InstructionMetadataFactory.getInstructionMetadata(instructionStr),
       );
 
       instructionsMetadata.forEach(metadata => {
-        expect(metadata.methodParams).not.toBeDefined();
+        expect(metadata.methodParams).toBeNull();
       });
     });
 
@@ -152,7 +152,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
       ];
 
       const instructionsMetadata = instructionsStr.map(instructionStr =>
-        InstructionMetadata.getInstructionMetadata(instructionStr),
+        InstructionMetadataFactory.getInstructionMetadata(instructionStr),
       );
 
       instructionsMetadata.forEach(metadata => {
@@ -160,15 +160,15 @@ describe(`[${InstructionMetadata.name}]`, () => {
       });
     });
 
-    it('should not set property methodInstructionsToApply for method instructions without instructions specified', () => {
+    it('should set property methodInstructionsToApply to null for method instructions without instructions specified', () => {
       const instructionsStr = ['someMethod', 'someMethod ( someParams )'];
 
       const instructionsMetadata = instructionsStr.map(instructionStr =>
-        InstructionMetadata.getInstructionMetadata(instructionStr),
+        InstructionMetadataFactory.getInstructionMetadata(instructionStr),
       );
 
       instructionsMetadata.forEach(metadata => {
-        expect(metadata.methodInstructionsToApply).not.toBeDefined();
+        expect(metadata.methodInstructionsToApply).toBeNull();
       });
     });
 
@@ -177,7 +177,7 @@ describe(`[${InstructionMetadata.name}]`, () => {
       const note = '1/2';
       const instructionStr = `${chord}-${note}`;
 
-      const instructionMetadata = InstructionMetadata.getInstructionMetadata(instructionStr);
+      const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.chord).toBe(chord);
       expect(instructionMetadata.note).toBe(note);
