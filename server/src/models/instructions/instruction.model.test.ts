@@ -31,4 +31,27 @@ describe(`[${Instruction.name}]`, () => {
 
     expect(instruction.writeBehaviour.writeToTab).toHaveBeenCalledWith(tab, errorManager);
   });
+
+  it('should not call writeToTab method of writeToTab if instruction`s metadata are not read properly', () => {
+    const instructionStr = '/';
+    const instruction = new Instruction(instructionStr, 0, instructionStr.length);
+    const tab = new Tab();
+
+    instruction.writeBehaviour.writeToTab = jest.fn();
+    instruction.writeToTab(tab);
+
+    expect(instruction.writeBehaviour.writeToTab).not.toHaveBeenCalled();
+  });
+
+  it('should add error on error manager if one is provided and instruction`s metadata are not read properly', () => {
+    const instructionStr = '/';
+    const instruction = new Instruction(instructionStr, 0, instructionStr.length);
+    const tab = new Tab();
+    const errorManager = new OperationErrorManager();
+
+    errorManager.addError = jest.fn();
+    instruction.writeToTab(tab, errorManager);
+
+    expect(errorManager.addError).toHaveBeenCalled();
+  });
 });

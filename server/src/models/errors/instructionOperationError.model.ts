@@ -15,6 +15,6 @@ export class InstructionOperationError extends OperationError {
   public toString(): string {
     const operationName = OperationError.mapOperation2Name[this.operation];
     const operationContextName = OperationError.mapOperationContext2Name[this.operationContext];
-    return `Erro ao ${operationName} ${operationContextName}, posição ${this.instruction.startsAt}: < ${this.instruction.instructionStr} >. ${this.description}.`;
+    return `Erro ao ${operationName} ${operationContextName}, posição ${this.instruction.startsAt}: < ${this.instruction.source} >. ${this.description}.`;
   }
 }

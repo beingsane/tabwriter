@@ -9,5 +9,9 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  rules: {},
+  rules: {
+    "@typescript-eslint/no-empty-function": ["error", {
+      "allow": ["protected-constructors", "private-constructors"]
+    }]
+  },
 };

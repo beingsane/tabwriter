@@ -1,42 +1,42 @@
+import { Operation, OperationContext } from './../../enums/index.enum';
+import { InstructionMetadata } from './instructionMetadata.model';
 import { InstructionWriteBehavior } from './instructionWriteBehavior.model';
 import { InstructionDefaultWriteBehavior } from './instructionDefaultWriteBehavior.model';
 import { OperationErrorManager } from '../errors/operationErrorManager.model';
+import { InstructionOperationError } from '../errors/instructionOperationError.model';
 import { Tab } from '../tab/tab.model';
 
 export class Instruction {
-  /**
-   * Regex para extração de dados:
-   * ^([a-z]+)\s*(\((.*)\))?\s*(\{(.*)\})? [gim] -> intruções método
-   * ^(\d+)\-(.*) [gim] -> instrução padrão
-   */
-  private static readonly REGEX_METHOD_EXTRACTION = /^(\w*)(?=\s*(\(|\{|\[))/gm;
+  public readonly metadata: InstructionMetadata;
+  public readonly source: string;
+  public writeBehaviour!: InstructionWriteBehavior;
 
-  private static extractMethodMetadata(instructionStr: string): RegExpExecArray | null {
-    const methodMetadata = Instruction.REGEX_METHOD_EXTRACTION.exec(instructionStr);
-    Instruction.REGEX_METHOD_EXTRACTION.lastIndex = 0;
-
-    return methodMetadata;
-  }
-
-  writeBehaviour!: InstructionWriteBehavior;
-
-  constructor(
-    public readonly instructionStr: string,
-    public readonly startsAt: number,
-    public readonly endsAt: number,
-  ) {
+  constructor(source: string, public readonly startsAt: number, public readonly endsAt: number) {
+    this.source = source.trim();
+    this.metadata = InstructionMetadata.getInstructionMetadata(this.source);
     this.setWriteBehavior();
   }
 
   public writeToTab(tab: Tab, errorReporter?: OperationErrorManager): void {
-    this.writeBehaviour.writeToTab(tab, errorReporter);
+    if (this.metadata.isRead) {
+      this.writeBehaviour.writeToTab(tab, errorReporter);
+    } else {
+      if (errorReporter) {
+        errorReporter.addError(
+          new InstructionOperationError(
+            this,
+            Operation.leitura,
+            OperationContext.instructionGeneral,
+            this.metadata.readFailDescription,
+          ),
+        );
+      }
+    }
   }
 
   private setWriteBehavior(): void {
-    const instructionMethodMetadata = Instruction.extractMethodMetadata(this.instructionStr);
-    if (instructionMethodMetadata !== null) {
-      const methodName = instructionMethodMetadata[1].toUpperCase();
-      switch (methodName) {
+    if (this.metadata.isMethod) {
+      switch (this.metadata.methodName.toUpperCase()) {
         default:
           this.writeBehaviour = new InstructionDefaultWriteBehavior(this);
       }

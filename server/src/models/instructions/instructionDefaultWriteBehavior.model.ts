@@ -5,25 +5,14 @@ import { InstructionOperationError } from '../errors/instructionOperationError.m
 import { Tab } from '../tab/tab.model';
 
 export class InstructionDefaultWriteBehavior extends InstructionWriteBehavior {
-  private static readonly REGEX_EXTRACT_CHORD_AND_FRET = /^(\d+)\-(.*)/gm;
-
   protected context = OperationContext.instructionDefault;
 
-  private chord = -1;
-  private note = '';
-
   writeToTab(tab: Tab, errorReporter?: OperationErrorManager): void {
-    if (!this.parseChordAndNote()) {
-      if (errorReporter) {
-        const errorDescription = 'Não foi possível identificar a corda ou a nota indicados';
-        errorReporter.addError(
-          new InstructionOperationError(this.instruction, this.operation, this.context, errorDescription),
-        );
-      }
-      return;
-    }
+    if (!this.validateChordAndNote(errorReporter)) return;
 
-    const writeResult = tab.currentTabBlock.writeNoteOnChord(this.chord, this.note);
+    const chord = this.instruction.metadata.chord;
+    const note = this.instruction.metadata.note;
+    const writeResult = tab.currentTabBlock.writeNoteOnChord(chord, note);
 
     if (!writeResult.success && errorReporter) {
       errorReporter.addError(
@@ -32,19 +21,20 @@ export class InstructionDefaultWriteBehavior extends InstructionWriteBehavior {
     }
   }
 
-  private parseChordAndNote(): boolean {
-    const chordAndNoteData = InstructionDefaultWriteBehavior.REGEX_EXTRACT_CHORD_AND_FRET.exec(
-      this.instruction.instructionStr,
-    );
-    InstructionDefaultWriteBehavior.REGEX_EXTRACT_CHORD_AND_FRET.lastIndex = 0;
+  private validateChordAndNote(errorReporter?: OperationErrorManager): boolean {
+    let isValid = true;
 
-    if (chordAndNoteData === null) {
-      return false;
+    if (!this.instruction.metadata.chord || !this.instruction.metadata.note) {
+      isValid = false;
+
+      if (errorReporter) {
+        const errorDescription = 'Não foi possível identificar a corda ou a nota indicados';
+        errorReporter.addError(
+          new InstructionOperationError(this.instruction, this.operation, this.context, errorDescription),
+        );
+      }
     }
 
-    this.chord = parseInt(chordAndNoteData[1], 10);
-    this.note = chordAndNoteData[2].trim();
-
-    return true;
+    return isValid;
   }
 }
