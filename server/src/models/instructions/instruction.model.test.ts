@@ -1,5 +1,6 @@
 import { OperationErrorManager } from './../errors/operationErrorManager.model';
 import { InstructionDefaultWriteBehavior } from './instructionDefaultWriteBehavior.model';
+import { InstructionBreakWriteBehavior } from './instructionBreakWriteBehavior.model';
 import { Instruction } from './instruction.model';
 import { Tab } from '../tab/tab.model';
 
@@ -12,12 +13,20 @@ describe(`[${Instruction.name}]`, () => {
     expect(instruction.writeBehaviour).toBeInstanceOf(InstructionDefaultWriteBehavior);
   });
 
-  it('should create an instruction with the default write behavior if the instruction is a method', () => {
+  it('should create an instruction with the default write behavior if the instruction is an unmapped method', () => {
     const instructionStr = 'method(args){ params }';
     const instruction = new Instruction(instructionStr, 0, instructionStr.length);
 
     expect(instruction.writeBehaviour).not.toBeNull();
     expect(instruction.writeBehaviour).toBeInstanceOf(InstructionDefaultWriteBehavior);
+  });
+
+  it('should create an instruction with the break write behavior if the instruction is break', () => {
+    const instructionStr = 'break';
+    const instruction = new Instruction(instructionStr, 0, instructionStr.length);
+
+    expect(instruction.writeBehaviour).not.toBeNull();
+    expect(instruction.writeBehaviour).toBeInstanceOf(InstructionBreakWriteBehavior);
   });
 
   it('should call writeToTab method of writeBehavior once its writeToTab method is called', () => {

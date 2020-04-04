@@ -1,3 +1,4 @@
+import { InstructionBreakWriteBehavior } from './instructionBreakWriteBehavior.model';
 import { Operation, OperationContext } from './../../enums/index.enum';
 import { InstructionMetadataFactory, InstructionMetadata } from './instructionMetadata.model';
 import { InstructionWriteBehavior } from './instructionWriteBehavior.model';
@@ -37,6 +38,9 @@ export class Instruction {
   private setWriteBehavior(): void {
     if (this.metadata.isMethod) {
       switch (this.metadata.methodName.toUpperCase()) {
+        case 'BREAK':
+          this.writeBehaviour = new InstructionBreakWriteBehavior(this);
+          break;
         default:
           this.writeBehaviour = new InstructionDefaultWriteBehavior(this);
       }

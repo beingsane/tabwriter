@@ -6,4 +6,5 @@ export enum Operation {
 export enum OperationContext {
   instructionGeneral,
   instructionDefault,
+  instructionBreak,
 }

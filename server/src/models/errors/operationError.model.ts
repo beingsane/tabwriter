@@ -9,6 +9,7 @@ export abstract class OperationError {
   public static readonly mapOperationContext2Name: Record<OperationContext, string> = {
     [OperationContext.instructionGeneral]: 'instrução',
     [OperationContext.instructionDefault]: 'instrução típica',
+    [OperationContext.instructionBreak]: 'instrução break',
   };
 
   constructor(
