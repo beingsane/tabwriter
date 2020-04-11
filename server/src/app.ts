@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import { TabwriterServer } from './server';
-import { tabwriterConfig } from './config';
+import { tabwriterConfig } from './config/config';
 import { WebController } from './controllers/web.controller';
 import { ApiController } from './controllers/api.controller';
 

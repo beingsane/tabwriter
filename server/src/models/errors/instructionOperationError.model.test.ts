@@ -1,7 +1,7 @@
 import { Instruction } from './../instructions/instruction.model';
 import { InstructionOperationError } from './instructionOperationError.model';
-import { Operation, OperationContext } from '../../enums/index.enum';
 import { OperationError } from './operationError.model';
+import { Operation, OperationContext } from '../../config/index.enum';
 
 describe(`[${InstructionOperationError.name}]`, () => {
   describe(`[${InstructionOperationError.prototype.toString.name}]`, () => {

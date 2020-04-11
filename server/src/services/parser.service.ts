@@ -13,14 +13,14 @@ class ParsedIntructionDto {
   }
 }
 
-interface TabwriterParserConfig {
+interface ParserServiceConfig {
   instructionsSeparator: string;
 }
 
-export class TabwriterParser {
+export class ParserService {
   public static DEFAULT_INSTRUCTIONS_SEPARATOR = ' ';
 
-  private _instructionsSeparator = TabwriterParser.DEFAULT_INSTRUCTIONS_SEPARATOR;
+  private _instructionsSeparator = ParserService.DEFAULT_INSTRUCTIONS_SEPARATOR;
   get instructionsSeparator(): string {
     return this._instructionsSeparator;
   }
@@ -32,7 +32,7 @@ export class TabwriterParser {
   public instructionsStr: string;
   public instructions: ParsedIntructionDto[] = [];
 
-  constructor(instructionsStr: string, parserConfig?: TabwriterParserConfig) {
+  constructor(instructionsStr: string, parserConfig?: ParserServiceConfig) {
     this.instructionsStr = instructionsStr.trim();
 
     if (parserConfig?.instructionsSeparator) this.instructionsSeparator = parserConfig.instructionsSeparator;

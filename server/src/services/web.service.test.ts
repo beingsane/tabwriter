@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { WebService } from './web.service';
-import { tabwriterConfig } from '../config';
+import { tabwriterConfig } from '../config/config';
 
 describe(`[${WebService.name}]`, () => {
   describe(`[${WebService.getWebPagePath.name}]`, () => {

@@ -1,7 +1,7 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import httpStatusCodes from 'http-status-codes';
-import { ControllerBase } from '../interfaces/ControllerBase.interface';
+import { ControllerBase } from './controllerBase.interface';
 
 export class ApiController implements ControllerBase {
   public readonly routePrefix = '/api';

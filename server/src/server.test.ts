@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import express from 'express';
 import { Request, Response, NextFunction, Handler } from 'express';
-import { ControllerBase } from './interfaces/ControllerBase.interface';
+import { TabwriterConfig } from './config/config';
 import { TabwriterServer } from './server';
-import { TabwriterConfig } from './config';
+import { ControllerBase } from './controllers/controllerBase.interface';
 
 const getTestMiddleware = (): Handler => (_req: Request, _res: Response, next: NextFunction): void => {
   next();

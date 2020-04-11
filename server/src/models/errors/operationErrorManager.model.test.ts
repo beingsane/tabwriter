@@ -1,7 +1,7 @@
 import { OperationErrorManager } from './operationErrorManager.model';
 import { Instruction } from '../instructions/instruction.model';
 import { InstructionOperationError } from './instructionOperationError.model';
-import { Operation, OperationContext } from '../../enums/index.enum';
+import { Operation, OperationContext } from '../../config/index.enum';
 
 describe(`[${OperationErrorManager.name}]`, () => {
   it('should provide a method to add an operation error to be visible in the errorMessages field', () => {

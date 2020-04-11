@@ -1,6 +1,6 @@
 import { OperationError } from './operationError.model';
 import { Instruction } from '../instructions/instruction.model';
-import { Operation, OperationContext } from '../../enums/index.enum';
+import { Operation, OperationContext } from '../../config/index.enum';
 
 export class InstructionOperationError extends OperationError {
   constructor(

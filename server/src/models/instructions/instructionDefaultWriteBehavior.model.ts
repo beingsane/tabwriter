@@ -1,6 +1,6 @@
 import { OperationErrorManager } from '../errors/operationErrorManager.model';
 import { InstructionWriteBehavior } from './instructionWriteBehavior.model';
-import { OperationContext } from '../../enums/index.enum';
+import { OperationContext } from '../../config/index.enum';
 import { InstructionOperationError } from '../errors/instructionOperationError.model';
 import { Tab } from '../tab/tab.model';
 

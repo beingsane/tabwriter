@@ -1,7 +1,7 @@
 import express from 'express';
 import { Application, RequestHandler, Handler } from 'express';
-import { ControllerBase } from './interfaces/ControllerBase.interface';
-import { TabwriterConfig } from './config';
+import { TabwriterConfig } from './config/config';
+import { ControllerBase } from './controllers/controllerBase.interface';
 
 export class TabwriterServer {
   public readonly app: Application;

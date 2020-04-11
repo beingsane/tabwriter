@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { tabwriterConfig } from '../config';
+import { tabwriterConfig } from '../config/config';
 
 export class WebService {
   public static getWebPagePath(): Promise<string | null> {

@@ -1,5 +1,5 @@
 import { InstructionBreakWriteBehavior } from './instructionBreakWriteBehavior.model';
-import { Operation, OperationContext } from './../../enums/index.enum';
+import { Operation, OperationContext } from '../../config/index.enum';
 import { InstructionMetadataFactory, InstructionMetadata } from './instructionMetadata.model';
 import { InstructionWriteBehavior } from './instructionWriteBehavior.model';
 import { InstructionDefaultWriteBehavior } from './instructionDefaultWriteBehavior.model';

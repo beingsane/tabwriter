@@ -1,4 +1,4 @@
-import { Operation, OperationContext } from '../../enums/index.enum';
+import { Operation, OperationContext } from '../../config/index.enum';
 
 export abstract class OperationError {
   public static readonly mapOperation2Name: Record<Operation, string> = {

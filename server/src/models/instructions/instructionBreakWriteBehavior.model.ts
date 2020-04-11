@@ -1,5 +1,5 @@
 import { InstructionWriteBehavior } from './instructionWriteBehavior.model';
-import { OperationContext } from '../../enums/index.enum';
+import { OperationContext } from '../../config/index.enum';
 import { Tab } from '../tab/tab.model';
 
 export class InstructionBreakWriteBehavior extends InstructionWriteBehavior {

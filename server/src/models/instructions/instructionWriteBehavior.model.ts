@@ -1,6 +1,6 @@
 import { Tab } from '../tab/tab.model';
 import { Instruction } from './instruction.model';
-import { Operation, OperationContext } from '../../enums/index.enum';
+import { Operation, OperationContext } from '../../config/index.enum';
 import { OperationErrorManager } from '../errors/operationErrorManager.model';
 
 export abstract class InstructionWriteBehavior {

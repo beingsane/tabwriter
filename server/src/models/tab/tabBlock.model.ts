@@ -1,4 +1,4 @@
-import { Operation } from '../../enums/index.enum';
+import { Operation } from '../../config/index.enum';
 import { TabConfig } from './tab.model';
 
 export class TabBlockWriteResultDto {
