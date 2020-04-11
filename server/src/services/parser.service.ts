@@ -2,32 +2,29 @@ import { Instruction } from './../models/instructions/instruction.model';
 import { BracketsHelper } from '../utils/brackets.helper';
 import '../extensions/string.extensions';
 
-interface ParserServiceConfig {
-  instructionsSeparator: string;
-}
+export class ParserServiceConfig {
+  public static readonly DEFAULT_INSTRUCTIONS_SEPARATOR = ' ';
 
-export class ParserService {
-  public static DEFAULT_INSTRUCTIONS_SEPARATOR = ' ';
-
-  private _instructionsSeparator = ParserService.DEFAULT_INSTRUCTIONS_SEPARATOR;
+  private _instructionsSeparator = ParserServiceConfig.DEFAULT_INSTRUCTIONS_SEPARATOR;
   get instructionsSeparator(): string {
     return this._instructionsSeparator;
   }
   set instructionsSeparator(value: string) {
-    if (value.length !== 1) throw Error(`A instructions separator must have only one character`);
+    if (value.length !== 1)
+      throw Error(`[${ParserServiceConfig.name}] A instructions separator must have only one character`);
+
     this._instructionsSeparator = value;
   }
+}
 
+export class ParserService {
   public instructionsStr: string;
-  public instructions: Instruction[] = [];
 
-  constructor(instructionsStr: string, parserConfig?: ParserServiceConfig) {
+  constructor(instructionsStr: string, public readonly config = new ParserServiceConfig()) {
     this.instructionsStr = instructionsStr.trim();
-
-    if (parserConfig?.instructionsSeparator) this.instructionsSeparator = parserConfig.instructionsSeparator;
   }
 
-  public parse(): void {
+  public parse(): Instruction[] {
     let startIndex = 0;
     const instructions: Instruction[] = [];
 
@@ -39,10 +36,10 @@ export class ParserService {
       startIndex = instruction.endsAt + 1;
     }
 
-    this.instructions = instructions;
+    return instructions;
   }
 
-  public async parseAsync(): Promise<void> {
+  public async parseAsync(): Promise<Instruction[]> {
     return new Promise((resolve, reject) => {
       try {
         resolve(this.parse());
@@ -55,7 +52,7 @@ export class ParserService {
   private extractInstruction(fromIndex: number): Instruction | null {
     if (fromIndex > this.instructionsStr.length - 1) return null;
 
-    const startInstrIndex = this.instructionsStr.indexOfDifferent(this.instructionsSeparator, fromIndex);
+    const startInstrIndex = this.instructionsStr.indexOfDifferent(this.config.instructionsSeparator, fromIndex);
 
     const endInstrIndex = this.indexOfInstructionEnd(startInstrIndex);
 
@@ -67,7 +64,7 @@ export class ParserService {
   }
 
   private indexOfInstructionEnd(instrStartIndex: number): number {
-    const nextSeparatorIndex = this.instructionsStr.indexOf(this.instructionsSeparator, instrStartIndex);
+    const nextSeparatorIndex = this.instructionsStr.indexOf(this.config.instructionsSeparator, instrStartIndex);
     if (nextSeparatorIndex < 0) return this.instructionsStr.length - 1;
 
     let endOfInstrIndex = this.correctEndForOpeningBracketsBefore(instrStartIndex, nextSeparatorIndex - 1);
@@ -91,7 +88,10 @@ export class ParserService {
   private correctEndForOpeningBracketsAfter(instrStartIndex: number, toCheckEndIndex: number): number {
     if (toCheckEndIndex + 1 > this.instructionsStr.length - 1) return toCheckEndIndex;
 
-    const nextInstrStartIndex = this.instructionsStr.indexOfDifferent(this.instructionsSeparator, toCheckEndIndex + 1);
+    const nextInstrStartIndex = this.instructionsStr.indexOfDifferent(
+      this.config.instructionsSeparator,
+      toCheckEndIndex + 1,
+    );
     const nextInstrStartChar = this.instructionsStr[nextInstrStartIndex];
     if (!BracketsHelper.isOpeningBracket(nextInstrStartChar)) return toCheckEndIndex;
 
