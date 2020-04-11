@@ -1,17 +1,6 @@
+import { Instruction } from './../models/instructions/instruction.model';
 import { BracketsHelper } from '../utils/brackets.helper';
 import '../extensions/string.extensions';
-
-class ParsedIntructionDto {
-  startsAtIndex: number;
-  endsAtIndex: number;
-  instructionStr: string;
-
-  constructor(startIndex: number, endIndex: number, instructionStr: string) {
-    this.startsAtIndex = startIndex;
-    this.endsAtIndex = endIndex;
-    this.instructionStr = instructionStr;
-  }
-}
 
 interface ParserServiceConfig {
   instructionsSeparator: string;
@@ -30,7 +19,7 @@ export class ParserService {
   }
 
   public instructionsStr: string;
-  public instructions: ParsedIntructionDto[] = [];
+  public instructions: Instruction[] = [];
 
   constructor(instructionsStr: string, parserConfig?: ParserServiceConfig) {
     this.instructionsStr = instructionsStr.trim();
@@ -40,14 +29,14 @@ export class ParserService {
 
   public parse(): void {
     let startIndex = 0;
-    const instructions: ParsedIntructionDto[] = [];
+    const instructions: Instruction[] = [];
 
     while (true) {
       const instruction = this.extractInstruction(startIndex);
       if (instruction === null) break;
 
       instructions.push(instruction);
-      startIndex = instruction.endsAtIndex + 1;
+      startIndex = instruction.endsAt + 1;
     }
 
     this.instructions = instructions;
@@ -63,17 +52,17 @@ export class ParserService {
     });
   }
 
-  private extractInstruction(fromIndex: number): ParsedIntructionDto | null {
+  private extractInstruction(fromIndex: number): Instruction | null {
     if (fromIndex > this.instructionsStr.length - 1) return null;
 
     const startInstrIndex = this.instructionsStr.indexOfDifferent(this.instructionsSeparator, fromIndex);
 
     const endInstrIndex = this.indexOfInstructionEnd(startInstrIndex);
 
-    return new ParsedIntructionDto(
+    return new Instruction(
+      this.instructionsStr.slice(startInstrIndex, endInstrIndex + 1),
       startInstrIndex,
       endInstrIndex,
-      this.instructionsStr.slice(startInstrIndex, endInstrIndex + 1),
     );
   }
 

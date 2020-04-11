@@ -66,8 +66,8 @@ describe(`[${ParserService.name}]`, () => {
       parser.parse();
 
       expect(parser.instructions.length).toBe(2);
-      expect(parser.instructions[0].instructionStr).toBe('instr1');
-      expect(parser.instructions[1].instructionStr).toBe('instr2');
+      expect(parser.instructions[0].source).toBe('instr1');
+      expect(parser.instructions[1].source).toBe('instr2');
     });
 
     it('should read instructions with brackets as a single instruction', () => {
@@ -77,7 +77,7 @@ describe(`[${ParserService.name}]`, () => {
       parser.parse();
 
       expect(parser.instructions.length).toBe(1);
-      expect(parser.instructions[0].instructionStr).toBe(instructionsStr.trim());
+      expect(parser.instructions[0].source).toBe(instructionsStr.trim());
     });
 
     it('should read a instruction with no matching closing bracket to the end of the instructions string', () => {
@@ -87,7 +87,7 @@ describe(`[${ParserService.name}]`, () => {
       parser.parse();
 
       expect(parser.instructions.length).toBe(1);
-      expect(parser.instructions[0].instructionStr).toBe(instructionsStr.trim());
+      expect(parser.instructions[0].source).toBe(instructionsStr.trim());
     });
 
     it('should read a instruction with instructions separator between brackets as one single instruction', () => {
@@ -97,7 +97,7 @@ describe(`[${ParserService.name}]`, () => {
       parser.parse();
 
       expect(parser.instructions.length).toBe(1);
-      expect(parser.instructions[0].instructionStr).toBe(instructionsStr.trim());
+      expect(parser.instructions[0].source).toBe(instructionsStr.trim());
     });
   });
 });
