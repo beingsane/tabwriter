@@ -22,7 +22,7 @@ export class ParserService {
   public instructionsStr: string;
 
   constructor(instructionsStr: string, public readonly config = new ParserServiceConfig()) {
-    this.instructionsStr = instructionsStr.trim();
+    this.instructionsStr = instructionsStr.trimRight();
   }
 
   public parse(): Instruction[] {
