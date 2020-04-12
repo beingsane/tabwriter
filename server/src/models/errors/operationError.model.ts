@@ -10,6 +10,7 @@ export abstract class OperationError {
     [OperationContext.instructionGeneral]: 'instrução',
     [OperationContext.instructionDefault]: 'instrução típica',
     [OperationContext.instructionBreak]: 'instrução break',
+    [OperationContext.instructionMerge]: 'instrução merge',
   };
 
   constructor(

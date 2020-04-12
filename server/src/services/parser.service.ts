@@ -1,4 +1,5 @@
 import { Instruction } from './../models/instructions/instruction.model';
+import { InstructionParsingMetadata } from '../models/instructions/instructionMetadata.model';
 import { BracketsHelper } from '../utils/brackets.helper';
 import '../extensions/string.extensions';
 
@@ -30,10 +31,14 @@ export class ParserService {
 
     while (true) {
       const instruction = this.extractInstruction(startIndex);
+
       if (instruction === null) break;
 
+      if (instruction.parsingMetadata.endsAtIndex === null)
+        throw Error(`[${ParserServiceConfig.name}] Unable to read the end position of the last extracted instruction`);
+
       instructions.push(instruction);
-      startIndex = instruction.endsAt + 1;
+      startIndex = instruction.parsingMetadata.endsAtIndex + 1;
     }
 
     return instructions;
@@ -49,7 +54,7 @@ export class ParserService {
     });
   }
 
-  private extractInstruction(fromIndex: number): Instruction | null {
+  public extractInstruction(fromIndex: number): Instruction | null {
     if (fromIndex > this.instructionsStr.length - 1) return null;
 
     const startInstrIndex = this.instructionsStr.indexOfDifferent(this.config.instructionsSeparator, fromIndex);
@@ -58,8 +63,7 @@ export class ParserService {
 
     return new Instruction(
       this.instructionsStr.slice(startInstrIndex, endInstrIndex + 1),
-      startInstrIndex,
-      endInstrIndex,
+      new InstructionParsingMetadata(startInstrIndex, endInstrIndex, this.config),
     );
   }
 

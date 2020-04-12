@@ -6,7 +6,7 @@ import { Tab } from '../tab/tab.model';
 import { TabBlock } from '../tab/tabBlock.model';
 
 const createInstructionDefaultWriteBehavior = (instructionStr: string): InstructionDefaultWriteBehavior => {
-  const instruction = new Instruction(instructionStr, 0, instructionStr.length);
+  const instruction = new Instruction(instructionStr);
   return new InstructionDefaultWriteBehavior(instruction);
 };
 

@@ -5,7 +5,7 @@ import { Tab } from '../tab/tab.model';
 describe(`[${InstructionBreakWriteBehavior.name}]`, () => {
   it('should add a tab block to tab', () => {
     const instructionStr = 'break';
-    const instruction = new Instruction(instructionStr, 0, instructionStr.length);
+    const instruction = new Instruction(instructionStr);
 
     const tab = new Tab();
     const currentaTabBlocksQty = tab.tabBlocks.length;

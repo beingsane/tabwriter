@@ -1,3 +1,13 @@
+import { ParserServiceConfig } from './../../services/parser.service';
+
+export class InstructionParsingMetadata {
+  constructor(
+    public readonly startsAtIndex: number | null = null,
+    public readonly endsAtIndex: number | null = null,
+    public readonly parserConfig: ParserServiceConfig | null = null,
+  ) {}
+}
+
 export interface InstructionMetadata {
   isRead: boolean;
   readFailDescription: string;

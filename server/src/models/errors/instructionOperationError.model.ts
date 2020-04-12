@@ -15,6 +15,10 @@ export class InstructionOperationError extends OperationError {
   public toString(): string {
     const operationName = OperationError.mapOperation2Name[this.operation];
     const operationContextName = OperationError.mapOperationContext2Name[this.operationContext];
-    return `Erro ao ${operationName} ${operationContextName}, posição ${this.instruction.startsAt}: < ${this.instruction.source} >. ${this.description}.`;
+
+    const instructionStartIndex = this.instruction.parsingMetadata.startsAtIndex;
+    const positionDescription = instructionStartIndex !== null ? `, posição ${instructionStartIndex}` : '';
+
+    return `Erro ao ${operationName} ${operationContextName}${positionDescription}: < ${this.instruction.source} >. ${this.description}.`;
   }
 }

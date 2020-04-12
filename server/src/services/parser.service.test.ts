@@ -1,4 +1,5 @@
 import { ParserService, ParserServiceConfig } from './parser.service';
+import { Instruction } from '../models/instructions/instruction.model';
 
 describe(`[${ParserServiceConfig.name}]`, () => {
   it('should start with the default instructions separator', () => {
@@ -110,6 +111,15 @@ describe(`[${ParserService.name}]`, () => {
 
       expect(instructions.length).toBe(1);
       expect(instructions[0].source).toBe(instructionsStr.trim());
+    });
+
+    it('should throw if a instructions is read and have no informations about its end position', () => {
+      const instructionsStr = '1-2';
+      const parser = new ParserService(instructionsStr);
+
+      parser.extractInstruction = jest.fn(() => new Instruction('1-2'));
+
+      expect(() => parser.parse()).toThrow();
     });
   });
 });

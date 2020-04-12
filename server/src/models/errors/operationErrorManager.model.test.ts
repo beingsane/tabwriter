@@ -6,7 +6,7 @@ import { Operation, OperationContext } from '../../config/index.enum';
 describe(`[${OperationErrorManager.name}]`, () => {
   it('should provide a method to add an operation error to be visible in the errorMessages field', () => {
     const instructionStr = '1-2';
-    const instruction = new Instruction(instructionStr, 0, instructionStr.length);
+    const instruction = new Instruction(instructionStr);
 
     const operationError = new InstructionOperationError(
       instruction,
@@ -24,7 +24,7 @@ describe(`[${OperationErrorManager.name}]`, () => {
 
   it('should provide a method to add multiple operation errors to be visible in the errorMessages field', () => {
     const instructionStr = '1-2';
-    const instruction = new Instruction(instructionStr, 0, instructionStr.length);
+    const instruction = new Instruction(instructionStr);
     const description = 'some error description';
 
     const operationErrors = [
