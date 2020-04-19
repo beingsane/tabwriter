@@ -7,4 +7,5 @@ export enum OperationContext {
   instructionGeneral,
   instructionDefault,
   instructionBreak,
+  instructionMerge,
 }

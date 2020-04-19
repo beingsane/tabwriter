@@ -1,3 +1,4 @@
+import { InstructionMergeWriteBehavior } from './instructionMergeWriteBehavior.model';
 import {
   InstructionMetadataFactory,
   InstructionMetadata,
@@ -9,6 +10,7 @@ import { InstructionBreakWriteBehavior } from './instructionBreakWriteBehavior.m
 import { Operation, OperationContext } from '../../config/index.enum';
 import { OperationErrorManager } from '../errors/operationErrorManager.model';
 import { InstructionOperationError } from '../errors/instructionOperationError.model';
+import { ParserService } from '../../services/parser.service';
 import { Tab } from '../tab/tab.model';
 
 export class Instruction {
@@ -41,11 +43,24 @@ export class Instruction {
     }
   }
 
+  public parseInstructionsToApply(): Instruction[] {
+    if (!this.metadata.methodInstructionsStrToApply) return [];
+
+    if (!this.parsingMetadata.parserConfig)
+      throw Error(`[${InstructionWriteBehavior.name}] Unable to create parser to read instructions to apply method.`);
+
+    const parser = new ParserService(this.metadata.methodInstructionsStrToApply, this.parsingMetadata.parserConfig);
+    return parser.parse();
+  }
+
   private getWriteBehavior(): InstructionWriteBehavior {
     if (this.metadata.isMethod) {
       switch (this.metadata.methodName.toUpperCase()) {
         case 'BREAK':
           return new InstructionBreakWriteBehavior(this);
+        case 'MERGE':
+        case 'M':
+          return new InstructionMergeWriteBehavior(this);
         default:
           return new InstructionDefaultWriteBehavior(this);
       }

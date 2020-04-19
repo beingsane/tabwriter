@@ -1,3 +1,5 @@
+import { ParserServiceConfig } from './../../services/parser.service';
+import { InstructionMergeWriteBehavior } from './instructionMergeWriteBehavior.model';
 import { OperationErrorManager } from './../errors/operationErrorManager.model';
 import { InstructionDefaultWriteBehavior } from './instructionDefaultWriteBehavior.model';
 import { InstructionBreakWriteBehavior } from './instructionBreakWriteBehavior.model';
@@ -46,38 +48,74 @@ describe(`[${Instruction.name}]`, () => {
     expect(instruction.writeBehaviour).toBeInstanceOf(InstructionBreakWriteBehavior);
   });
 
-  it('should call writeToTab method of writeBehavior once its writeToTab method is called', () => {
-    const instructionStr = '1-2';
+  it('should create an instruction with the merge write behavior if the instructions is merge', () => {
+    const instructionStr = 'merge { 1-2 1-3 }';
     const instruction = new Instruction(instructionStr);
-    const tab = new Tab();
-    const errorManager = new OperationErrorManager();
 
-    instruction.writeBehaviour.writeToTab = jest.fn();
-    instruction.writeToTab(tab, errorManager);
-
-    expect(instruction.writeBehaviour.writeToTab).toHaveBeenCalledWith(tab, errorManager);
+    expect(instruction.writeBehaviour).not.toBeNull();
+    expect(instruction.writeBehaviour).toBeInstanceOf(InstructionMergeWriteBehavior);
   });
 
-  it('should not call writeToTab method of writeToTab if instruction`s metadata are not read properly', () => {
-    const instructionStr = '/';
+  it('should create an instruction with the merge write behavior if the instructions is m (merge)', () => {
+    const instructionStr = 'm { 1-2 1-3 }';
     const instruction = new Instruction(instructionStr);
-    const tab = new Tab();
 
-    instruction.writeBehaviour.writeToTab = jest.fn();
-    instruction.writeToTab(tab);
-
-    expect(instruction.writeBehaviour.writeToTab).not.toHaveBeenCalled();
+    expect(instruction.writeBehaviour).not.toBeNull();
+    expect(instruction.writeBehaviour).toBeInstanceOf(InstructionMergeWriteBehavior);
   });
 
-  it('should add error on error manager if one is provided and instruction`s metadata are not read properly', () => {
-    const instructionStr = '/';
-    const instruction = new Instruction(instructionStr);
-    const tab = new Tab();
-    const errorManager = new OperationErrorManager();
+  describe(`[${Instruction.prototype.writeToTab.name}]`, () => {
+    it('should call writeToTab method of writeBehavior once its writeToTab method is called', () => {
+      const instructionStr = '1-2';
+      const instruction = new Instruction(instructionStr);
+      const tab = new Tab();
+      const errorManager = new OperationErrorManager();
 
-    errorManager.addError = jest.fn();
-    instruction.writeToTab(tab, errorManager);
+      instruction.writeBehaviour.writeToTab = jest.fn();
+      instruction.writeToTab(tab, errorManager);
 
-    expect(errorManager.addError).toHaveBeenCalled();
+      expect(instruction.writeBehaviour.writeToTab).toHaveBeenCalledWith(tab, errorManager);
+    });
+
+    it('should not call writeToTab method of writeToTab if instruction`s metadata are not read properly', () => {
+      const instructionStr = '/';
+      const instruction = new Instruction(instructionStr);
+      const tab = new Tab();
+
+      instruction.writeBehaviour.writeToTab = jest.fn();
+      instruction.writeToTab(tab);
+
+      expect(instruction.writeBehaviour.writeToTab).not.toHaveBeenCalled();
+    });
+
+    it('should add error on error manager if one is provided and instruction`s metadata are not read properly', () => {
+      const instructionStr = '/';
+      const instruction = new Instruction(instructionStr);
+      const tab = new Tab();
+      const errorManager = new OperationErrorManager();
+
+      errorManager.addError = jest.fn();
+      instruction.writeToTab(tab, errorManager);
+
+      expect(errorManager.addError).toHaveBeenCalled();
+    });
+  });
+
+  describe(`[${Instruction.prototype.parseInstructionsToApply.name}]`, () => {
+    it('should return an empty array if there are no instructions to parse (to apply)', () => {
+      const instructionStr = '1-2';
+      const instruction = new Instruction(instructionStr);
+
+      const instructionsToApply = instruction.parseInstructionsToApply();
+
+      expect(instructionsToApply.length).toBe(0);
+    });
+
+    it('should throw an error if there are instructions to parse (to apply) but parser config is unavailable', () => {
+      const instructionStr = 'method { 1-2  1-3 }';
+      const instruction = new Instruction(instructionStr);
+
+      expect(() => instruction.parseInstructionsToApply()).toThrow();
+    });
   });
 });

@@ -91,13 +91,13 @@ describe(`[${InstructionMetadataFactory.name}]`, () => {
       expect(instructionMetadata.note).not.toBeDefined();
     });
 
-    it('should not set properties methodName, methodParams and methodInstructionsToApply for non method instructions', () => {
+    it('should not set properties methodName, methodStrParams and methodInstructionsStrToApply for non method instructions', () => {
       const instructionStr = '1-2';
       const instructionMetadata = InstructionMetadataFactory.getInstructionMetadata(instructionStr);
 
       expect(instructionMetadata.methodName).not.toBeDefined();
-      expect(instructionMetadata.methodParams).not.toBeDefined();
-      expect(instructionMetadata.methodInstructionsToApply).not.toBeDefined();
+      expect(instructionMetadata.methodStrParams).not.toBeDefined();
+      expect(instructionMetadata.methodInstructionsStrToApply).not.toBeDefined();
     });
 
     it('should set property methodName for method instructions', () => {
@@ -117,7 +117,7 @@ describe(`[${InstructionMetadataFactory.name}]`, () => {
       });
     });
 
-    it('should set property methodParams for method instructions with parameters', () => {
+    it('should set property methodStrParams for method instructions with parameters', () => {
       const params = '1, 2 , someTextParam ';
       const expectedParams = params.split(',').map(param => param.trim());
 
@@ -128,11 +128,11 @@ describe(`[${InstructionMetadataFactory.name}]`, () => {
       );
 
       instructionsMetadata.forEach(metadata => {
-        expect(metadata.methodParams).toEqual(expectedParams);
+        expect(metadata.methodStrParams).toEqual(expectedParams);
       });
     });
 
-    it('should set property methodParams to null for method instructions without parameters', () => {
+    it('should set property methodStrParams to null for method instructions without parameters', () => {
       const instructionsStr = ['someMethod', `someMethod { instructions }`];
 
       const instructionsMetadata = instructionsStr.map(instructionStr =>
@@ -140,11 +140,11 @@ describe(`[${InstructionMetadataFactory.name}]`, () => {
       );
 
       instructionsMetadata.forEach(metadata => {
-        expect(metadata.methodParams).toBeNull();
+        expect(metadata.methodStrParams).toBeNull();
       });
     });
 
-    it('should set property methodInstructionsToApply for method instructions with instructions specified', () => {
+    it('should set property methodInstructionsStrToApply for method instructions with instructions specified', () => {
       const instructionsToApply = 'someInstructionsToApply';
       const instructionsStr = [
         `someMethod { ${instructionsToApply} }`,
@@ -156,11 +156,11 @@ describe(`[${InstructionMetadataFactory.name}]`, () => {
       );
 
       instructionsMetadata.forEach(metadata => {
-        expect(metadata.methodInstructionsToApply).toBe(instructionsToApply);
+        expect(metadata.methodInstructionsStrToApply).toBe(instructionsToApply);
       });
     });
 
-    it('should set property methodInstructionsToApply to null for method instructions without instructions specified', () => {
+    it('should set property methodInstructionsStrToApply to null for method instructions without instructions specified', () => {
       const instructionsStr = ['someMethod', 'someMethod ( someParams )'];
 
       const instructionsMetadata = instructionsStr.map(instructionStr =>
@@ -168,7 +168,7 @@ describe(`[${InstructionMetadataFactory.name}]`, () => {
       );
 
       instructionsMetadata.forEach(metadata => {
-        expect(metadata.methodInstructionsToApply).toBeNull();
+        expect(metadata.methodInstructionsStrToApply).toBeNull();
       });
     });
 

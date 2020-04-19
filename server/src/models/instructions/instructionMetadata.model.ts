@@ -13,8 +13,8 @@ export interface InstructionMetadata {
   readFailDescription: string;
   isMethod: boolean;
   methodName: string;
-  methodParams: string[] | null;
-  methodInstructionsToApply: string | null;
+  methodStrParams: string[] | null;
+  methodInstructionsStrToApply: string | null;
   chord: number;
   note: string;
 }
@@ -26,8 +26,8 @@ class MethodInstructionMetadata implements InstructionMetadata {
   public readonly isMethod = true;
 
   public readonly methodName: string;
-  public readonly methodParams: string[] | null = null;
-  public readonly methodInstructionsToApply: string | null;
+  public readonly methodStrParams: string[] | null = null;
+  public readonly methodInstructionsStrToApply: string | null;
 
   public readonly readFailDescription!: string;
   public readonly chord!: number;
@@ -35,10 +35,10 @@ class MethodInstructionMetadata implements InstructionMetadata {
 
   constructor(methodName: string, methodParams: string | null = null, methodInstructionsToApply: string | null = null) {
     this.methodName = methodName.trim();
-    this.methodParams = methodParams
+    this.methodStrParams = methodParams
       ? methodParams.split(MethodInstructionMetadata.METHOD_PARAMS_SEPARATOR).map(param => param.trim())
       : null;
-    this.methodInstructionsToApply = methodInstructionsToApply ? methodInstructionsToApply.trim() : null;
+    this.methodInstructionsStrToApply = methodInstructionsToApply ? methodInstructionsToApply.trim() : null;
   }
 }
 
@@ -51,8 +51,8 @@ class NonMethodInstructionMetadata implements InstructionMetadata {
 
   public readonly readFailDescription!: string;
   public readonly methodName!: string;
-  public readonly methodParams!: string[] | null;
-  public readonly methodInstructionsToApply!: string | null;
+  public readonly methodStrParams!: string[] | null;
+  public readonly methodInstructionsStrToApply!: string | null;
 
   constructor(chord: string, note: string) {
     this.chord = parseInt(chord, 10);
@@ -64,8 +64,8 @@ class ReadFailInstructionMetadata implements InstructionMetadata {
   public readonly isRead = false;
   public readonly isMethod!: boolean;
   public readonly methodName!: string;
-  public readonly methodParams!: string[] | null;
-  public readonly methodInstructionsToApply!: string | null;
+  public readonly methodStrParams!: string[] | null;
+  public readonly methodInstructionsStrToApply!: string | null;
   public readonly chord!: number;
   public readonly note!: string;
 

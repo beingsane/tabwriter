@@ -1,4 +1,4 @@
-import { TabBlockWriteResultDto } from './../tab/tabBlock.model';
+import { TabBlockWriteResultDto, TabBlockWriteInstruction } from './../tab/tabBlock.model';
 import { OperationErrorManager } from './../errors/operationErrorManager.model';
 import { InstructionDefaultWriteBehavior } from './instructionDefaultWriteBehavior.model';
 import { Instruction } from './instruction.model';
@@ -16,10 +16,10 @@ describe(`[${InstructionDefaultWriteBehavior.name}]`, () => {
     const instructionDefaultWriteBehavior = createInstructionDefaultWriteBehavior(instructionStr);
     const tab = new Tab();
 
-    TabBlock.prototype.writeNoteOnChord = jest.fn();
+    TabBlock.prototype.writeInstruction = jest.fn();
     instructionDefaultWriteBehavior.writeToTab(tab);
 
-    expect(TabBlock.prototype.writeNoteOnChord).not.toHaveBeenCalled();
+    expect(TabBlock.prototype.writeInstruction).not.toHaveBeenCalled();
   });
 
   it(`should add error on error manager if one is provided and it can't read instruction's chord and note`, () => {
@@ -41,10 +41,11 @@ describe(`[${InstructionDefaultWriteBehavior.name}]`, () => {
     const instructionDefaultWriteBehavior = createInstructionDefaultWriteBehavior(instructionStr);
     const tab = new Tab();
 
-    TabBlock.prototype.writeNoteOnChord = jest.fn(() => new TabBlockWriteResultDto(true));
+    const expectedWriteInstruction = new TabBlockWriteInstruction(chord, note);
+    TabBlock.prototype.writeInstruction = jest.fn(() => new TabBlockWriteResultDto(true));
     instructionDefaultWriteBehavior.writeToTab(tab);
 
-    expect(TabBlock.prototype.writeNoteOnChord).toHaveBeenCalledWith(chord, note);
+    expect(TabBlock.prototype.writeInstruction).toHaveBeenCalledWith(expectedWriteInstruction);
   });
 
   it('should add error on error manager if one is provided and it gets an error while writing chord and not to tab', () => {
@@ -56,7 +57,7 @@ describe(`[${InstructionDefaultWriteBehavior.name}]`, () => {
     const errorManager = new OperationErrorManager();
 
     errorManager.addError = jest.fn();
-    TabBlock.prototype.writeNoteOnChord = jest.fn(() => new TabBlockWriteResultDto(false));
+    TabBlock.prototype.writeInstruction = jest.fn(() => new TabBlockWriteResultDto(false));
     instructionDefaultWriteBehavior.writeToTab(tab, errorManager);
 
     expect(errorManager.addError).toHaveBeenCalled();

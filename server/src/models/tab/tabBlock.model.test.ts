@@ -1,5 +1,5 @@
 import { TabConfig } from './tab.model';
-import { TabBlock } from './tabBlock.model';
+import { TabBlock, TabBlockWriteInstruction } from './tabBlock.model';
 describe(`[${TabBlock.name}]`, () => {
   it('should initialize the tab block rows based on the given config', () => {
     const tabConfig = new TabConfig();
@@ -20,14 +20,15 @@ describe(`[${TabBlock.name}]`, () => {
     });
   });
 
-  describe(`[${TabBlock.prototype.writeNoteOnChord.name}]`, () => {
+  describe(`[${TabBlock.prototype.writeInstruction.name}]`, () => {
     it('should return a no success result if the given chord is smaller than 1', () => {
       const tabConfig = new TabConfig();
       const invalidChord = 0;
       const note = '1';
 
+      const writeInstruction = new TabBlockWriteInstruction(invalidChord, note);
       const tabBlock = new TabBlock(tabConfig);
-      const result = tabBlock.writeNoteOnChord(invalidChord, note);
+      const result = tabBlock.writeInstruction(writeInstruction);
 
       expect(result.success).toBe(false);
     });
@@ -37,8 +38,9 @@ describe(`[${TabBlock.name}]`, () => {
       const invalidChord = tabConfig.rowsQty + 1;
       const note = '1';
 
+      const writeInstruction = new TabBlockWriteInstruction(invalidChord, note);
       const tabBlock = new TabBlock(tabConfig);
-      const result = tabBlock.writeNoteOnChord(invalidChord, note);
+      const result = tabBlock.writeInstruction(writeInstruction);
 
       expect(result.success).toBe(false);
     });
@@ -49,9 +51,10 @@ describe(`[${TabBlock.name}]`, () => {
       const tabConfig = new TabConfig();
       const expectedWriteValue = note + Array(tabConfig.rowsSpacing + 1).join(tabConfig.rowsFiller);
 
+      const writeInstruction = new TabBlockWriteInstruction(chord, note);
       const tabBlock = new TabBlock(tabConfig);
       const expectedFinalRowValue = tabBlock.rows[chord - 1] + expectedWriteValue;
-      tabBlock.writeNoteOnChord(chord, note);
+      tabBlock.writeInstruction(writeInstruction);
 
       expect(tabBlock.rows[chord - 1]).toBe(expectedFinalRowValue);
     });
@@ -73,7 +76,8 @@ describe(`[${TabBlock.name}]`, () => {
         return store;
       }, {});
 
-      tabBlock.writeNoteOnChord(chordToWrite, note);
+      const writeInstruction = new TabBlockWriteInstruction(chordToWrite, note);
+      tabBlock.writeInstruction(writeInstruction);
 
       Object.keys(expectedNonChordFinalRowValues).forEach(rowIdxStr => {
         const rowIdx = parseInt(rowIdxStr, 10);
