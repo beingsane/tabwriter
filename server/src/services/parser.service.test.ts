@@ -1,125 +1,174 @@
-import { ParserService, ParserServiceConfig } from './parser.service';
-import { Instruction } from '../models/instructions/instruction.model';
-
-describe(`[${ParserServiceConfig.name}]`, () => {
-  it('should start with the default instructions separator', () => {
-    const config = new ParserServiceConfig();
-
-    expect(config.instructionsSeparator).toBe(ParserServiceConfig.DEFAULT_INSTRUCTIONS_SEPARATOR);
-  });
-
-  it('should allow editing the instructions separator value', () => {
-    const config = new ParserServiceConfig();
-    const instructionsSeparator = '$';
-
-    config.instructionsSeparator = instructionsSeparator;
-
-    expect(config.instructionsSeparator).toBe(instructionsSeparator);
-  });
-
-  it('should throw an error when editing the instructions separator value with a non character string', () => {
-    const config = new ParserServiceConfig();
-    const instructionsSeparator = '$$';
-
-    expect(() => (config.instructionsSeparator = instructionsSeparator)).toThrow();
-  });
-});
+import { ParserService } from './parser.service';
 
 describe(`[${ParserService.name}]`, () => {
-  it('should use the default parser config if no custom config is provided', () => {
-    const defaultConfig = new ParserServiceConfig();
-
-    const parser = new ParserService('1-2');
-
-    expect(parser.config).toEqual(defaultConfig);
-  });
-
-  it('should use the given parser config when provided', () => {
-    const config = new ParserServiceConfig();
-    config.instructionsSeparator = '$';
-
-    const parser = new ParserService('1-2', config);
-
-    expect(parser.config).toEqual(config);
-  });
-
-  describe(`[${ParserService.prototype.parse.name}]`, () => {
+  describe(`[parse]`, () => {
     it('should have an async execution option', async () => {
-      const parser = new ParserService('');
+      const parser = new ParserService();
       parser.parse = jest.fn();
 
-      await parser.parseAsync();
+      await parser.parseAsync('');
 
       expect(parser.parse).toHaveBeenCalled();
     });
 
     it('should reject if an error occurs while parsing async', () => {
-      const parser = new ParserService('');
+      const parser = new ParserService();
       const expectedError = new Error('test');
       parser.parse = jest.fn(() => {
         throw expectedError;
       });
 
-      return parser.parseAsync().catch(e => expect(e).toBe(expectedError));
+      return parser.parseAsync('').catch(e => expect(e).toBe(expectedError));
     });
 
     it('should parse no instructions if the given instructions string is empty', () => {
       const instructionsStr = '     ';
-      const parser = new ParserService(instructionsStr);
+      const parser = new ParserService();
 
-      const instructions = parser.parse();
+      const instructions = parser.parse(instructionsStr);
 
       expect(instructions.length).toBe(0);
     });
 
-    it('should parse instructions between the instructions separator set on the parser', () => {
-      const instructionsStr = ' instr1 instr2 ';
-      const parser = new ParserService(instructionsStr);
+    it('should parse instructions between spaces', () => {
+      const instruction1 = 'instr1';
+      const instruction2 = 'instr2';
+      const instructionsStr = `${instruction1} ${instruction2}`;
+      const parser = new ParserService();
 
-      const instructions = parser.parse();
+      const instructions = parser.parse(instructionsStr);
 
       expect(instructions.length).toBe(2);
-      expect(instructions[0].source).toBe('instr1');
-      expect(instructions[1].source).toBe('instr2');
+      expect(instructions[0].value).toBe(instruction1);
+      expect(instructions[1].value).toBe(instruction2);
     });
 
     it('should read instructions with brackets as a single instruction', () => {
-      const instructionsStr = ' instr1 ( arg1, arg2 ) [ arg1, arg2 ] { arg1, arg2 } ';
-      const parser = new ParserService(instructionsStr);
+      const instructionsStr = 'instr1(arg1, arg2)[arg1, arg2]{arg1, arg2}';
+      const parser = new ParserService();
 
-      const instructions = parser.parse();
+      const instructions = parser.parse(instructionsStr);
 
       expect(instructions.length).toBe(1);
-      expect(instructions[0].source).toBe(instructionsStr.trim());
+      expect(instructions[0].value).toBe(instructionsStr);
+    });
+
+    it('should read instructions with brackets as a single instruction, even with spaces between', () => {
+      const instructionsStr = '  instr1  (  arg1  , arg2  )  [  arg1  , arg2  ]  {  arg1  , arg2  }  ';
+      const parser = new ParserService();
+
+      const instructions = parser.parse(instructionsStr);
+
+      expect(instructions.length).toBe(1);
+      expect(instructions[0].value).toBe(instructionsStr.trim());
     });
 
     it('should read a instruction with no matching closing bracket to the end of the instructions string', () => {
-      const instructionsStr = ' instr2 ( arg1, arg2 [ arg1, arg2 ] { arg1, arg2 } ';
-      const parser = new ParserService(instructionsStr);
+      const instructionsStr = 'instr2(arg1, arg2[arg1, arg2]{arg1, arg2}';
+      const parser = new ParserService();
 
-      const instructions = parser.parse();
-
-      expect(instructions.length).toBe(1);
-      expect(instructions[0].source).toBe(instructionsStr.trim());
-    });
-
-    it('should read a instruction with instructions separator between brackets as one single instruction', () => {
-      const instructionsStr = ' instr2(arg1, arg2) ';
-      const parser = new ParserService(instructionsStr);
-
-      const instructions = parser.parse();
+      const instructions = parser.parse(instructionsStr);
 
       expect(instructions.length).toBe(1);
-      expect(instructions[0].source).toBe(instructionsStr.trim());
+      expect(instructions[0].value).toBe(instructionsStr);
     });
 
-    it('should throw if a instructions is read and have no informations about its end position', () => {
-      const instructionsStr = '1-2';
-      const parser = new ParserService(instructionsStr);
+    it('should read a instruction with no matching closing bracket to the end of the instructions string, even with spaces between', () => {
+      const instructionsStr = '  instr1  (  arg1  , arg2  )  [  arg1  , arg2  ]  {  arg1  , arg2  ';
+      const parser = new ParserService();
 
-      parser.extractInstruction = jest.fn(() => new Instruction('1-2'));
+      const instructions = parser.parse(instructionsStr);
 
-      expect(() => parser.parse()).toThrow();
+      expect(instructions.length).toBe(1);
+      expect(instructions[0].value).toBe(instructionsStr.trim());
+    });
+
+    it('should parse and read the instructions args', () => {
+      const args = [1, 1.11, 'some text input'];
+      const instructionStr = `instr(${args.join(', ')})`;
+      const parser = new ParserService();
+
+      const instructions = parser.parse(instructionStr);
+
+      expect(instructions.length).toBe(1);
+      expect(instructions[0].args).toEqual(args);
+    });
+
+    it('should parse and read the instructions args, even with spaces', () => {
+      const args = [1, 1.11, 'some text input'];
+      const instructionStr = `  instr  (  ${args.join('  ,  ')}  )  `;
+      const parser = new ParserService();
+
+      const instructions = parser.parse(instructionStr);
+
+      expect(instructions.length).toBe(1);
+      expect(instructions[0].args).toEqual(args);
+    });
+
+    it('should parse and read the instruction targets', () => {
+      const targets = ['1-2', '2-3'];
+      const instructionsStr = `instr{${targets.join(' ')}}`;
+      const parser = new ParserService();
+
+      const instructions = parser.parse(instructionsStr);
+      const readTargetsValues = instructions[0].targets?.map(target => target.value);
+
+      expect(instructions.length).toBe(1);
+      expect(readTargetsValues).toEqual(targets);
+    });
+
+    it('sould parse and read the instruction targets, even with spaces', () => {
+      const targets = ['1-2', '2-3'];
+      const instructionsStr = `  instr  {  ${targets.join('  ')}  }  `;
+      const parser = new ParserService();
+
+      const instructions = parser.parse(instructionsStr);
+      const readTargetsValues = instructions[0].targets?.map(target => target.value);
+
+      expect(instructions.length).toBe(1);
+      expect(readTargetsValues).toEqual(targets);
+    });
+
+    it('should upadete inner targets positions to the global reference', () => {
+      const innerTargets = ['6-1', '6-2'];
+      const target = `instr{${innerTargets.join(' ')}}`;
+      const instructionsStr = `instr{${target}}`;
+      const parser = new ParserService();
+
+      const instructions = parser.parse(instructionsStr);
+      const instructionReadTarget = instructions[0]?.targets;
+      const innerTargetsRead = instructionReadTarget ? instructionReadTarget[0]?.targets : null;
+
+      expect(innerTargetsRead).not.toBeNull();
+      expect(innerTargetsRead).toBeDefined();
+      if (innerTargetsRead) {
+        innerTargets.forEach((target, idx) => {
+          expect(innerTargetsRead[idx].value).toBe(target);
+          expect(innerTargetsRead[idx].readFromIdx).toBe(instructionsStr.indexOf(target));
+          expect(innerTargetsRead[idx].readToIdx).toBe(instructionsStr.indexOf(target) + target.length - 1);
+        });
+      }
+    });
+
+    it('should upadete inner targets positions to the global reference, even with spaces', () => {
+      const innerTargets = ['6-1', '6-2'];
+      const target = `  instr  {  ${innerTargets.join('  ')}  }  `;
+      const instructionsStr = `  instr  {  ${target}  }  `;
+      const parser = new ParserService();
+
+      const instructions = parser.parse(instructionsStr);
+      const instructionReadTarget = instructions[0]?.targets;
+      const innerTargetsRead = instructionReadTarget ? instructionReadTarget[0]?.targets : null;
+
+      expect(innerTargetsRead).not.toBeNull();
+      expect(innerTargetsRead).toBeDefined();
+      if (innerTargetsRead) {
+        innerTargets.forEach((target, idx) => {
+          expect(innerTargetsRead[idx].value).toBe(target);
+          expect(innerTargetsRead[idx].readFromIdx).toBe(instructionsStr.indexOf(target));
+          expect(innerTargetsRead[idx].readToIdx).toBe(instructionsStr.indexOf(target) + target.length - 1);
+        });
+      }
     });
   });
 });

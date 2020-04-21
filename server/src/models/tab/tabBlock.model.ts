@@ -1,56 +1,60 @@
-import { Operation } from '../../config/index.enum';
-import { TabConfig } from './tab.model';
+import { OperationResult } from '../operationResult.model';
+import { Tab } from './tab.model';
 
-export class TabBlockWriteResultDto {
-  success: boolean;
-  description: string;
-  operation = Operation.escrita;
-
-  constructor(success: boolean, description = '') {
-    this.success = success;
-    this.description = description;
-  }
-}
+export class TabBlockWriteResult extends OperationResult {}
 
 export class TabBlockWriteInstruction {
   constructor(public readonly chord: number, public readonly note: string) {}
 }
 
 export class TabBlock {
-  header = '';
-  rows: string[];
-  footer = '';
+  private _header = '';
+  private _rows: string[];
+  private _footer = '';
 
-  constructor(private readonly tabConfig: TabConfig) {
-    this.rows = Array(tabConfig.rowsQty).fill('');
+  public get header(): string {
+    return this._header;
+  }
+
+  public get footer(): string {
+    return this._footer;
+  }
+
+  public get rows(): string[] {
+    return this._rows;
+  }
+
+  public get block(): string[] {
+    return [this._header, ...this._rows, this._footer];
+  }
+
+  constructor(private readonly tab: Tab) {
+    this._rows = Array(tab.config.rowsQty).fill('');
     this.addSpacing();
   }
 
   public addSpacing(): void {
-    const rowFiller = this.getRowFiller(this.tabConfig.rowsSpacing);
-    this.rows.forEach((row, rowIdx) => (this.rows[rowIdx] = row + rowFiller));
+    const rowFiller = this.getRowFiller(this.tab.config.rowsSpacing);
+    this._rows.forEach((row, rowIdx) => (this._rows[rowIdx] = row + rowFiller));
   }
 
-  public writeInstruction(instruction: TabBlockWriteInstruction): TabBlockWriteResultDto {
+  public writeInstruction(instruction: TabBlockWriteInstruction): TabBlockWriteResult {
     return this.writeInstructionsMerged([instruction]);
   }
 
-  public writeInstructionsMerged(instructions: TabBlockWriteInstruction[]): TabBlockWriteResultDto {
+  public writeInstructionsMerged(instructions: TabBlockWriteInstruction[]): TabBlockWriteResult {
     const invalidChords = this.getInvalidChordsToWrite(instructions);
     if (invalidChords.length > 0)
-      return new TabBlockWriteResultDto(false, this.getInvalidChordsToWriteDescription(invalidChords));
+      return new TabBlockWriteResult(false, this.getInvalidChordsToWriteDescription(invalidChords));
 
-    const chordsWithMultipleInstructions = this.getChordsWithMultipleInstructions(instructions);
-    if (chordsWithMultipleInstructions.length > 0)
-      return new TabBlockWriteResultDto(
-        false,
-        this.getChordsWithMultipleInstructionsDescription(chordsWithMultipleInstructions),
-      );
+    const duplicatedChords = this.getChordsWithMultipleInstructions(instructions);
+    if (duplicatedChords.length > 0)
+      return new TabBlockWriteResult(false, this.getChordsWithMultipleInstructionsDescription(duplicatedChords));
 
     this.writeInstructionsToRows(instructions);
     this.addSpacing();
 
-    return new TabBlockWriteResultDto(true);
+    return new TabBlockWriteResult(true);
   }
 
   private writeInstructionsToRows(instructions: TabBlockWriteInstruction[]): void {
@@ -58,23 +62,23 @@ export class TabBlock {
       return Math.max(maxNoteLength, instruction.note.length);
     }, 0);
 
-    this.rows.forEach((row, idx) => {
+    this._rows.forEach((row, idx) => {
       const instructionToWrite = instructions.find(instruction => instruction.chord === idx + 1);
       if (instructionToWrite) {
         const rowFillerLength = maxNoteLength - instructionToWrite.note.length;
-        this.rows[idx] = row + instructionToWrite.note + this.getRowFiller(rowFillerLength);
+        this._rows[idx] = row + instructionToWrite.note + this.getRowFiller(rowFillerLength);
       } else {
-        this.rows[idx] = row + this.getRowFiller(maxNoteLength);
+        this._rows[idx] = row + this.getRowFiller(maxNoteLength);
       }
     });
   }
 
   private getRowFiller(fillerLength: number): string {
-    return Array(fillerLength + 1).join(this.tabConfig.rowsFiller);
+    return Array(fillerLength + 1).join(this.tab.config.rowsFiller);
   }
 
   private isChordValidToWrite(chord: number): boolean {
-    return chord > 0 && chord <= this.tabConfig.rowsQty;
+    return chord > 0 && chord <= this.tab.config.rowsQty;
   }
 
   private getInvalidChordsToWrite(instructions: TabBlockWriteInstruction[]): number[] {
@@ -87,13 +91,11 @@ export class TabBlock {
   }
 
   private getInvalidChordsToWriteDescription(chords: number[]): string {
-    if (chords.length === 1) {
-      return `A corda indicada < ${chords[0]} > está fora da faixa disponível, de 1 a ${this.tabConfig.rowsQty}`;
-    } else {
-      return `As cordas indicadas < ${chords.join(', ')} > estão fora da faixa disponível, de 1 a ${
-        this.tabConfig.rowsQty
-      }`;
-    }
+    const availableChordsDesc = `de 1 a ${this.tab.config.rowsQty}`;
+
+    return chords.length === 1
+      ? `A corda indicada < ${chords[0]} > está fora da faixa disponível, ${availableChordsDesc}`
+      : `As cordas indicadas < ${chords.join(', ')} > estão fora da faixa disponível, ${availableChordsDesc}`;
   }
 
   private getChordsWithMultipleInstructions(instructions: TabBlockWriteInstruction[]): number[] {
@@ -111,7 +113,7 @@ export class TabBlock {
 
   private getChordsWithMultipleInstructionsDescription(chords: number[]): string {
     if (chords.length === 1) {
-      return `Múltiplas notas encontradas para a seguinte corda: ${chords.join(', ')}`;
+      return `Múltiplas notas encontradas para a corda ${chords[0]}`;
     } else {
       return `Múltiplas notas encontradas para as seguintes cordas: ${chords.join(', ')}`;
     }

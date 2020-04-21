@@ -1,17 +1,21 @@
 import { OperationError } from './operationError.model';
+import { InstructionOperationError } from './instructionOperationError.model';
 
 export class OperationErrorManager {
-  protected errors: OperationError[] = [];
+  private errors: OperationError[] = [];
 
   get errorMessages(): string[] {
     return this.errors.map(e => e.toString());
   }
 
-  addError(error: OperationError): void {
-    this.errors.push(error);
-  }
-
-  addErrors(errors: OperationError[]): void {
-    this.errors = this.errors.concat(errors);
+  addInstructionReadError(
+    instructionSource: string,
+    instructionName: string,
+    instructionPosition: number,
+    errorDescription: string,
+  ): void {
+    this.errors.push(
+      new InstructionOperationError(instructionSource, instructionPosition, instructionName, errorDescription),
+    );
   }
 }

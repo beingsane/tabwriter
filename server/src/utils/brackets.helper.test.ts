@@ -1,7 +1,7 @@
 import { BracketsHelper } from './brackets.helper';
 
 describe(`[${BracketsHelper.name}]`, () => {
-  describe(`[${BracketsHelper.isOpeningBracket.name}]`, () => {
+  describe(`[isOpeningBracket]`, () => {
     it('should identify (, [ and { as opening brackets', () => {
       const isOpeningBracketMap: Record<string, boolean | null> = {
         '(': null,
@@ -19,7 +19,7 @@ describe(`[${BracketsHelper.name}]`, () => {
     });
   });
 
-  describe(`[${BracketsHelper.isClosingBracket.name}]`, () => {
+  describe(`[isClosingBracket]`, () => {
     it('should identify ), ] and } as closing brackets', () => {
       const isClosingBracketMap: Record<string, boolean | null> = {
         ')': null,
@@ -37,7 +37,7 @@ describe(`[${BracketsHelper.name}]`, () => {
     });
   });
 
-  describe(`[${BracketsHelper.hasOpeningBracket.name}]`, () => {
+  describe(`[hasOpeningBracket]`, () => {
     it('should return false when the string has no opening brackets', () => {
       const str = 'some string without opening brackets';
       const hasOpeningBrackets = BracketsHelper.hasOpeningBracket(str);
@@ -60,7 +60,7 @@ describe(`[${BracketsHelper.name}]`, () => {
     });
   });
 
-  describe(`[${BracketsHelper.hasClosingBracket.name}]`, () => {
+  describe(`[hasClosingBracket]`, () => {
     it('should return false when the string has no closing brackets', () => {
       const str = 'some string without closing brackets';
       const hasClosingBrackets = BracketsHelper.hasClosingBracket(str);
@@ -83,7 +83,7 @@ describe(`[${BracketsHelper.name}]`, () => {
     });
   });
 
-  describe(`[${BracketsHelper.indexOfMatchingClosingBracket.name}]`, () => {
+  describe(`[indexOfMatchingClosingBracket]`, () => {
     it('should return -1 if opening bracket index is greater than provided string length', () => {
       const str = 'test';
 
@@ -92,12 +92,10 @@ describe(`[${BracketsHelper.name}]`, () => {
       expect(indexOfMatchingClosingBracket).toBe(-1);
     });
 
-    it('should return -1 if opening brackect index does not contain a valid opening bracket', () => {
+    it('should throw if opening brackect index does not contain a valid opening bracket', () => {
       const str = 'test';
 
-      const indexOfMatchingClosingBracket = BracketsHelper.indexOfMatchingClosingBracket(str, 0);
-
-      expect(indexOfMatchingClosingBracket).toBe(-1);
+      expect(() => BracketsHelper.indexOfMatchingClosingBracket(str, 0)).toThrow();
     });
 
     it('should return -1 if no matching closing bracket is found', () => {
@@ -114,6 +112,43 @@ describe(`[${BracketsHelper.name}]`, () => {
       const indexOfMatchingClosingBracket = BracketsHelper.indexOfMatchingClosingBracket(str, 0);
 
       expect(indexOfMatchingClosingBracket).toBe(7);
+    });
+  });
+
+  describe('[getValueInsideBrackets]', () => {
+    it('should throw if opening brackect is not a valid opening bracket', () => {
+      const invalidOpeningbracket = 'test';
+
+      expect(() => BracketsHelper.getValueInsideBrackets(invalidOpeningbracket, invalidOpeningbracket)).toThrow();
+    });
+
+    it('should return an empty string if the given opening bracket is not found at the given string', () => {
+      const str = 'test without brackets';
+      const openingBracket = '(';
+
+      const value = BracketsHelper.getValueInsideBrackets(str, openingBracket);
+
+      expect(value).toBe('');
+    });
+
+    it('should return the string from the opening bracket to the end if no matching closing bracket is found', () => {
+      const expectedValue = ' some text after opening bracket ';
+      const openingBracket = '(';
+      const str = `test with ${openingBracket}${expectedValue}`;
+
+      const value = BracketsHelper.getValueInsideBrackets(str, openingBracket);
+
+      expect(value).toBe(expectedValue);
+    });
+
+    it('should return the string inside if both the opening bracket and the matching closing bracket are found', () => {
+      const expectedValue = ' some text after opening bracket ';
+      const openingBracket = '(';
+      const str = `test with ${openingBracket}${expectedValue}) some extra text`;
+
+      const value = BracketsHelper.getValueInsideBrackets(str, openingBracket);
+
+      expect(value).toBe(expectedValue);
     });
   });
 });

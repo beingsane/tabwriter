@@ -1,4 +1,4 @@
-import { TabBlock } from './tabBlock.model';
+import { TabBlock, TabBlockWriteInstruction, TabBlockWriteResult } from './tabBlock.model';
 
 export class TabConfig {
   public static readonly DEFAULT_ROWS_QTY = 6;
@@ -35,10 +35,14 @@ export class TabConfig {
 }
 
 export class Tab {
-  public readonly tabBlocks: TabBlock[] = [];
+  private readonly tabBlocks: TabBlock[] = [];
 
-  get currentTabBlock(): TabBlock {
+  private get currentTabBlock(): TabBlock {
     return this.tabBlocks[this.tabBlocks.length - 1];
+  }
+
+  public get blocks(): string[][] {
+    return this.tabBlocks.map(tabBlock => tabBlock.block);
   }
 
   constructor(public readonly config: TabConfig = new TabConfig()) {
@@ -46,6 +50,14 @@ export class Tab {
   }
 
   public addTabBlock(): void {
-    this.tabBlocks.push(new TabBlock(this.config));
+    this.tabBlocks.push(new TabBlock(this));
+  }
+
+  public writeInstruction(instruction: TabBlockWriteInstruction): TabBlockWriteResult {
+    return this.currentTabBlock.writeInstruction(instruction);
+  }
+
+  public writeInstructionsMerged(instructions: TabBlockWriteInstruction[]): TabBlockWriteResult {
+    return this.currentTabBlock.writeInstructionsMerged(instructions);
   }
 }

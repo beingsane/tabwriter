@@ -1,107 +1,204 @@
-import { Instruction } from './../models/instructions/instruction.model';
-import { InstructionParsingMetadata } from '../models/instructions/instructionMetadata.model';
 import { BracketsHelper } from '../utils/brackets.helper';
 import '../extensions/string.extensions';
 
-export class ParserServiceConfig {
-  public static readonly DEFAULT_INSTRUCTIONS_SEPARATOR = ' ';
+export class ParserResult {
+  constructor(
+    public value: string,
+    public readFromIdx: number,
+    public readToIdx: number,
+    public method: string | null,
+    public args: (string | number)[] | null,
+    public targets: ParserResult[] | null,
+  ) {}
+}
 
-  private _instructionsSeparator = ParserServiceConfig.DEFAULT_INSTRUCTIONS_SEPARATOR;
-  get instructionsSeparator(): string {
-    return this._instructionsSeparator;
-  }
-  set instructionsSeparator(value: string) {
-    if (value.length !== 1)
-      throw Error(`[${ParserServiceConfig.name}] A instructions separator must have only one character`);
+class ParseInstructionResult {
+  constructor(
+    public readonly method: string | null,
+    public readonly args: string | null,
+    public readonly targets: string | null,
+  ) {}
+}
 
-    this._instructionsSeparator = value;
-  }
+class ReadInstructionResult {
+  constructor(
+    public readonly method: string | null,
+    public readonly args: (string | number)[] | null,
+    public readonly targets: ParserResult[] | null,
+  ) {}
 }
 
 export class ParserService {
-  public instructionsStr: string;
+  public static readonly INSTRUCTIONS_SEPARATOR = ' ';
+  public static readonly INSTRUCTIONS_ARGS_SEPARATOR = ',';
+  public static readonly INSTRUCTIONS_ARGS_OPENING_BRACKET = '(';
+  public static readonly INSTRUCTIONS_TARGETS_OPENING_BRACKET = '{';
 
-  constructor(instructionsStr: string, public readonly config = new ParserServiceConfig()) {
-    this.instructionsStr = instructionsStr.trimRight();
+  private static readonly INSTRUCTIONS_METHOD_REGEX_EXTRACTION = /^([a-z]+)(?!-)/gim;
+
+  private static extractMethod(parsedInstruction: string): string | null {
+    const methodRegexMatchResult = ParserService.INSTRUCTIONS_METHOD_REGEX_EXTRACTION.exec(parsedInstruction);
+    ParserService.INSTRUCTIONS_METHOD_REGEX_EXTRACTION.lastIndex = 0;
+
+    return methodRegexMatchResult ? methodRegexMatchResult[1] : null;
   }
 
-  public parse(): Instruction[] {
-    let startIndex = 0;
-    const instructions: Instruction[] = [];
+  public parse(instructionsToParse: string): ParserResult[] {
+    const result: ParserResult[] = [];
 
+    let startIndex = 0;
     while (true) {
-      const instruction = this.extractInstruction(startIndex);
+      const instruction = this.parseNextInstruction(instructionsToParse, startIndex);
 
       if (instruction === null) break;
 
-      if (instruction.parsingMetadata.endsAtIndex === null)
-        throw Error(`[${ParserServiceConfig.name}] Unable to read the end position of the last extracted instruction`);
-
-      instructions.push(instruction);
-      startIndex = instruction.parsingMetadata.endsAtIndex + 1;
+      result.push(instruction);
+      startIndex = instruction.readToIdx + 1;
     }
 
-    return instructions;
+    return result;
   }
 
-  public async parseAsync(): Promise<Instruction[]> {
+  public async parseAsync(instructionsToParse: string): Promise<ParserResult[]> {
     return new Promise((resolve, reject) => {
       try {
-        resolve(this.parse());
+        resolve(this.parse(instructionsToParse));
       } catch (ex) {
         reject(ex);
       }
     });
   }
 
-  public extractInstruction(fromIndex: number): Instruction | null {
-    if (fromIndex > this.instructionsStr.length - 1) return null;
+  private parseNextInstruction(instructionsToParse: string, fromIndex: number): ParserResult | null {
+    if (fromIndex > instructionsToParse.length - 1) return null;
 
-    const startInstrIndex = this.instructionsStr.indexOfDifferent(this.config.instructionsSeparator, fromIndex);
+    const instructionStartIndex = instructionsToParse.indexOfDifferent(ParserService.INSTRUCTIONS_SEPARATOR, fromIndex);
+    if (instructionStartIndex < 0) return null;
 
-    const endInstrIndex = this.indexOfInstructionEnd(startInstrIndex);
+    const instructionEndIndex = this.indexOfInstructionEnd(instructionsToParse, instructionStartIndex);
 
-    return new Instruction(
-      this.instructionsStr.slice(startInstrIndex, endInstrIndex + 1),
-      new InstructionParsingMetadata(startInstrIndex, endInstrIndex, this.config),
-    );
+    const parsedInstruction = instructionsToParse.slice(instructionStartIndex, instructionEndIndex + 1).trim();
+    const { method, args, targets } = this.readInstruction(parsedInstruction, instructionStartIndex);
+
+    return new ParserResult(parsedInstruction, instructionStartIndex, instructionEndIndex, method, args, targets);
   }
 
-  private indexOfInstructionEnd(instrStartIndex: number): number {
-    const nextSeparatorIndex = this.instructionsStr.indexOf(this.config.instructionsSeparator, instrStartIndex);
-    if (nextSeparatorIndex < 0) return this.instructionsStr.length - 1;
+  private indexOfInstructionEnd(instructionsToParse: string, instrStartIndex: number): number {
+    const nextSeparatorIndex = instructionsToParse.indexOf(ParserService.INSTRUCTIONS_SEPARATOR, instrStartIndex);
+    if (nextSeparatorIndex < 0) return instructionsToParse.length - 1;
 
-    let endOfInstrIndex = this.correctEndForOpeningBracketsBefore(instrStartIndex, nextSeparatorIndex - 1);
-    endOfInstrIndex = this.correctEndForOpeningBracketsAfter(instrStartIndex, endOfInstrIndex);
+    let endOfInstrIndex = this.correctEndForOpeningBracketsBefore(
+      instructionsToParse,
+      instrStartIndex,
+      nextSeparatorIndex - 1,
+    );
+
+    endOfInstrIndex = this.correctEndForOpeningBracketsAfter(instructionsToParse, instrStartIndex, endOfInstrIndex);
 
     return endOfInstrIndex;
   }
 
-  private correctEndForOpeningBracketsBefore(instrStartIndex: number, toCheckInstrEndIndex: number): number {
+  private correctEndForOpeningBracketsBefore(
+    instructionsToParse: string,
+    instrStartIndex: number,
+    toCheckInstrEndIndex: number,
+  ): number {
     const openingBracketsIndexes = BracketsHelper.openingBrackets
-      .map(openingBracket => this.instructionsStr.indexOf(openingBracket, instrStartIndex))
+      .map(openingBracket => instructionsToParse.indexOf(openingBracket, instrStartIndex))
       .filter(openingBracketIndex => openingBracketIndex > 0);
     if (openingBracketsIndexes.length === 0) return toCheckInstrEndIndex;
 
     const firstOpeningBracketIndex = Math.min(...openingBracketsIndexes);
     if (firstOpeningBracketIndex > toCheckInstrEndIndex) return toCheckInstrEndIndex;
 
-    return BracketsHelper.indexOfMatchingClosingBracket(this.instructionsStr, firstOpeningBracketIndex);
+    const closingBracketIndex = BracketsHelper.indexOfMatchingClosingBracket(
+      instructionsToParse,
+      firstOpeningBracketIndex,
+    );
+    if (closingBracketIndex < 0) return instructionsToParse.length - 1;
+
+    return closingBracketIndex;
   }
 
-  private correctEndForOpeningBracketsAfter(instrStartIndex: number, toCheckEndIndex: number): number {
-    if (toCheckEndIndex + 1 > this.instructionsStr.length - 1) return toCheckEndIndex;
+  private correctEndForOpeningBracketsAfter(
+    instructionsToParse: string,
+    instrStartIndex: number,
+    toCheckEndIndex: number,
+  ): number {
+    if (toCheckEndIndex + 1 > instructionsToParse.length - 1) return toCheckEndIndex;
 
-    const nextInstrStartIndex = this.instructionsStr.indexOfDifferent(
-      this.config.instructionsSeparator,
+    const nextInstrStartIndex = instructionsToParse.indexOfDifferent(
+      ParserService.INSTRUCTIONS_SEPARATOR,
       toCheckEndIndex + 1,
     );
-    const nextInstrStartChar = this.instructionsStr[nextInstrStartIndex];
+    const nextInstrStartChar = instructionsToParse[nextInstrStartIndex];
     if (!BracketsHelper.isOpeningBracket(nextInstrStartChar)) return toCheckEndIndex;
 
-    const closingBracketIndex = BracketsHelper.indexOfMatchingClosingBracket(this.instructionsStr, nextInstrStartIndex);
-    if (closingBracketIndex < 0) return this.instructionsStr.length - 1;
+    const closingBracketIndex = BracketsHelper.indexOfMatchingClosingBracket(instructionsToParse, nextInstrStartIndex);
+    if (closingBracketIndex < 0) return instructionsToParse.length - 1;
 
-    return this.correctEndForOpeningBracketsAfter(instrStartIndex, closingBracketIndex);
+    return this.correctEndForOpeningBracketsAfter(instructionsToParse, instrStartIndex, closingBracketIndex);
+  }
+
+  private readInstruction(parsedInstruction: string, parsedInstructionStartIdx: number): ReadInstructionResult {
+    const { method, args, targets } = this.parseInstruction(parsedInstruction);
+
+    const readArgs = args ? this.readInstructionArgs(args) : null;
+
+    const readTargets = targets
+      ? this.readInstructionTargets(targets, parsedInstruction, parsedInstructionStartIdx)
+      : null;
+
+    return new ReadInstructionResult(method, readArgs, readTargets);
+  }
+
+  private parseInstruction(parsedInstruction: string): ParseInstructionResult {
+    const parsedMethod = ParserService.extractMethod(parsedInstruction);
+    const parsedArgs = BracketsHelper.getValueInsideBrackets(
+      parsedInstruction,
+      ParserService.INSTRUCTIONS_ARGS_OPENING_BRACKET,
+    );
+
+    const parsedTargets = BracketsHelper.getValueInsideBrackets(
+      parsedInstruction,
+      ParserService.INSTRUCTIONS_TARGETS_OPENING_BRACKET,
+    );
+
+    return new ParseInstructionResult(parsedMethod, parsedArgs, parsedTargets);
+  }
+
+  private readInstructionArgs(parsedArgs: string): (string | number)[] {
+    return parsedArgs.split(ParserService.INSTRUCTIONS_ARGS_SEPARATOR).map(arg => {
+      const argNumber = Number(arg);
+      return isNaN(argNumber) ? arg.trim() : argNumber;
+    });
+  }
+
+  private readInstructionTargets(
+    parsedTargets: string,
+    parsedInstruction: string,
+    parsedInstructionStartIdx: number,
+  ): ParserResult[] {
+    let readTargets = this.parse(parsedTargets);
+    readTargets = this.updateInstructionTargetsIdxsReference(readTargets, parsedInstruction, parsedInstructionStartIdx);
+
+    return readTargets;
+  }
+
+  private updateInstructionTargetsIdxsReference(
+    targetsToUpdate: ParserResult[],
+    parsedInstruction: string,
+    parsedInstructionStartIdx: number,
+  ): ParserResult[] {
+    return targetsToUpdate.map(target => {
+      target.readFromIdx = parsedInstructionStartIdx + parsedInstruction.indexOf(target.value);
+      target.readToIdx = target.readFromIdx + target.value.length - 1;
+
+      if (target.targets) {
+        this.updateInstructionTargetsIdxsReference(target.targets, target.value, target.readFromIdx);
+      }
+
+      return target;
+    });
   }
 }

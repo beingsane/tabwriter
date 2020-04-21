@@ -28,7 +28,9 @@ export class BracketsHelper {
   }
 
   public static indexOfMatchingClosingBracket(str: string, openingBracketIndex: number): number {
-    if (openingBracketIndex > str.length - 1 || !BracketsHelper.isOpeningBracket(str[openingBracketIndex])) return -1;
+    if (openingBracketIndex > str.length - 1) return -1;
+    if (!BracketsHelper.isOpeningBracket(str[openingBracketIndex]))
+      throw Error(`Invalid opening bracket ${str[openingBracketIndex]}, at index ${openingBracketIndex}`);
 
     const openingBracket = str[openingBracketIndex];
     const closingBracket = BracketsHelper.openingClosingBracketsMap[openingBracket];
@@ -48,6 +50,18 @@ export class BracketsHelper {
     }
 
     return -1;
+  }
+
+  public static getValueInsideBrackets(str: string, openingBracket: string, start?: number): string {
+    if (!BracketsHelper.isOpeningBracket(openingBracket)) throw Error(`Invalid openingBracket ${openingBracket}`);
+
+    const startIdx = str.indexOf(openingBracket, start);
+    if (startIdx > -1) {
+      const endIdx = BracketsHelper.indexOfMatchingClosingBracket(str, startIdx);
+      return endIdx < 0 ? str.slice(startIdx + 1, str.length) : str.slice(startIdx + 1, endIdx);
+    }
+
+    return '';
   }
 
   private static hasBrackets(str: string, brackets: string[]): boolean {

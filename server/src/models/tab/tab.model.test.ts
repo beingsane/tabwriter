@@ -1,3 +1,4 @@
+import { TabBlockWriteInstruction } from './tabBlock.model';
 import { TabConfig, Tab } from './tab.model';
 
 describe(`[${TabConfig.name}]`, () => {
@@ -100,7 +101,7 @@ describe(`[${Tab.name}]`, () => {
   it('should be created with one tab block', () => {
     const tab = new Tab();
 
-    expect(tab.tabBlocks.length).toBe(1);
+    expect(tab.blocks.length).toBe(1);
   });
 
   it('should provide a method to add a new tab block to the tab', () => {
@@ -108,6 +109,35 @@ describe(`[${Tab.name}]`, () => {
 
     tab.addTabBlock();
 
-    expect(tab.tabBlocks.length).toBe(2);
+    expect(tab.blocks.length).toBe(2);
+  });
+
+  it('should provide a method to add a instruction to the last tab block', () => {
+    const chord = 1;
+    const note = '1/2';
+    const instruction = new TabBlockWriteInstruction(chord, note);
+
+    const tab = new Tab();
+    tab.addTabBlock();
+    tab.writeInstruction(instruction);
+
+    expect(tab.blocks[1][chord]).toContain(note);
+  });
+
+  it('should provide a method to add merged instructions to the last tab block', () => {
+    const chordNoteMap: Record<number, string> = { 1: '1/2', 2: '2' };
+    const instructions = Object.keys(chordNoteMap).map(chordStr => {
+      const chord = parseInt(chordStr, 10);
+      return new TabBlockWriteInstruction(chord, chordNoteMap[chord]);
+    });
+
+    const tab = new Tab();
+    tab.addTabBlock();
+    tab.writeInstructionsMerged(instructions);
+
+    Object.keys(chordNoteMap).map(chordStr => {
+      const chord = parseInt(chordStr, 10);
+      expect(tab.blocks[1][chord]).toContain(chordNoteMap[chord]);
+    });
   });
 });
