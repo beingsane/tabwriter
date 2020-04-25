@@ -1,5 +1,6 @@
 import { OperationResult } from '../operationResult.model';
 import { Tab } from './tab.model';
+import '../../extensions/string.extensions';
 
 export class TabBlockWriteResult extends OperationResult {}
 
@@ -8,34 +9,60 @@ export class TabBlockWriteInstruction {
 }
 
 export class TabBlock {
-  private _header = '';
-  private _rows: string[];
-  private _footer = '';
+  private internalHeader = '';
+  private internalRows: string[];
+  private internalFooter = '';
 
   public get header(): string {
-    return this._header;
+    return this.internalHeader;
   }
 
   public get footer(): string {
-    return this._footer;
+    return this.internalFooter;
   }
 
   public get rows(): string[] {
-    return this._rows;
+    return this.internalRows;
   }
 
   public get block(): string[] {
-    return [this._header, ...this._rows, this._footer];
+    return [this.internalHeader, ...this.internalRows, this.internalFooter];
   }
 
   constructor(private readonly tab: Tab) {
-    this._rows = Array(tab.config.rowsQty).fill('');
+    this.internalRows = Array(tab.rowsQuantity).fill('');
     this.addSpacing();
   }
 
-  public addSpacing(): void {
-    const rowFiller = this.getRowFiller(this.tab.config.rowsSpacing);
-    this._rows.forEach((row, rowIdx) => (this._rows[rowIdx] = row + rowFiller));
+  public addSpacing(spacing?: number): void {
+    if (spacing !== undefined && spacing < 1) throw Error(`[${TabBlock.name}] spacing must be a positive number.`);
+
+    const spacingToAdd = spacing ? spacing : this.tab.rowsSpacing;
+    const rowFiller = this.getRowFiller(spacingToAdd);
+    this.internalRows.forEach((row, rowIdx) => (this.internalRows[rowIdx] = row + rowFiller));
+  }
+
+  public removeSpacing(spacing?: number): void {
+    if (spacing !== undefined && spacing < 1) throw Error(`[${TabBlock.name}] spacing must be a positive number.`);
+
+    const maxRemovableSpacing = this.maximumRemovableSpacing();
+
+    if (spacing !== undefined && spacing > maxRemovableSpacing)
+      throw Error(`[${TabBlock.name}] can not remove content elements. Removable spacing < ${maxRemovableSpacing} >.`);
+
+    const spacingToRemove = spacing ? spacing : maxRemovableSpacing;
+    this.internalRows.forEach(
+      (row, rowIdx) => (this.internalRows[rowIdx] = row.slice(0, row.length - spacingToRemove)),
+    );
+  }
+
+  public maximumRemovableSpacing(): number {
+    return this.internalRows.reduce((store: number, row) => {
+      const nonFillerLastIdx = row.indexOfDifferent(this.tab.rowsFiller, row.length - 1, -1);
+      const removableSpacing = nonFillerLastIdx < 0 ? row.length : row.length - (nonFillerLastIdx + 1);
+
+      return store < 0 ? removableSpacing : Math.min(removableSpacing, store);
+    }, -1);
   }
 
   public writeInstruction(instruction: TabBlockWriteInstruction): TabBlockWriteResult {
@@ -62,23 +89,23 @@ export class TabBlock {
       return Math.max(maxNoteLength, instruction.note.length);
     }, 0);
 
-    this._rows.forEach((row, idx) => {
+    this.internalRows.forEach((row, idx) => {
       const instructionToWrite = instructions.find(instruction => instruction.chord === idx + 1);
       if (instructionToWrite) {
         const rowFillerLength = maxNoteLength - instructionToWrite.note.length;
-        this._rows[idx] = row + instructionToWrite.note + this.getRowFiller(rowFillerLength);
+        this.internalRows[idx] = row + instructionToWrite.note + this.getRowFiller(rowFillerLength);
       } else {
-        this._rows[idx] = row + this.getRowFiller(maxNoteLength);
+        this.internalRows[idx] = row + this.getRowFiller(maxNoteLength);
       }
     });
   }
 
   private getRowFiller(fillerLength: number): string {
-    return Array(fillerLength + 1).join(this.tab.config.rowsFiller);
+    return Array(fillerLength + 1).join(this.tab.rowsFiller);
   }
 
   private isChordValidToWrite(chord: number): boolean {
-    return chord > 0 && chord <= this.tab.config.rowsQty;
+    return chord > 0 && chord <= this.tab.rowsQuantity;
   }
 
   private getInvalidChordsToWrite(instructions: TabBlockWriteInstruction[]): number[] {
@@ -91,7 +118,7 @@ export class TabBlock {
   }
 
   private getInvalidChordsToWriteDescription(chords: number[]): string {
-    const availableChordsDesc = `de 1 a ${this.tab.config.rowsQty}`;
+    const availableChordsDesc = `de 1 a ${this.tab.rowsQuantity}`;
 
     return chords.length === 1
       ? `A corda indicada < ${chords[0]} > está fora da faixa disponível, ${availableChordsDesc}`

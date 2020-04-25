@@ -1,42 +1,53 @@
 import { TabBlock, TabBlockWriteInstruction, TabBlockWriteResult } from './tabBlock.model';
 
-export class TabConfig {
-  public static readonly DEFAULT_ROWS_QTY = 6;
+interface TabConfig {
+  rowsQuantity?: number;
+  rowsFiller?: string;
+  rowsSpacing?: number;
+  sectionSymbol?: string;
+}
+
+export class Tab {
+  public static readonly DEFAULT_ROWS_QUANTITY = 6;
   public static readonly DEFAULT_ROWS_FILLER = '-';
   public static readonly DEFAULT_ROWS_SPACING = 3;
   public static readonly DEFAULT_SECTION_SYMBOL = '|';
 
-  private _rowsFiller: string = TabConfig.DEFAULT_ROWS_FILLER;
-  get rowsFiller(): string {
-    return this._rowsFiller;
-  }
-  set rowsFiller(value: string) {
-    if (value.length !== 1) {
-      throw Error(`[${TabConfig.name}] rowsFiller must be a single character string.`);
-    }
-
-    this._rowsFiller = value;
+  private readonly currentRowsQuantity: number;
+  public get rowsQuantity(): number {
+    return this.currentRowsQuantity;
   }
 
-  private _sectionSymbol: string = TabConfig.DEFAULT_SECTION_SYMBOL;
-  get sectionSymbol(): string {
-    return this._sectionSymbol;
-  }
-  set sectionSymbol(value: string) {
-    if (value.length !== 1) {
-      throw Error(`[${TabConfig.name}] sectionSymbol must be a single character string.`);
-    }
-
-    this._sectionSymbol = value;
+  private readonly currentRowsFiller: string;
+  public get rowsFiller(): string {
+    return this.currentRowsFiller;
   }
 
-  rowsQty = TabConfig.DEFAULT_ROWS_QTY;
-  rowsSpacing = TabConfig.DEFAULT_ROWS_SPACING;
-}
+  private currentRowsSpacing: number;
+  public get rowsSpacing(): number {
+    return this.currentRowsSpacing;
+  }
+  public set rowsSpacing(value: number) {
+    this.validateRowsSpacing(value);
 
-export class Tab {
+    const spaceDiff = value - this.currentRowsSpacing;
+    if (spaceDiff === 0) return;
+    else if (spaceDiff > 0) this.currentTabBlock.addSpacing(spaceDiff);
+    else this.currentTabBlock.removeSpacing(-spaceDiff);
+
+    this.currentRowsSpacing = value;
+  }
+
+  private currentSectionSymbol: string;
+  public get sectionSymbol(): string {
+    return this.currentSectionSymbol;
+  }
+  public set sectionSymbol(value: string) {
+    this.validateSectionSymbol(value);
+    this.currentSectionSymbol = value;
+  }
+
   private readonly tabBlocks: TabBlock[] = [];
-
   private get currentTabBlock(): TabBlock {
     return this.tabBlocks[this.tabBlocks.length - 1];
   }
@@ -45,7 +56,17 @@ export class Tab {
     return this.tabBlocks.map(tabBlock => tabBlock.block);
   }
 
-  constructor(public readonly config: TabConfig = new TabConfig()) {
+  constructor({ rowsQuantity, rowsFiller, rowsSpacing, sectionSymbol }: TabConfig = {}) {
+    if (rowsQuantity !== undefined) this.validateRowsQuantity(rowsQuantity);
+    if (rowsFiller !== undefined) this.validateRowsFiller(rowsFiller);
+    if (rowsSpacing !== undefined) this.validateRowsSpacing(rowsSpacing);
+    if (sectionSymbol !== undefined) this.validateSectionSymbol(sectionSymbol);
+
+    this.currentRowsQuantity = rowsQuantity ? rowsQuantity : Tab.DEFAULT_ROWS_QUANTITY;
+    this.currentRowsFiller = rowsFiller ? rowsFiller : Tab.DEFAULT_ROWS_FILLER;
+    this.currentRowsSpacing = rowsSpacing ? rowsSpacing : Tab.DEFAULT_ROWS_SPACING;
+    this.currentSectionSymbol = sectionSymbol ? sectionSymbol : Tab.DEFAULT_SECTION_SYMBOL;
+
     this.addTabBlock();
   }
 
@@ -59,5 +80,21 @@ export class Tab {
 
   public writeInstructionsMerged(instructions: TabBlockWriteInstruction[]): TabBlockWriteResult {
     return this.currentTabBlock.writeInstructionsMerged(instructions);
+  }
+
+  private validateRowsQuantity(rowsQuantity: number): void {
+    if (rowsQuantity < 1) throw Error(`[${Tab.name}] rowsQuantity must be a positive number.`);
+  }
+
+  private validateRowsFiller(rowsFiller: string): void {
+    if (rowsFiller.length > 1) throw Error(`[${Tab.name}] rowsFiller must be a single character.`);
+  }
+
+  private validateRowsSpacing(rowsSpacing: number): void {
+    if (rowsSpacing < 1) throw Error(`[${Tab.name}] rowsSpacing must be a positive number.`);
+  }
+
+  private validateSectionSymbol(sectionSymbol: string): void {
+    if (sectionSymbol.length > 1) throw Error(`[${Tab.name}] sectionSymbol must be a single character.`);
   }
 }
