@@ -1,3 +1,4 @@
+import { RepeatInstruction } from './repeatInstruction.model';
 import { DefaultInstruction } from './defaultInstruction.model';
 import { InvalidInstruction } from './invalidInstruction';
 import { MergeInstruction } from './mergeInstruction.model';
@@ -82,6 +83,66 @@ describe(`[${InstructionFactory.name}]`, () => {
 
     it('should return an invalid instruction for a parsed < MERGE > or < M > method with unmergeable targets', () => {
       const instructionStr = 'merge {{}} m{{}} merge { break 1-2 } m { break 1-2 }';
+      const parser = new ParserService();
+      const parserResults = parser.parse(instructionStr);
+
+      parserResults.forEach(parserResult => {
+        const instruction = InstructionFactory.getInstruction(parserResult);
+
+        expect(instruction).toBeInstanceOf(InvalidInstruction);
+      });
+    });
+
+    it('should return a repeat instruction for a parsed < REPEAT > or < R > methods with valid args and targets', () => {
+      const instructionStr = 'repeat (2) { 1-2 2-2 } r (2) { 1-2 2-2 }';
+      const parser = new ParserService();
+      const parserResults = parser.parse(instructionStr);
+
+      parserResults.forEach(parserResult => {
+        const instruction = InstructionFactory.getInstruction(parserResult);
+
+        expect(instruction).toBeInstanceOf(RepeatInstruction);
+      });
+    });
+
+    it('should return an invalid instruction for a parsed < REPEAT > or < R > method without arguments', () => {
+      const instructionStr = 'repeat { 1-2 2-2 } r { 1-2 2-2 }';
+      const parser = new ParserService();
+      const parserResults = parser.parse(instructionStr);
+
+      parserResults.forEach(parserResult => {
+        const instruction = InstructionFactory.getInstruction(parserResult);
+
+        expect(instruction).toBeInstanceOf(InvalidInstruction);
+      });
+    });
+
+    it('should return an invalid instruction for a parsed < REPEAT > or < R > method with more than 1 argument', () => {
+      const instructionStr = 'repeat (2, another argument) { 1-2 2-2 } r (2, another argument) { 1-2 2-2 }';
+      const parser = new ParserService();
+      const parserResults = parser.parse(instructionStr);
+
+      parserResults.forEach(parserResult => {
+        const instruction = InstructionFactory.getInstruction(parserResult);
+
+        expect(instruction).toBeInstanceOf(InvalidInstruction);
+      });
+    });
+
+    it('should return an invalid instruction for a parsed < REPEAT > or < R > method with an invalid argument', () => {
+      const instructionStr = 'repeat (some argument) { 1-2 2-2 } r (some argument) { 1-2 2-2 }';
+      const parser = new ParserService();
+      const parserResults = parser.parse(instructionStr);
+
+      parserResults.forEach(parserResult => {
+        const instruction = InstructionFactory.getInstruction(parserResult);
+
+        expect(instruction).toBeInstanceOf(InvalidInstruction);
+      });
+    });
+
+    it('should return an invalid instruction for a parsed < REPEAT > or < R > method without targets', () => {
+      const instructionStr = 'repeat (2) r (2)';
       const parser = new ParserService();
       const parserResults = parser.parse(instructionStr);
 

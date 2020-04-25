@@ -1,3 +1,4 @@
+import { RepeatInstruction } from './repeatInstruction.model';
 import { MergeableInstruction } from './mergeableInstruction.model';
 import { MergeInstruction } from './mergeInstruction.model';
 import { BreakInstruction } from './breakInstruction.model';
@@ -38,6 +39,9 @@ export class InstructionFactory {
       case 'M':
       case 'MERGE':
         return InstructionFactory.getMergeInstruction(parsedInstructionResult);
+      case 'R':
+      case 'REPEAT':
+        return InstructionFactory.getRepeatInstruction(parsedInstructionResult);
       default:
         return InstructionFactory.getDefaultInstruction(parsedInstructionResult);
     }
@@ -71,5 +75,29 @@ export class InstructionFactory {
     }
 
     return new MergeInstruction(mergeableInstructions);
+  }
+
+  private static getRepeatInstruction(parsedInstructionResult: ParserResult): Instruction {
+    if (!parsedInstructionResult.args || parsedInstructionResult.args.length === 0)
+      return new InvalidInstruction('A quantidade de repetições não foi indicada para aplicação da instrução repeat');
+
+    if (parsedInstructionResult.args.length > 1)
+      return new InvalidInstruction('Apenas um argumento é utilizado para aplicação da instrução repeat');
+
+    const repetitionsStr = parsedInstructionResult.args[0];
+    const repetitions = Number(repetitionsStr);
+    if (isNaN(repetitions))
+      return new InvalidInstruction(
+        `O argumento < ${repetitionsStr} > é inválido como quantidade de repetições para a instrução repeat`,
+      );
+
+    if (!parsedInstructionResult.targets || parsedInstructionResult.targets.length === 0)
+      return new InvalidInstruction('Nenhuma instrução indicada para aplicação da instrução repeat');
+
+    const instructionsToRepeat = parsedInstructionResult.targets.map(target =>
+      InstructionFactory.getInstruction(target),
+    );
+
+    return new RepeatInstruction(repetitions, instructionsToRepeat);
   }
 }
