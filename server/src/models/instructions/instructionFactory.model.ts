@@ -1,3 +1,4 @@
+import { SetSpacingInstruction } from './setSpacingInstruction.model';
 import { RepeatInstruction } from './repeatInstruction.model';
 import { MergeableInstruction } from './mergeableInstruction.model';
 import { MergeInstruction } from './mergeInstruction.model';
@@ -42,6 +43,9 @@ export class InstructionFactory {
       case 'R':
       case 'REPEAT':
         return InstructionFactory.getRepeatInstruction(parsedInstructionResult);
+      case 'S':
+      case 'SPACE':
+        return InstructionFactory.getSetSpacingInstruction(parsedInstructionResult);
       default:
         return InstructionFactory.getDefaultInstruction(parsedInstructionResult);
     }
@@ -99,5 +103,22 @@ export class InstructionFactory {
     );
 
     return new RepeatInstruction(repetitions, instructionsToRepeat);
+  }
+
+  private static getSetSpacingInstruction(parsedInstructionResult: ParserResult): Instruction {
+    if (!parsedInstructionResult.args || parsedInstructionResult.args.length === 0)
+      return new InvalidInstruction('O novo espaçamento não foi indicado para aplicação da instrução space');
+
+    if (parsedInstructionResult.args.length > 1)
+      return new InvalidInstruction('Apenas um argumento é utilizado para aplicação da instrução space');
+
+    const newSpacingStr = parsedInstructionResult.args[0];
+    const newSpacing = Number(newSpacingStr);
+    if (isNaN(newSpacing))
+      return new InvalidInstruction(
+        `O argumento < ${newSpacing} > é inválido como novo espaçamento para a instrução space`,
+      );
+
+    return new SetSpacingInstruction(newSpacing);
   }
 }
