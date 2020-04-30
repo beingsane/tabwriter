@@ -1,3 +1,4 @@
+import { SectionInstruction } from './sectionInstruction.model';
 import { SetSpacingInstruction } from './setSpacingInstruction.model';
 import { RepeatInstruction } from './repeatInstruction.model';
 import { DefaultInstruction } from './defaultInstruction.model';
@@ -201,6 +202,44 @@ describe(`[${InstructionFactory.name}]`, () => {
 
       it('should return an invalid instruction for a parsed < SPACE > or < S > method with an invalid argument', () => {
         const instructionStr = 'space (some argument) s (some argument)';
+        const parser = new ParserService();
+        const parserResults = parser.parse(instructionStr);
+
+        parserResults.forEach(parserResult => {
+          const instruction = InstructionFactory.getInstruction(parserResult);
+
+          expect(instruction).toBeInstanceOf(InvalidInstruction);
+        });
+      });
+    });
+
+    describe('[section]', () => {
+      it('should return a section instruction for a parsed < SECTION > or < SEC > methods with valid args', () => {
+        const instructionStr = 'section (some section) sec (some other section)';
+        const parser = new ParserService();
+        const parserResults = parser.parse(instructionStr);
+
+        parserResults.forEach(parserResult => {
+          const instruction = InstructionFactory.getInstruction(parserResult);
+
+          expect(instruction).toBeInstanceOf(SectionInstruction);
+        });
+      });
+
+      it('should return an invalid instruction for a parsed < SECTION > or < SEC > method without arguments', () => {
+        const instructionStr = 'section sec';
+        const parser = new ParserService();
+        const parserResults = parser.parse(instructionStr);
+
+        parserResults.forEach(parserResult => {
+          const instruction = InstructionFactory.getInstruction(parserResult);
+
+          expect(instruction).toBeInstanceOf(InvalidInstruction);
+        });
+      });
+
+      it('should return an invalid instruction for a parsed < SECTION > or < SEC > method with more than 1 argument', () => {
+        const instructionStr = 'section (some section, another argument) sec (some other section, another argument)';
         const parser = new ParserService();
         const parserResults = parser.parse(instructionStr);
 

@@ -147,6 +147,27 @@ describe(`[${Tab.name}]`, () => {
     });
   });
 
+  describe('[sectionFiller]', () => {
+    it('should be created with the default section filler if none is provided', () => {
+      const tab = new Tab();
+
+      expect(tab.sectionFiller).toBe(Tab.DEFAULT_SECTION_FILLER);
+    });
+
+    it('should be created with the given section filler if one is provided and valid', () => {
+      const sectionFiller = '$';
+      const tab = new Tab({ sectionFiller });
+
+      expect(tab.sectionFiller).toBe(sectionFiller);
+    });
+
+    it('should throw if the given section filler is not single character', () => {
+      const sectionFiller = '$$';
+
+      expect(() => new Tab({ sectionFiller })).toThrow();
+    });
+  });
+
   it('should be created with one tab block', () => {
     const tab = new Tab();
 
@@ -188,5 +209,15 @@ describe(`[${Tab.name}]`, () => {
       const chord = parseInt(chordStr, 10);
       expect(tab.blocks[1][chord]).toContain(chordNoteMap[chord]);
     });
+  });
+
+  it('should provide a method to write a header to the last tab block', () => {
+    const headerName = 'some tab header';
+    const tab = new Tab();
+
+    tab.addTabBlock();
+    tab.writeHeader(headerName);
+
+    expect(tab.blocks[1][0]).toContain(headerName);
   });
 });

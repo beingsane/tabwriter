@@ -49,16 +49,37 @@ describe(`[${TabBlock.name}]`, () => {
     });
   });
 
-  it('should give access to the header section alone', () => {
-    const { tabBlock } = getDefaultSetup();
+  describe('[block]', () => {
+    it('should give access to the header section alone', () => {
+      const { tabBlock } = getDefaultSetup();
 
-    expect(tabBlock.block[0]).toBe(tabBlock.header);
-  });
+      expect(tabBlock.block[tabBlock.blockHeaderIdx]).toBe(tabBlock.header);
+    });
 
-  it('should give access to the footer section alone', () => {
-    const { tab, tabBlock } = getDefaultSetup();
+    it('should give access to the footer section alone', () => {
+      const { tabBlock } = getDefaultSetup();
 
-    expect(tabBlock.block[tab.rowsQuantity + 1]).toBe(tabBlock.footer);
+      expect(tabBlock.block[tabBlock.blockFooterIdx]).toBe(tabBlock.footer);
+    });
+
+    it('should give access to the rows alone', () => {
+      const { tabBlock } = getDefaultSetup();
+
+      expect(tabBlock.block.slice(tabBlock.blockRowsStartIdx, tabBlock.blockRowsEndIdx + 1)).toEqual(tabBlock.rows);
+    });
+
+    it('should have the header trimmed if its end spacing is grather than the current spacing', () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const spacingToRemove = 1;
+
+      tabBlock.writeHeader('some header');
+      const expectedHeader = tabBlock.header.slice(0, tabBlock.header.length - spacingToRemove);
+
+      tab.rowsSpacing = tab.rowsSpacing - spacingToRemove;
+      tabBlock.removeSpacing(spacingToRemove);
+
+      expect(tabBlock.header).toBe(expectedHeader);
+    });
   });
 
   describe('[addSpacing]', () => {
@@ -103,7 +124,7 @@ describe(`[${TabBlock.name}]`, () => {
       const { tabBlock } = getDefaultSetup();
       const spacingToRemove = 2;
 
-      tabBlock.maximumRemovableSpacing = jest.fn().mockReturnValue(spacingToRemove - 1);
+      tabBlock.getMaximumRemovableRowsSpacing = jest.fn().mockReturnValue(spacingToRemove - 1);
 
       expect(() => tabBlock.removeSpacing(spacingToRemove)).toThrow();
     });
@@ -128,13 +149,13 @@ describe(`[${TabBlock.name}]`, () => {
     });
   });
 
-  describe('[maximumRemovableSpacing]', () => {
+  describe('[getMaximumRemovableRowsSpacing]', () => {
     it('should return the minimum number of fillers from the end to the beggining based on every row', () => {
       const { chord, note, tab, tabBlock } = getDefaultSetup();
       const writeInstruction = new TabBlockWriteInstruction(chord, note);
       tabBlock.writeInstruction(writeInstruction);
 
-      const maximumRemovableSpacing = tabBlock.maximumRemovableSpacing();
+      const maximumRemovableSpacing = tabBlock.getMaximumRemovableRowsSpacing();
 
       expect(maximumRemovableSpacing).toBe(tab.rowsSpacing);
     });
@@ -272,6 +293,48 @@ describe(`[${TabBlock.name}]`, () => {
         const rowIdx = parseInt(rowIdxStr, 10);
         expect(tabBlock.rows[rowIdx]).toBe(expectedNonChordFinalRowValues[rowIdx]);
       });
+    });
+  });
+
+  describe('[writeHeader]', () => {
+    it('should return a no success write result if an empty header is given', () => {
+      const { tabBlock } = getDefaultSetup();
+      const headerName = '  ';
+
+      const result = tabBlock.writeHeader(headerName);
+
+      expect(result.success).toBe(false);
+      expect(result.description).toBeTruthy();
+    });
+
+    it('should add a section symbol to all block elements, write the name to the header and add spacing to rows', () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const headerName = 'some header name';
+
+      const expectedHeader =
+        tabBlock.header +
+        tab.sectionSymbol +
+        tab.sectionFiller +
+        headerName +
+        Array(tab.rowsSpacing + 1).join(tab.sectionFiller);
+
+      const expectedRows = tabBlock.rows.map(
+        row =>
+          row +
+          tab.sectionSymbol +
+          Array(tab.sectionFiller.length + headerName.length + tab.rowsSpacing + 1).join(tab.rowsFiller),
+      );
+
+      const expectedFooter =
+        tabBlock.footer +
+        tab.sectionSymbol +
+        Array(tab.sectionFiller.length + headerName.length + tab.rowsSpacing + 1).join(tab.sectionFiller);
+
+      tabBlock.writeHeader(headerName);
+
+      expect(tabBlock.header).toBe(expectedHeader);
+      expect(tabBlock.rows).toEqual(expectedRows);
+      expect(tabBlock.footer).toBe(expectedFooter);
     });
   });
 });

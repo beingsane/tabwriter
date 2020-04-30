@@ -1,3 +1,4 @@
+import { SectionInstruction } from './sectionInstruction.model';
 import { SetSpacingInstruction } from './setSpacingInstruction.model';
 import { RepeatInstruction } from './repeatInstruction.model';
 import { MergeableInstruction } from './mergeableInstruction.model';
@@ -43,6 +44,9 @@ export class InstructionFactory {
       case 'R':
       case 'REPEAT':
         return InstructionFactory.getRepeatInstruction(parsedInstructionResult);
+      case 'SEC':
+      case 'SECTION':
+        return InstructionFactory.getSectionInstruction(parsedInstructionResult);
       case 'S':
       case 'SPACE':
         return InstructionFactory.getSetSpacingInstruction(parsedInstructionResult);
@@ -120,5 +124,15 @@ export class InstructionFactory {
       );
 
     return new SetSpacingInstruction(newSpacing);
+  }
+
+  private static getSectionInstruction(parsedInstructionResult: ParserResult): Instruction {
+    if (!parsedInstructionResult.args || parsedInstructionResult.args.length === 0)
+      return new InvalidInstruction('O nome da seção não foi indicado para aplicação da instrução section');
+
+    if (parsedInstructionResult.args.length > 1)
+      return new InvalidInstruction('Apenas um argumento é utilizado para aplicação da instrução section');
+
+    return new SectionInstruction(parsedInstructionResult.args[0].toString());
   }
 }

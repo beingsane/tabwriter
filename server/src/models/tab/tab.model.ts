@@ -5,6 +5,7 @@ interface TabConfig {
   rowsFiller?: string;
   rowsSpacing?: number;
   sectionSymbol?: string;
+  sectionFiller?: string;
 }
 
 export class Tab {
@@ -12,6 +13,7 @@ export class Tab {
   public static readonly DEFAULT_ROWS_FILLER = '-';
   public static readonly DEFAULT_ROWS_SPACING = 3;
   public static readonly DEFAULT_SECTION_SYMBOL = '|';
+  public static readonly DEFAULT_SECTION_FILLER = ' ';
 
   private readonly currentRowsQuantity: number;
   public get rowsQuantity(): number {
@@ -28,7 +30,7 @@ export class Tab {
     return this.currentRowsSpacing;
   }
   public set rowsSpacing(value: number) {
-    this.validateRowsSpacing(value);
+    this.validateForPositiveNumber(value, 'rowsSpacing');
 
     const spaceDiff = value - this.currentRowsSpacing;
     if (spaceDiff === 0) return;
@@ -43,8 +45,13 @@ export class Tab {
     return this.currentSectionSymbol;
   }
   public set sectionSymbol(value: string) {
-    this.validateSectionSymbol(value);
+    this.validateForSingleCharacterString(value, 'sectionSymbol');
     this.currentSectionSymbol = value;
+  }
+
+  private readonly currentSectionFiller: string;
+  public get sectionFiller(): string {
+    return this.currentSectionFiller;
   }
 
   private readonly tabBlocks: TabBlock[] = [];
@@ -56,16 +63,18 @@ export class Tab {
     return this.tabBlocks.map(tabBlock => tabBlock.block);
   }
 
-  constructor({ rowsQuantity, rowsFiller, rowsSpacing, sectionSymbol }: TabConfig = {}) {
-    if (rowsQuantity !== undefined) this.validateRowsQuantity(rowsQuantity);
-    if (rowsFiller !== undefined) this.validateRowsFiller(rowsFiller);
-    if (rowsSpacing !== undefined) this.validateRowsSpacing(rowsSpacing);
-    if (sectionSymbol !== undefined) this.validateSectionSymbol(sectionSymbol);
+  constructor({ rowsQuantity, rowsFiller, rowsSpacing, sectionSymbol, sectionFiller }: TabConfig = {}) {
+    if (rowsQuantity !== undefined) this.validateForPositiveNumber(rowsQuantity, 'rowsQuantity');
+    if (rowsFiller !== undefined) this.validateForSingleCharacterString(rowsFiller, 'rowsFiller');
+    if (rowsSpacing !== undefined) this.validateForPositiveNumber(rowsSpacing, 'rowsSpacing');
+    if (sectionSymbol !== undefined) this.validateForSingleCharacterString(sectionSymbol, 'sectionSymbol');
+    if (sectionFiller !== undefined) this.validateForSingleCharacterString(sectionFiller, 'sectionFiller');
 
     this.currentRowsQuantity = rowsQuantity ? rowsQuantity : Tab.DEFAULT_ROWS_QUANTITY;
     this.currentRowsFiller = rowsFiller ? rowsFiller : Tab.DEFAULT_ROWS_FILLER;
     this.currentRowsSpacing = rowsSpacing ? rowsSpacing : Tab.DEFAULT_ROWS_SPACING;
     this.currentSectionSymbol = sectionSymbol ? sectionSymbol : Tab.DEFAULT_SECTION_SYMBOL;
+    this.currentSectionFiller = sectionFiller ? sectionFiller : Tab.DEFAULT_SECTION_FILLER;
 
     this.addTabBlock();
   }
@@ -82,19 +91,15 @@ export class Tab {
     return this.currentTabBlock.writeInstructionsMerged(instructions);
   }
 
-  private validateRowsQuantity(rowsQuantity: number): void {
-    if (rowsQuantity < 1) throw Error(`[${Tab.name}] rowsQuantity must be a positive number.`);
+  public writeHeader(headerName: string): TabBlockWriteResult {
+    return this.currentTabBlock.writeHeader(headerName);
   }
 
-  private validateRowsFiller(rowsFiller: string): void {
-    if (rowsFiller.length > 1) throw Error(`[${Tab.name}] rowsFiller must be a single character.`);
+  private validateForPositiveNumber(value: number, propertyName: string): void {
+    if (value < 1) throw Error(`[${Tab.name}] ${propertyName} must be a positive number.`);
   }
 
-  private validateRowsSpacing(rowsSpacing: number): void {
-    if (rowsSpacing < 1) throw Error(`[${Tab.name}] rowsSpacing must be a positive number.`);
-  }
-
-  private validateSectionSymbol(sectionSymbol: string): void {
-    if (sectionSymbol.length > 1) throw Error(`[${Tab.name}] sectionSymbol must be a single character.`);
+  private validateForSingleCharacterString(value: string, propertyName: string): void {
+    if (value.length > 1) throw Error(`[${Tab.name}] ${propertyName} must be a single character.`);
   }
 }
