@@ -1,7 +1,5 @@
-import { OperationResult } from '../operationResult.model';
 import { Tab } from './../tab/tab.model';
-
-export class InstructionWriteResult extends OperationResult {}
+import { InstructionWriteResult } from './instructionWriteResult.model';
 
 export abstract class Instruction {
   public abstract name: string;

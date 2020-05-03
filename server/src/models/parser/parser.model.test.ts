@@ -1,9 +1,9 @@
-import { ParserService } from './parser.service';
+import { Parser } from './parser.model';
 
-describe(`[${ParserService.name}]`, () => {
+describe(`[${Parser.name}]`, () => {
   describe(`[parse]`, () => {
     it('should have an async execution option', async () => {
-      const parser = new ParserService();
+      const parser = new Parser();
       parser.parse = jest.fn();
 
       await parser.parseAsync('');
@@ -12,7 +12,7 @@ describe(`[${ParserService.name}]`, () => {
     });
 
     it('should reject if an error occurs while parsing async', () => {
-      const parser = new ParserService();
+      const parser = new Parser();
       const expectedError = new Error('test');
       parser.parse = jest.fn(() => {
         throw expectedError;
@@ -23,7 +23,7 @@ describe(`[${ParserService.name}]`, () => {
 
     it('should parse no instructions if the given instructions string is empty', () => {
       const instructionsStr = '     ';
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
 
@@ -34,7 +34,7 @@ describe(`[${ParserService.name}]`, () => {
       const instruction1 = 'instr1';
       const instruction2 = 'instr2';
       const instructionsStr = `${instruction1} ${instruction2}`;
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
 
@@ -45,7 +45,7 @@ describe(`[${ParserService.name}]`, () => {
 
     it('should read instructions with brackets as a single instruction', () => {
       const instructionsStr = 'instr1(arg1, arg2)[arg1, arg2]{arg1, arg2}';
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
 
@@ -55,7 +55,7 @@ describe(`[${ParserService.name}]`, () => {
 
     it('should read instructions with brackets as a single instruction, even with spaces between', () => {
       const instructionsStr = '  instr1  (  arg1  , arg2  )  [  arg1  , arg2  ]  {  arg1  , arg2  }  ';
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
 
@@ -65,7 +65,7 @@ describe(`[${ParserService.name}]`, () => {
 
     it('should read a instruction with no matching closing bracket to the end of the instructions string', () => {
       const instructionsStr = 'instr2(arg1, arg2[arg1, arg2]{arg1, arg2}';
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
 
@@ -75,7 +75,7 @@ describe(`[${ParserService.name}]`, () => {
 
     it('should read a instruction with no matching closing bracket to the end of the instructions string, even with spaces between', () => {
       const instructionsStr = '  instr1  (  arg1  , arg2  )  [  arg1  , arg2  ]  {  arg1  , arg2  ';
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
 
@@ -86,7 +86,7 @@ describe(`[${ParserService.name}]`, () => {
     it('should parse and read the instructions args', () => {
       const args = [1, 1.11, 'some text input'];
       const instructionStr = `instr(${args.join(', ')})`;
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionStr);
 
@@ -97,7 +97,7 @@ describe(`[${ParserService.name}]`, () => {
     it('should parse and read the instructions args, even with spaces', () => {
       const args = [1, 1.11, 'some text input'];
       const instructionStr = `  instr  (  ${args.join('  ,  ')}  )  `;
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionStr);
 
@@ -108,7 +108,7 @@ describe(`[${ParserService.name}]`, () => {
     it('should parse and read the instruction targets', () => {
       const targets = ['1-2', '2-3'];
       const instructionsStr = `instr{${targets.join(' ')}}`;
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
       const readTargetsValues = instructions[0].targets?.map(target => target.value);
@@ -120,7 +120,7 @@ describe(`[${ParserService.name}]`, () => {
     it('sould parse and read the instruction targets, even with spaces', () => {
       const targets = ['1-2', '2-3'];
       const instructionsStr = `  instr  {  ${targets.join('  ')}  }  `;
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
       const readTargetsValues = instructions[0].targets?.map(target => target.value);
@@ -133,7 +133,7 @@ describe(`[${ParserService.name}]`, () => {
       const innerTargets = ['6-1', '6-2'];
       const target = `instr{${innerTargets.join(' ')}}`;
       const instructionsStr = `instr{${target}}`;
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
       const instructionReadTarget = instructions[0]?.targets;
@@ -154,7 +154,7 @@ describe(`[${ParserService.name}]`, () => {
       const innerTargets = ['6-1', '6-2'];
       const target = `  instr  {  ${innerTargets.join('  ')}  }  `;
       const instructionsStr = `  instr  {  ${target}  }  `;
-      const parser = new ParserService();
+      const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
       const instructionReadTarget = instructions[0]?.targets;

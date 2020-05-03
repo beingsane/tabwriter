@@ -1,16 +1,6 @@
-import { BracketsHelper } from '../utils/brackets.helper';
-import '../extensions/string.extensions';
-
-export class ParserResult {
-  constructor(
-    public value: string,
-    public readFromIdx: number,
-    public readToIdx: number,
-    public method: string | null,
-    public args: (string | number)[] | null,
-    public targets: ParserResult[] | null,
-  ) {}
-}
+import { ParserResult } from './parserResult.model';
+import { BracketsHelper } from '../../utils/brackets.helper';
+import '../../extensions/string.extensions';
 
 class ParseInstructionResult {
   constructor(
@@ -28,7 +18,7 @@ class ReadInstructionResult {
   ) {}
 }
 
-export class ParserService {
+export class Parser {
   public static readonly INSTRUCTIONS_SEPARATOR = ' ';
   public static readonly INSTRUCTIONS_ARGS_SEPARATOR = ',';
   public static readonly INSTRUCTIONS_ARGS_OPENING_BRACKET = '(';
@@ -37,8 +27,8 @@ export class ParserService {
   private static readonly INSTRUCTIONS_METHOD_REGEX_EXTRACTION = /^([a-z]+)(?!-)/gim;
 
   private static extractMethod(parsedInstruction: string): string | null {
-    const methodRegexMatchResult = ParserService.INSTRUCTIONS_METHOD_REGEX_EXTRACTION.exec(parsedInstruction);
-    ParserService.INSTRUCTIONS_METHOD_REGEX_EXTRACTION.lastIndex = 0;
+    const methodRegexMatchResult = Parser.INSTRUCTIONS_METHOD_REGEX_EXTRACTION.exec(parsedInstruction);
+    Parser.INSTRUCTIONS_METHOD_REGEX_EXTRACTION.lastIndex = 0;
 
     return methodRegexMatchResult ? methodRegexMatchResult[1] : null;
   }
@@ -72,7 +62,7 @@ export class ParserService {
   private parseNextInstruction(instructionsToParse: string, fromIndex: number): ParserResult | null {
     if (fromIndex > instructionsToParse.length - 1) return null;
 
-    const instructionStartIndex = instructionsToParse.indexOfDifferent(ParserService.INSTRUCTIONS_SEPARATOR, fromIndex);
+    const instructionStartIndex = instructionsToParse.indexOfDifferent(Parser.INSTRUCTIONS_SEPARATOR, fromIndex);
     if (instructionStartIndex < 0) return null;
 
     const instructionEndIndex = this.indexOfInstructionEnd(instructionsToParse, instructionStartIndex);
@@ -84,7 +74,7 @@ export class ParserService {
   }
 
   private indexOfInstructionEnd(instructionsToParse: string, instrStartIndex: number): number {
-    const nextSeparatorIndex = instructionsToParse.indexOf(ParserService.INSTRUCTIONS_SEPARATOR, instrStartIndex);
+    const nextSeparatorIndex = instructionsToParse.indexOf(Parser.INSTRUCTIONS_SEPARATOR, instrStartIndex);
     if (nextSeparatorIndex < 0) return instructionsToParse.length - 1;
 
     let endOfInstrIndex = this.correctEndForOpeningBracketsBefore(
@@ -128,7 +118,7 @@ export class ParserService {
     if (toCheckEndIndex + 1 > instructionsToParse.length - 1) return toCheckEndIndex;
 
     const nextInstrStartIndex = instructionsToParse.indexOfDifferent(
-      ParserService.INSTRUCTIONS_SEPARATOR,
+      Parser.INSTRUCTIONS_SEPARATOR,
       toCheckEndIndex + 1,
     );
     const nextInstrStartChar = instructionsToParse[nextInstrStartIndex];
@@ -153,22 +143,22 @@ export class ParserService {
   }
 
   private parseInstruction(parsedInstruction: string): ParseInstructionResult {
-    const parsedMethod = ParserService.extractMethod(parsedInstruction);
+    const parsedMethod = Parser.extractMethod(parsedInstruction);
     const parsedArgs = BracketsHelper.getValueInsideBrackets(
       parsedInstruction,
-      ParserService.INSTRUCTIONS_ARGS_OPENING_BRACKET,
+      Parser.INSTRUCTIONS_ARGS_OPENING_BRACKET,
     );
 
     const parsedTargets = BracketsHelper.getValueInsideBrackets(
       parsedInstruction,
-      ParserService.INSTRUCTIONS_TARGETS_OPENING_BRACKET,
+      Parser.INSTRUCTIONS_TARGETS_OPENING_BRACKET,
     );
 
     return new ParseInstructionResult(parsedMethod, parsedArgs, parsedTargets);
   }
 
   private readInstructionArgs(parsedArgs: string): (string | number)[] {
-    return parsedArgs.split(ParserService.INSTRUCTIONS_ARGS_SEPARATOR).map(arg => {
+    return parsedArgs.split(Parser.INSTRUCTIONS_ARGS_SEPARATOR).map(arg => {
       const argNumber = Number(arg);
       return isNaN(argNumber) ? arg.trim() : argNumber;
     });

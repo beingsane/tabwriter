@@ -1,4 +1,6 @@
-import { TabBlock, TabBlockWriteInstruction, TabBlockWriteResult } from './tabBlock.model';
+import { TabBlock } from './tabBlock.model';
+import { TabBlockWriteInstruction } from './tabBlockWriteInstruction.model';
+import { TabBlockWriteResult } from './tabBlockWriteResult.model';
 
 interface TabConfig {
   rowsQuantity?: number;

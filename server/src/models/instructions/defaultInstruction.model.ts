@@ -1,7 +1,7 @@
 import { Tab } from '../tab/tab.model';
-import { TabBlockWriteInstruction } from '../tab/tabBlock.model';
 import { MergeableInstruction } from './mergeableInstruction.model';
-import { InstructionWriteResult } from './instruction.model';
+import { TabBlockWriteInstruction } from '../tab/tabBlockWriteInstruction.model';
+import { InstructionWriteResult } from './instructionWriteResult.model';
 
 export class DefaultInstruction extends MergeableInstruction {
   public name = 'instrução típica';

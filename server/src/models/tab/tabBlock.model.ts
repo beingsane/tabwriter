@@ -1,17 +1,12 @@
-import { OperationResult } from '../operationResult.model';
 import { Tab } from './tab.model';
+import { TabBlockWriteInstruction } from './tabBlockWriteInstruction.model';
+import { TabBlockWriteResult } from './tabBlockWriteResult.model';
 import '../../extensions/string.extensions';
 
 interface FooterInsertPreparation {
   footerInsertStartIdx: number;
   fillersToAdd: number;
   footerToAdd: string;
-}
-
-export class TabBlockWriteResult extends OperationResult {}
-
-export class TabBlockWriteInstruction {
-  constructor(public readonly chord: number, public readonly note: string) {}
 }
 
 export class TabBlock {

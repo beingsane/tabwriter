@@ -1,7 +1,7 @@
-import { TabBlockWriteResult } from './../tab/tabBlock.model';
 import { DefaultInstruction } from './defaultInstruction.model';
 import { RepeatInstruction } from './repeatInstruction.model';
 import { Tab } from '../tab/tab.model';
+import { TabBlockWriteResult } from '../tab/tabBlockWriteResult.model';
 
 describe(`[${RepeatInstruction.name}]`, () => {
   it('should set up the instructions name', () => {

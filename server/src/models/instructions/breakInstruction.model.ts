@@ -1,4 +1,5 @@
-import { Instruction, InstructionWriteResult } from './instruction.model';
+import { Instruction } from './instruction.model';
+import { InstructionWriteResult } from './instructionWriteResult.model';
 import { Tab } from '../tab/tab.model';
 
 export class BreakInstruction extends Instruction {

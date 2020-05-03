@@ -1,5 +1,6 @@
-import { TabBlockWriteInstruction, TabBlock } from './tabBlock.model';
 import { Tab } from './tab.model';
+import { TabBlock } from './tabBlock.model';
+import { TabBlockWriteInstruction } from './tabBlockWriteInstruction.model';
 
 describe(`[${Tab.name}]`, () => {
   describe('[rowsQuantity]', () => {

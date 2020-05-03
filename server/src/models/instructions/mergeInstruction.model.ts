@@ -1,7 +1,8 @@
-import { Instruction, InstructionWriteResult } from './instruction.model';
-import { Tab } from '../tab/tab.model';
-import { TabBlockWriteInstruction } from '../tab/tabBlock.model';
+import { Instruction } from './instruction.model';
+import { InstructionWriteResult } from './instructionWriteResult.model';
 import { MergeableInstruction } from './mergeableInstruction.model';
+import { Tab } from '../tab/tab.model';
+import { TabBlockWriteInstruction } from '../tab/tabBlockWriteInstruction.model';
 
 export class MergeInstruction extends Instruction {
   public name = 'instrução merge';

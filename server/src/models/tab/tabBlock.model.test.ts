@@ -1,5 +1,6 @@
 import { Tab } from './tab.model';
-import { TabBlock, TabBlockWriteInstruction } from './tabBlock.model';
+import { TabBlock } from './tabBlock.model';
+import { TabBlockWriteInstruction } from './tabBlockWriteInstruction.model';
 
 const getDefaultSetup = (): { chord: number; note: string; tab: Tab; tabBlock: TabBlock } => {
   const chord = 1;

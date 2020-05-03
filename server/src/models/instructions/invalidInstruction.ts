@@ -1,4 +1,5 @@
-import { Instruction, InstructionWriteResult } from './instruction.model';
+import { Instruction } from './instruction.model';
+import { InstructionWriteResult } from './instructionWriteResult.model';
 
 export class InvalidInstruction extends Instruction {
   public name = 'instrução';

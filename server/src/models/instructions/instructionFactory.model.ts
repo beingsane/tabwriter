@@ -1,14 +1,14 @@
-import { NoteInstruction } from './noteInstruction.model';
-import { SectionInstruction } from './sectionInstruction.model';
-import { SetSpacingInstruction } from './setSpacingInstruction.model';
-import { RepeatInstruction } from './repeatInstruction.model';
-import { MergeableInstruction } from './mergeableInstruction.model';
-import { MergeInstruction } from './mergeInstruction.model';
-import { BreakInstruction } from './breakInstruction.model';
-import { DefaultInstruction } from './defaultInstruction.model';
-import { ParserResult } from '../../services/parser.service';
 import { Instruction } from './instruction.model';
+import { MergeableInstruction } from './mergeableInstruction.model';
+import { ParserResult } from './../parser/parserResult.model';
 import { InvalidInstruction } from './invalidInstruction';
+import { DefaultInstruction } from './defaultInstruction.model';
+import { BreakInstruction } from './breakInstruction.model';
+import { MergeInstruction } from './mergeInstruction.model';
+import { RepeatInstruction } from './repeatInstruction.model';
+import { SetSpacingInstruction } from './setSpacingInstruction.model';
+import { SectionInstruction } from './sectionInstruction.model';
+import { NoteInstruction } from './noteInstruction.model';
 
 interface ChordAndNoteExtractionResult {
   chord: number | null;
