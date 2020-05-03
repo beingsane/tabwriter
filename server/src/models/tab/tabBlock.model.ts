@@ -2,6 +2,12 @@ import { OperationResult } from '../operationResult.model';
 import { Tab } from './tab.model';
 import '../../extensions/string.extensions';
 
+interface FooterInsertPreparation {
+  footerInsertStartIdx: number;
+  fillersToAdd: number;
+  footerToAdd: string;
+}
+
 export class TabBlockWriteResult extends OperationResult {}
 
 export class TabBlockWriteInstruction {
@@ -100,12 +106,11 @@ export class TabBlock {
     return new TabBlockWriteResult(true);
   }
 
-  public writeHeader(headerName: string): TabBlockWriteResult {
-    if (headerName.trim().length === 0)
-      return new TabBlockWriteResult(false, 'Ao criar uma seção um nome deve ser indicado.');
+  public writeHeader(header: string): TabBlockWriteResult {
+    if (header.trim().length === 0) return new TabBlockWriteResult(false, 'Nenhum conteúdo indicado para escrita.');
 
     this.setupForNewSection();
-    const headerToAdd = this.tab.sectionSymbol + this.tab.sectionFiller + headerName;
+    const headerToAdd = this.tab.sectionSymbol + this.tab.sectionFiller + header;
     this.internalHeader += headerToAdd + this.getSectionsFiller(this.tab.rowsSpacing);
 
     this.internalRows.forEach((row, idx) => (this.internalRows[idx] = row + this.tab.sectionSymbol));
@@ -116,6 +121,42 @@ export class TabBlock {
     this.isInternalBlockSet = false;
 
     return new TabBlockWriteResult(true);
+  }
+
+  public writeFooter(footer: string): TabBlockWriteResult {
+    if (footer.trim().length === 0) return new TabBlockWriteResult(false, 'Nenhum conteúdo indicado para escrita.');
+
+    this.setupForNewSection();
+    const { footerToAdd, footerInsertStartIdx, fillersToAdd } = this.getFooterInsertPreparation(footer);
+
+    if (fillersToAdd > 0) {
+      this.internalHeader += this.getSectionsFiller(fillersToAdd);
+      this.internalRows.forEach((row, idx) => (this.internalRows[idx] = row + this.getRowFiller(fillersToAdd)));
+    }
+
+    const sectionFinalizer = this.tab.sectionSymbol + this.getSectionsFiller(this.tab.rowsSpacing);
+    this.internalFooter = this.internalFooter.slice(0, footerInsertStartIdx) + footerToAdd + sectionFinalizer;
+
+    this.internalHeader += sectionFinalizer;
+    this.internalRows.forEach((row, idx) => (this.internalRows[idx] = row + this.tab.sectionSymbol));
+    this.addSpacing();
+
+    return new TabBlockWriteResult(true);
+  }
+
+  private getFooterInsertPreparation(footer: string): FooterInsertPreparation {
+    const footerToAdd = this.getSectionsFiller(this.tab.rowsSpacing) + footer + this.tab.sectionFiller;
+    const nonSectionFillerFooterIdx = this.internalFooter.indexOfDifferent(this.tab.sectionFiller, -1, -1);
+
+    let footerInsertStartIdx = nonSectionFillerFooterIdx + 1;
+    let fillersToAdd = 0;
+    if (footerInsertStartIdx + footerToAdd.length <= this.rowsLength) {
+      footerInsertStartIdx = this.rowsLength - footerToAdd.length;
+    } else {
+      fillersToAdd = footerInsertStartIdx + footerToAdd.length - this.rowsLength;
+    }
+
+    return { footerToAdd, footerInsertStartIdx, fillersToAdd };
   }
 
   private setupForNewSection(): void {
@@ -134,13 +175,10 @@ export class TabBlock {
         ? this.internalHeader + this.getSectionsFiller(endBlockLength - this.internalHeader.length)
         : this.internalHeader.slice(0, endBlockLength);
 
-    const footer = this.internalFooter + this.getSectionsFiller(endBlockLength - this.internalFooter.length);
-    /*
     const footer =
       this.internalFooter.length <= endBlockLength
         ? this.internalFooter + this.getSectionsFiller(endBlockLength - this.internalFooter.length)
         : this.internalFooter.slice(0, endBlockLength);
-    */
 
     const rows = this.internalRows.map(row =>
       row.length < endBlockLength ? row + this.getRowFiller(endBlockLength - row.length) : row,
@@ -159,7 +197,7 @@ export class TabBlock {
   }
 
   private getMinimumSectionLength(section: string): number {
-    const nonSectionFillerIdx = section.indexOfDifferent(this.tab.sectionFiller, section.length - 1, -1);
+    const nonSectionFillerIdx = section.indexOfDifferent(this.tab.sectionFiller, -1, -1);
     const minimumSectionLenth = nonSectionFillerIdx > -1 ? nonSectionFillerIdx + this.tab.rowsSpacing + 1 : 0;
 
     return minimumSectionLenth;

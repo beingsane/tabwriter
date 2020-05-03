@@ -1,13 +1,14 @@
-import { SectionInstruction } from './sectionInstruction.model';
-import { SetSpacingInstruction } from './setSpacingInstruction.model';
-import { RepeatInstruction } from './repeatInstruction.model';
-import { DefaultInstruction } from './defaultInstruction.model';
-import { InvalidInstruction } from './invalidInstruction';
-import { MergeInstruction } from './mergeInstruction.model';
-import { BreakInstruction } from './breakInstruction.model';
-import { ParserService } from './../../services/parser.service';
 import { InstructionFactory } from './instructionFactory.model';
 import { MergeableInstruction } from './mergeableInstruction.model';
+import { ParserService } from './../../services/parser.service';
+import { InvalidInstruction } from './invalidInstruction';
+import { DefaultInstruction } from './defaultInstruction.model';
+import { BreakInstruction } from './breakInstruction.model';
+import { MergeInstruction } from './mergeInstruction.model';
+import { RepeatInstruction } from './repeatInstruction.model';
+import { SetSpacingInstruction } from './setSpacingInstruction.model';
+import { SectionInstruction } from './sectionInstruction.model';
+import { NoteInstruction } from './noteInstruction.model';
 
 describe(`[${InstructionFactory.name}]`, () => {
   describe('[getInstruction]', () => {
@@ -240,6 +241,44 @@ describe(`[${InstructionFactory.name}]`, () => {
 
       it('should return an invalid instruction for a parsed < SECTION > or < SEC > method with more than 1 argument', () => {
         const instructionStr = 'section (some section, another argument) sec (some other section, another argument)';
+        const parser = new ParserService();
+        const parserResults = parser.parse(instructionStr);
+
+        parserResults.forEach(parserResult => {
+          const instruction = InstructionFactory.getInstruction(parserResult);
+
+          expect(instruction).toBeInstanceOf(InvalidInstruction);
+        });
+      });
+    });
+
+    describe('[note]', () => {
+      it('should return a note instruction for a parsed < NOTE > method with valid args', () => {
+        const instructionStr = 'note (some note)';
+        const parser = new ParserService();
+        const parserResults = parser.parse(instructionStr);
+
+        parserResults.forEach(parserResult => {
+          const instruction = InstructionFactory.getInstruction(parserResult);
+
+          expect(instruction).toBeInstanceOf(NoteInstruction);
+        });
+      });
+
+      it('should return an invalid instruction for a parsed < NOTE > method without arguments', () => {
+        const instructionStr = 'note';
+        const parser = new ParserService();
+        const parserResults = parser.parse(instructionStr);
+
+        parserResults.forEach(parserResult => {
+          const instruction = InstructionFactory.getInstruction(parserResult);
+
+          expect(instruction).toBeInstanceOf(InvalidInstruction);
+        });
+      });
+
+      it('should return an invalid instruction for a parsed < NOTE > method with more than 1 argument', () => {
+        const instructionStr = 'note (some note, another note)';
         const parser = new ParserService();
         const parserResults = parser.parse(instructionStr);
 

@@ -220,4 +220,14 @@ describe(`[${Tab.name}]`, () => {
 
     expect(tab.blocks[1][0]).toContain(headerName);
   });
+
+  it('should provide a method to write a footer to the last tab block', () => {
+    const footer = 'some tab footer';
+    const tab = new Tab();
+
+    tab.addTabBlock();
+    tab.writeFooter(footer);
+
+    expect(tab.blocks[1][tab.rowsQuantity + 1]).toContain(footer);
+  });
 });

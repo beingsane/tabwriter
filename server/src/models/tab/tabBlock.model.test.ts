@@ -68,7 +68,7 @@ describe(`[${TabBlock.name}]`, () => {
       expect(tabBlock.block.slice(tabBlock.blockRowsStartIdx, tabBlock.blockRowsEndIdx + 1)).toEqual(tabBlock.rows);
     });
 
-    it('should have the header trimmed if its end spacing is grather than the current spacing', () => {
+    it('should have the header trimmed if its end spacing is greater than the current spacing', () => {
       const { tab, tabBlock } = getDefaultSetup();
       const spacingToRemove = 1;
 
@@ -79,6 +79,19 @@ describe(`[${TabBlock.name}]`, () => {
       tabBlock.removeSpacing(spacingToRemove);
 
       expect(tabBlock.header).toBe(expectedHeader);
+    });
+
+    it('should have the footer trimmed if its end spacing is greater than the current spacing', () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const spacingToRemove = 1;
+
+      tabBlock.writeFooter('some footer');
+      const expectedFooter = tabBlock.footer.slice(0, tabBlock.footer.length - spacingToRemove);
+
+      tab.rowsSpacing = tab.rowsSpacing - spacingToRemove;
+      tabBlock.removeSpacing(spacingToRemove);
+
+      expect(tabBlock.footer).toBe(expectedFooter);
     });
   });
 
@@ -307,7 +320,7 @@ describe(`[${TabBlock.name}]`, () => {
       expect(result.description).toBeTruthy();
     });
 
-    it('should add a section symbol to all block elements, write the name to the header and add spacing to rows', () => {
+    it(`should write the given header to the header section, preceded by the tab's section symbol`, () => {
       const { tab, tabBlock } = getDefaultSetup();
       const headerName = 'some header name';
 
@@ -318,12 +331,52 @@ describe(`[${TabBlock.name}]`, () => {
         headerName +
         Array(tab.rowsSpacing + 1).join(tab.sectionFiller);
 
+      tabBlock.writeHeader(headerName);
+
+      expect(tabBlock.header).toBe(expectedHeader);
+    });
+
+    it(`should fill the rows with filler to the header end, preceded by tab's section symbol`, () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const headerName = 'some header name';
+
       const expectedRows = tabBlock.rows.map(
         row =>
           row +
           tab.sectionSymbol +
           Array(tab.sectionFiller.length + headerName.length + tab.rowsSpacing + 1).join(tab.rowsFiller),
       );
+
+      tabBlock.writeHeader(headerName);
+
+      expect(tabBlock.rows).toEqual(expectedRows);
+    });
+
+    it('should keep writing notes on rows despite of the added filler', () => {
+      const { chord, note, tab, tabBlock } = getDefaultSetup();
+      const headerName = 'some header name';
+
+      const expectedRows = tabBlock.rows.map((row, idx) =>
+        idx === chord - 1
+          ? row +
+            tab.sectionSymbol +
+            Array(tab.rowsSpacing + 1).join(tab.rowsFiller) +
+            note +
+            Array(tab.sectionFiller.length + headerName.length - note.length + 1).join(tab.rowsFiller)
+          : row +
+            tab.sectionSymbol +
+            Array(tab.sectionFiller.length + headerName.length + tab.rowsSpacing + 1).join(tab.rowsFiller),
+      );
+
+      tabBlock.writeHeader(headerName);
+      tabBlock.writeInstruction(new TabBlockWriteInstruction(chord, note));
+
+      expect(tabBlock.rows).toEqual(expectedRows);
+    });
+
+    it(`should fill the footer with filler to the header end, preceded by tab's section symbol`, () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const headerName = 'some header name';
 
       const expectedFooter =
         tabBlock.footer +
@@ -332,9 +385,79 @@ describe(`[${TabBlock.name}]`, () => {
 
       tabBlock.writeHeader(headerName);
 
-      expect(tabBlock.header).toBe(expectedHeader);
-      expect(tabBlock.rows).toEqual(expectedRows);
       expect(tabBlock.footer).toBe(expectedFooter);
+    });
+  });
+
+  describe('[writeFooter]', () => {
+    it('should return a no success write result if an empty footer is given', () => {
+      const { tabBlock } = getDefaultSetup();
+      const footer = '  ';
+
+      const result = tabBlock.writeFooter(footer);
+
+      expect(result.success).toBe(false);
+      expect(result.description).toBeTruthy();
+    });
+
+    it(`should fill the header with filler to the footer end, add the tab's section symbol and spacing`, () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const footer = 'some footer note';
+
+      const expectedHeader =
+        tabBlock.header +
+        Array(footer.length + tab.sectionFiller.length + 1).join(tab.sectionFiller) +
+        tab.sectionSymbol +
+        Array(tab.rowsSpacing + 1).join(tab.sectionFiller);
+
+      tabBlock.writeFooter(footer);
+
+      expect(tabBlock.header).toBe(expectedHeader);
+    });
+
+    it(`should fill the rows with filler to the footer end, add the tab's section symbol and spacing`, () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const footer = 'some footer note';
+
+      const expectedRows = tabBlock.rows.map(
+        row =>
+          row +
+          Array(footer.length + tab.sectionFiller.length + 1).join(tab.rowsFiller) +
+          tab.sectionSymbol +
+          Array(tab.rowsSpacing + 1).join(tab.rowsFiller),
+      );
+
+      tabBlock.writeFooter(footer);
+
+      expect(tabBlock.rows).toEqual(expectedRows);
+    });
+
+    it(`should write the given footer to the footer section, preceded by the tab's section symbol`, () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const footer = 'some footer note';
+
+      const sectinRowsSpacingFiller = Array(tab.rowsSpacing + 1).join(tab.sectionFiller);
+      const expectedFooter =
+        sectinRowsSpacingFiller + footer + tab.sectionFiller + tab.sectionSymbol + sectinRowsSpacingFiller;
+
+      tabBlock.writeFooter(footer);
+
+      expect(tabBlock.footer).toBe(expectedFooter);
+    });
+
+    it('should not add filler to the rows if there already is space to add the given footer', () => {
+      const { tab, tabBlock } = getDefaultSetup();
+      const footer = 'some footer note';
+
+      tabBlock.addSpacing(footer.length + 1);
+
+      const expectedRows = tabBlock.rows.map(
+        row => row + tab.sectionSymbol + Array(tab.rowsSpacing + 1).join(tab.rowsFiller),
+      );
+
+      tabBlock.writeFooter(footer);
+
+      expect(tabBlock.rows).toEqual(expectedRows);
     });
   });
 });

@@ -1,3 +1,4 @@
+import { NoteInstruction } from './noteInstruction.model';
 import { SectionInstruction } from './sectionInstruction.model';
 import { SetSpacingInstruction } from './setSpacingInstruction.model';
 import { RepeatInstruction } from './repeatInstruction.model';
@@ -41,6 +42,8 @@ export class InstructionFactory {
       case 'M':
       case 'MERGE':
         return InstructionFactory.getMergeInstruction(parsedInstructionResult);
+      case 'NOTE':
+        return InstructionFactory.getNoteInstruction(parsedInstructionResult);
       case 'R':
       case 'REPEAT':
         return InstructionFactory.getRepeatInstruction(parsedInstructionResult);
@@ -83,6 +86,16 @@ export class InstructionFactory {
     }
 
     return new MergeInstruction(mergeableInstructions);
+  }
+
+  private static getNoteInstruction(parsedInstructionResult: ParserResult): Instruction {
+    if (!parsedInstructionResult.args || parsedInstructionResult.args.length === 0)
+      return new InvalidInstruction('Nenhuma nota foi indicado para aplicação da instrução note');
+
+    if (parsedInstructionResult.args.length > 1)
+      return new InvalidInstruction('Apenas um argumento é utilizado para aplicação da instrução note');
+
+    return new NoteInstruction(parsedInstructionResult.args[0].toString());
   }
 
   private static getRepeatInstruction(parsedInstructionResult: ParserResult): Instruction {

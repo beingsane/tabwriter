@@ -91,8 +91,12 @@ export class Tab {
     return this.currentTabBlock.writeInstructionsMerged(instructions);
   }
 
-  public writeHeader(headerName: string): TabBlockWriteResult {
-    return this.currentTabBlock.writeHeader(headerName);
+  public writeHeader(header: string): TabBlockWriteResult {
+    return this.currentTabBlock.writeHeader(header);
+  }
+
+  public writeFooter(footer: string): TabBlockWriteResult {
+    return this.currentTabBlock.writeFooter(footer);
   }
 
   private validateForPositiveNumber(value: number, propertyName: string): void {
