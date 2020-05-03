@@ -1,5 +1,4 @@
 import { InvalidInstruction } from './invalidInstruction';
-import { Tab } from '../tab/tab.model';
 
 describe(`[${InvalidInstruction.name}]`, () => {
   it('should set up the instructions name', () => {

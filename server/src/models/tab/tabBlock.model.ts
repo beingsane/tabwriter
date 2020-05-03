@@ -9,16 +9,6 @@ export class TabBlockWriteInstruction {
 }
 
 export class TabBlock {
-  private internalHeader = '';
-  private internalRows: string[];
-  private internalFooter = '';
-  private internalBlock: string[] = [];
-  private isInternalBlockSet = false;
-
-  private get rowsLength(): number {
-    return this.internalRows[0].length;
-  }
-
   public readonly blockHeaderIdx = 0;
   public readonly blockFooterIdx = this.tab.rowsQuantity + 1;
   public readonly blockRowsStartIdx = this.blockHeaderIdx + 1;
@@ -39,6 +29,16 @@ export class TabBlock {
   public get block(): string[] {
     if (!this.isInternalBlockSet) this.setupInternalBlock();
     return this.internalBlock;
+  }
+
+  private internalHeader = '';
+  private internalRows: string[];
+  private internalFooter = '';
+  private internalBlock: string[] = [];
+  private isInternalBlockSet = false;
+
+  private get rowsLength(): number {
+    return this.internalRows[0].length;
   }
 
   constructor(private readonly tab: Tab) {
@@ -200,12 +200,8 @@ export class TabBlock {
     return invalidChords;
   }
 
-  private getInvalidChordsToWriteDescription(chords: number[]): string {
-    const availableChordsDesc = `de 1 a ${this.tab.rowsQuantity}`;
-
-    return chords.length === 1
-      ? `A corda indicada < ${chords[0]} > está fora da faixa disponível, ${availableChordsDesc}`
-      : `As cordas indicadas < ${chords.join(', ')} > estão fora da faixa disponível, ${availableChordsDesc}`;
+  private isChordValidToWrite(chord: number): boolean {
+    return chord > 0 && chord <= this.tab.rowsQuantity;
   }
 
   private getChordsWithMultipleInstructions(instructions: TabBlockWriteInstruction[]): number[] {
@@ -221,15 +217,19 @@ export class TabBlock {
     return chordsWithMultipleInstructions;
   }
 
+  private getInvalidChordsToWriteDescription(chords: number[]): string {
+    const availableChordsDesc = `de 1 a ${this.tab.rowsQuantity}`;
+
+    return chords.length === 1
+      ? `A corda indicada < ${chords[0]} > está fora da faixa disponível, ${availableChordsDesc}`
+      : `As cordas indicadas < ${chords.join(', ')} > estão fora da faixa disponível, ${availableChordsDesc}`;
+  }
+
   private getChordsWithMultipleInstructionsDescription(chords: number[]): string {
     if (chords.length === 1) {
       return `Múltiplas notas encontradas para a corda ${chords[0]}`;
     } else {
       return `Múltiplas notas encontradas para as seguintes cordas: ${chords.join(', ')}`;
     }
-  }
-
-  private isChordValidToWrite(chord: number): boolean {
-    return chord > 0 && chord <= this.tab.rowsQuantity;
   }
 }
