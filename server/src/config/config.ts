@@ -9,7 +9,7 @@ export class TabwriterConfig {
   public clientDistEntryPath: string;
 
   constructor() {
-    this.clientDistFolderPath = path.join(__dirname, '/../../client/build');
+    this.clientDistFolderPath = path.join(__dirname, '../../../client/build');
     this.clientDistEntryPath = path.join(this.clientDistFolderPath, '/index.html');
 
     this.serverPort = process.env.TABWRITER_SERVER_PORT
