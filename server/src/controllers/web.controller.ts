@@ -1,5 +1,6 @@
 import express from 'express';
 import { Request, Response } from 'express';
+import asyncHandler from 'express-async-handler';
 import httpStatusCodes from 'http-status-codes';
 import { ControllerBase } from './controllerBase.interface';
 import { WebService } from '../services/web.service';
@@ -9,7 +10,7 @@ export class WebController implements ControllerBase {
   public readonly router = express.Router();
 
   constructor() {
-    this.router.get('*', this.sendWebPage);
+    this.router.get('*', asyncHandler(this.sendWebPage));
   }
 
   public async sendWebPage(_req: Request, res: Response): Promise<void> {
