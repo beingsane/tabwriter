@@ -1,7 +1,5 @@
-import express from 'express';
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import httpStatusCodes from 'http-status-codes';
 import { ControllerBase } from './controllerBase.interface';
 import { WebService } from '../services/web.service';
 
@@ -10,15 +8,12 @@ export class WebController implements ControllerBase {
   public readonly router = express.Router();
 
   constructor() {
-    this.router.get('*', asyncHandler(this.sendWebPage));
+    this.router.get('*', asyncHandler(this.sendWebIndex));
   }
 
-  public async sendWebPage(_req: Request, res: Response): Promise<void> {
-    const webPagePath = await WebService.getWebPagePath();
-    if (webPagePath != null) {
-      res.sendFile(webPagePath);
-    } else {
-      res.sendStatus(httpStatusCodes.NOT_FOUND);
-    }
+  public async sendWebIndex(_req: Request, res: Response): Promise<void> {
+    const webIndex = await WebService.getIndex();
+
+    res.type('html').send(webIndex);
   }
 }
