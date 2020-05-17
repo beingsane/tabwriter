@@ -1,5 +1,5 @@
 import express from 'express';
-import { Application, RequestHandler, Handler } from 'express';
+import { Application, Handler, RequestHandler, ErrorRequestHandler } from 'express';
 import { TabwriterConfig } from './config/config';
 import { ControllerBase } from './controllers/controllerBase.interface';
 
@@ -14,7 +14,7 @@ export class TabwriterServer {
     this.port = port ? port : TabwriterConfig.DEFAULT_SERVER_PORT;
   }
 
-  public useMiddleware(middleware: RequestHandler): void {
+  public useMiddleware(middleware: RequestHandler | ErrorRequestHandler): void {
     this.app.use(middleware);
   }
 

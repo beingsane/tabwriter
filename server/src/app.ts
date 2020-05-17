@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import { TabwriterServer } from './server';
 import { tabwriterConfig } from './config/config';
+import { errorHandler } from './middlewares/errorHandler.middleware';
 import { WebController } from './controllers/web.controller';
 import { ApiController } from './controllers/api.controller';
 
@@ -15,5 +16,7 @@ twServer.useAsset(express.static(tabwriterConfig.clientDistFolderPath));
 
 twServer.useController(new ApiController());
 twServer.useController(new WebController());
+
+twServer.useMiddleware(errorHandler);
 
 twServer.start();
