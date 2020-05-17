@@ -1,13 +1,13 @@
-import { ParserResult } from './parser/parserResult.model';
-import { TabWriter } from './tabWriter.model';
-import { Tab } from './tab/tab.model';
+import { ParserResult } from '../models/parser/parserResult.model';
+import { TabWriterService } from './tabWriter.service';
+import { Tab } from '../models/tab/tab.model';
 
-describe(`[${TabWriter.name}]`, () => {
+describe(`[${TabWriterService.name}]`, () => {
   describe('[writeTab]', () => {
     it('should return a success tab write result if all instructions are successfully written to a tab', () => {
       const instructions = '1-2';
 
-      const result = TabWriter.writeTab(instructions, 6, 2);
+      const result = TabWriterService.writeTab(instructions, 6, 2);
 
       expect(result.success).toBe(true);
     });
@@ -15,7 +15,7 @@ describe(`[${TabWriter.name}]`, () => {
     it('should return a no success tab write result if any instruction fail to be written to a tab', () => {
       const instructions = '1-';
 
-      const result = TabWriter.writeTab(instructions, 6, 2);
+      const result = TabWriterService.writeTab(instructions, 6, 2);
 
       expect(result.success).toBe(false);
     });
@@ -25,7 +25,7 @@ describe(`[${TabWriter.name}]`, () => {
       const failedInstruction = '1-';
       const instructions = `${successInstruction} ${failedInstruction}`;
 
-      const result = TabWriter.writeTab(instructions, 6, 2);
+      const result = TabWriterService.writeTab(instructions, 6, 2);
       const failedInstructionResult = result.instructionsResults.filter(ir => !ir.success);
 
       expect(failedInstructionResult.length).toBe(1);
@@ -45,7 +45,7 @@ describe(`[${TabWriter.name}]`, () => {
       const parsedResult = buildParsedDefaultInstructionResult(chord, note);
       const tab = new Tab();
 
-      TabWriter.writeParsedInstructionToTab(parsedResult, tab);
+      TabWriterService.writeParsedInstructionToTab(parsedResult, tab);
 
       expect(tab.blocks[0][chord]).toContain(note);
     });
@@ -56,7 +56,7 @@ describe(`[${TabWriter.name}]`, () => {
       const parsedResult = buildParsedDefaultInstructionResult(chord, note);
       const tab = new Tab();
 
-      const result = TabWriter.writeParsedInstructionToTab(parsedResult, tab);
+      const result = TabWriterService.writeParsedInstructionToTab(parsedResult, tab);
 
       expect(result.success).toBe(true);
     });
@@ -67,7 +67,7 @@ describe(`[${TabWriter.name}]`, () => {
       const parsedResult = buildParsedDefaultInstructionResult(chord, note);
       const tab = new Tab();
 
-      const result = TabWriter.writeParsedInstructionToTab(parsedResult, tab);
+      const result = TabWriterService.writeParsedInstructionToTab(parsedResult, tab);
 
       expect(result.success).toBe(false);
     });

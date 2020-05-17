@@ -1,7 +1,7 @@
-import { ParserResult } from './parser/parserResult.model';
-import { InstructionFactory } from './instructions/instructionFactory.model';
-import { Parser } from './parser/parser.model';
-import { Tab } from './tab/tab.model';
+import { ParserResult } from '../models/parser/parserResult.model';
+import { InstructionFactory } from '../models/instructions/instructionFactory.model';
+import { Parser } from '../models/parser/parser.model';
+import { Tab } from '../models/tab/tab.model';
 
 interface InstructionWriteResult {
   success: boolean;
@@ -18,7 +18,7 @@ interface TabWriterResult {
   instructionsResults: InstructionWriteResult[];
 }
 
-export class TabWriter {
+export class TabWriterService {
   public static writeTab(instructions: string, rowsQuantity: number, rowsSpacing: number): TabWriterResult {
     let successBuild = true;
 
@@ -29,7 +29,7 @@ export class TabWriter {
     const instructionsResults: InstructionWriteResult[] = [];
 
     parserResult.forEach(parsedInstruction => {
-      const tabWriterInstructionResult = TabWriter.writeParsedInstructionToTab(parsedInstruction, tab);
+      const tabWriterInstructionResult = TabWriterService.writeParsedInstructionToTab(parsedInstruction, tab);
       instructionsResults.push(tabWriterInstructionResult);
 
       if (successBuild && !tabWriterInstructionResult.success) successBuild = false;
