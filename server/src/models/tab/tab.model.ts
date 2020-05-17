@@ -1,6 +1,7 @@
 import { TabBlock } from './tabBlock.model';
 import { TabBlockWriteInstruction } from './tabBlockWriteInstruction.model';
 import { TabBlockWriteResult } from './tabBlockWriteResult.model';
+import { InvalidArgumentError } from './../errors/invalidArgumentError';
 
 interface TabConfig {
   rowsQuantity?: number;
@@ -32,7 +33,7 @@ export class Tab {
     return this.currentRowsSpacing;
   }
   public set rowsSpacing(value: number) {
-    this.validateForPositiveNumber(value, 'rowsSpacing');
+    if (value < 1) throw new InvalidArgumentError('rowsSpacing must be a positive number');
 
     const spaceDiff = value - this.currentRowsSpacing;
     if (spaceDiff === 0) return;
@@ -47,7 +48,7 @@ export class Tab {
     return this.currentSectionSymbol;
   }
   public set sectionSymbol(value: string) {
-    this.validateForSingleCharacterString(value, 'sectionSymbol');
+    if (value.length !== 1) throw new InvalidArgumentError('sectionSymbol must be a single character string');
     this.currentSectionSymbol = value;
   }
 
@@ -66,11 +67,20 @@ export class Tab {
   }
 
   constructor({ rowsQuantity, rowsFiller, rowsSpacing, sectionSymbol, sectionFiller }: TabConfig = {}) {
-    if (rowsQuantity !== undefined) this.validateForPositiveNumber(rowsQuantity, 'rowsQuantity');
-    if (rowsFiller !== undefined) this.validateForSingleCharacterString(rowsFiller, 'rowsFiller');
-    if (rowsSpacing !== undefined) this.validateForPositiveNumber(rowsSpacing, 'rowsSpacing');
-    if (sectionSymbol !== undefined) this.validateForSingleCharacterString(sectionSymbol, 'sectionSymbol');
-    if (sectionFiller !== undefined) this.validateForSingleCharacterString(sectionFiller, 'sectionFiller');
+    if (rowsQuantity !== undefined && rowsQuantity < 1)
+      throw new InvalidArgumentError('rowsQuantity must be a positive number');
+
+    if (rowsFiller !== undefined && rowsFiller.length !== 1)
+      throw new InvalidArgumentError('rowsFiller must be a single character string');
+
+    if (rowsSpacing !== undefined && rowsSpacing < 1)
+      throw new InvalidArgumentError('rowsSpacing must be a positive number');
+
+    if (sectionSymbol !== undefined && sectionSymbol.length !== 1)
+      throw new InvalidArgumentError('sectionSymbol must be a single character string');
+
+    if (sectionFiller !== undefined && sectionFiller.length !== 1)
+      throw new InvalidArgumentError('sectionFiller must be a single character string');
 
     this.currentRowsQuantity = rowsQuantity ? rowsQuantity : Tab.DEFAULT_ROWS_QUANTITY;
     this.currentRowsFiller = rowsFiller ? rowsFiller : Tab.DEFAULT_ROWS_FILLER;
@@ -99,13 +109,5 @@ export class Tab {
 
   public writeFooter(footer: string): TabBlockWriteResult {
     return this.currentTabBlock.writeFooter(footer);
-  }
-
-  private validateForPositiveNumber(value: number, propertyName: string): void {
-    if (value < 1) throw Error(`[${Tab.name}] ${propertyName} must be a positive number.`);
-  }
-
-  private validateForSingleCharacterString(value: string, propertyName: string): void {
-    if (value.length > 1) throw Error(`[${Tab.name}] ${propertyName} must be a single character.`);
   }
 }

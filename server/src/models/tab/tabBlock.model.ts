@@ -1,3 +1,4 @@
+import { InvalidArgumentError } from './../errors/invalidArgumentError';
 import { Tab } from './tab.model';
 import { TabBlockWriteInstruction } from './tabBlockWriteInstruction.model';
 import { TabBlockWriteResult } from './tabBlockWriteResult.model';
@@ -48,7 +49,7 @@ export class TabBlock {
   }
 
   public addSpacing(spacing?: number): void {
-    if (spacing !== undefined && spacing < 1) throw Error(`[${TabBlock.name}] spacing must be a positive number.`);
+    if (spacing !== undefined && spacing < 1) throw new InvalidArgumentError('spacing must be a positive number');
 
     const spacingToAdd = spacing ? spacing : this.tab.rowsSpacing;
     const rowFiller = this.getRowFiller(spacingToAdd);
@@ -58,12 +59,12 @@ export class TabBlock {
   }
 
   public removeSpacing(spacing?: number): void {
-    if (spacing !== undefined && spacing < 1) throw Error(`[${TabBlock.name}] spacing must be a positive number.`);
+    if (spacing !== undefined && spacing < 1)
+      throw new InvalidArgumentError('spacing to remove must be a positive number');
 
     const maxRemovableSpacing = this.getMaximumRemovableRowsSpacing();
-
     if (spacing !== undefined && spacing > maxRemovableSpacing)
-      throw Error(`[${TabBlock.name}] can not remove content elements. Removable spacing < ${maxRemovableSpacing} >.`);
+      throw new InvalidArgumentError(`spacing to remove exceeds maximum removable spacing`);
 
     const spacingToRemove = spacing ? spacing : maxRemovableSpacing;
     this.internalRows.forEach(

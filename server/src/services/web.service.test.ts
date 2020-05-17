@@ -20,8 +20,6 @@ describe(`[${WebService.name}]`, () => {
 
       const webPagePath = await WebService.getIndex();
 
-      console.log(webPagePath.toString());
-
       expect(fsExistsSyncSpy).toHaveBeenCalled();
       expect(fsReadFileSpy).toHaveBeenCalledWith(tabwriterConfig.clientDistEntryPath);
       expect(webPagePath).toBe(INDEX_TEST_BUUFER);
