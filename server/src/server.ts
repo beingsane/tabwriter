@@ -1,7 +1,7 @@
 import express from 'express';
 import { Application, Handler, RequestHandler, ErrorRequestHandler } from 'express';
 import { TabwriterConfig } from './config/config';
-import { ControllerBase } from './controllers/controllerBase.interface';
+import { BaseController } from './controllers/base.controller';
 
 export class TabwriterServer {
   public readonly app: Application;
@@ -18,8 +18,8 @@ export class TabwriterServer {
     this.app.use(middleware);
   }
 
-  public useController(controller: ControllerBase): void {
-    this.app.use(controller.routePrefix, controller.router);
+  public useController(controller: BaseController): void {
+    this.app.use(`/${controller.routePrefix}`, controller.router);
   }
 
   public useAsset(assetHandler: Handler): void {

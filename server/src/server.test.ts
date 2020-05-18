@@ -1,19 +1,19 @@
-import express from 'express';
 import { Request, Response, NextFunction, Handler } from 'express';
 import { TabwriterConfig } from './config/config';
 import { TabwriterServer } from './server';
-import { ControllerBase } from './controllers/controllerBase.interface';
+import { BaseController } from './controllers/base.controller';
+
+class TestController extends BaseController {
+  public routePrefix = 'test';
+}
 
 const getTestMiddleware = (): Handler => (_req: Request, _res: Response, next: NextFunction): void => {
   next();
 };
 
-const getTestController = (): ControllerBase => ({
-  routePrefix: '/test',
-  router: express.Router(),
-});
+const getTestController = (): BaseController => new TestController();
 
-const getTestAssetHandler = (): Handler => (): void => {};
+const getTestAssetHandler = (): Handler => jest.fn();
 
 const getServerListenMock = (): jest.Mock =>
   jest.fn().mockImplementation((port: number, cb: Function) => {
@@ -39,7 +39,7 @@ describe(`[${TabwriterServer.name}]`, () => {
 
     twServer.useController(controller);
 
-    expect(twServer.app.use).toHaveBeenCalledWith(controller.routePrefix, controller.router);
+    expect(twServer.app.use).toHaveBeenCalledWith(`/${controller.routePrefix}`, controller.router);
   });
 
   it('should use a given asset handler', () => {

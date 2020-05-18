@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { WebController } from './web.controller';
-import { WebService } from '../services/web.service';
+import { WebService } from '../../services/web.service';
 
 describe(`[${WebController.name}]`, () => {
   describe('[sendWebIndex]', () => {
@@ -11,8 +11,8 @@ describe(`[${WebController.name}]`, () => {
 
       const requestObj = {} as Request;
       const responseObj = {} as Response;
-      responseObj.type = jest.fn(() => responseObj);
-      responseObj.send = jest.fn(() => responseObj);
+      responseObj.type = jest.fn().mockReturnThis();
+      responseObj.send = jest.fn().mockReturnThis();
 
       await webController.sendWebIndex(requestObj, responseObj);
 

@@ -3,6 +3,12 @@ import { InstructionFactory } from '../models/instructions/instructionFactory.mo
 import { Parser } from '../models/parser/parser.model';
 import { Tab } from '../models/tab/tab.model';
 
+export interface TabWriterInstructions {
+  instructions: string;
+  rowsQuantity: number;
+  rowsSpacing: number;
+}
+
 interface InstructionWriteResult {
   success: boolean;
   instruction: string;
@@ -12,14 +18,14 @@ interface InstructionWriteResult {
   error: null | string;
 }
 
-interface TabWriterResult {
+export interface TabWriterResult {
   success: boolean;
   tab: string[][];
   instructionsResults: InstructionWriteResult[];
 }
 
 export class TabWriterService {
-  public static writeTab(instructions: string, rowsQuantity: number, rowsSpacing: number): TabWriterResult {
+  public static writeTab({ instructions, rowsQuantity, rowsSpacing }: TabWriterInstructions): TabWriterResult {
     let successBuild = true;
 
     const parser = new Parser();
