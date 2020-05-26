@@ -17,6 +17,7 @@
     "@types/node": "^13.13.5",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
+    "express-validator": "^6.5.0",
     "http-status-codes": "^1.4.0",
     "morgan": "^1.10.0",
     "typescript": "^3.8.3"

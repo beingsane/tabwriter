@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import httpStatusCodes from 'http-status-codes';
 import { BaseController } from '../base.controller';
+import { ResponseErrorResourceNotFound } from './../../models/httpResponseErrors/responseErrorResourceNotFound.model';
 
 export class ApiController extends BaseController {
   public readonly routePrefix = 'api';
@@ -12,9 +12,7 @@ export class ApiController extends BaseController {
   }
 
   public resourceNotFound(req: Request, res: Response): void {
-    res.status(httpStatusCodes.NOT_FOUND).send({
-      message: 'The requested resource was not found',
-      requestedResource: req.originalUrl,
-    });
+    const response = new ResponseErrorResourceNotFound();
+    res.status(response.status).json(response);
   }
 }

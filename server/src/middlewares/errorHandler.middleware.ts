@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
-import httpStatusCodes from 'http-status-codes';
+import * as HttpStatus from 'http-status-codes';
+import { ResponseErrorDefault } from '../models/httpResponseErrors/responseErrorDefault.model';
 
 export const errorHandler: ErrorRequestHandler = (
   err: Error,
-  _req: Request,
+  req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _next: NextFunction,
+  next: NextFunction,
 ): void => {
   switch (err) {
     default:
-      res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).send({ message: err.message });
+      const response = new ResponseErrorDefault();
+      res.status(response.status).json(response);
   }
 };
