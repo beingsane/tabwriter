@@ -4,28 +4,28 @@ import { Tab } from '../models/tab/tab.model';
 
 describe(`[${TabWriterService.name}]`, () => {
   describe('[writeTab]', () => {
-    it('should return a success tab write result if all instructions are successfully written to a tab', () => {
+    it('should return a success tab write result if all instructions are successfully written to a tab', async () => {
       const instructions = '1-2';
 
-      const result = TabWriterService.writeTab({ instructions, rowsQuantity: 6, rowsSpacing: 2 });
+      const result = await TabWriterService.writeTab({ instructions, rowsQuantity: 6, rowsSpacing: 2 });
 
       expect(result.success).toBe(true);
     });
 
-    it('should return a no success tab write result if any instruction fail to be written to a tab', () => {
+    it('should return a no success tab write result if any instruction fail to be written to a tab', async () => {
       const instructions = '1-';
 
-      const result = TabWriterService.writeTab({ instructions, rowsQuantity: 6, rowsSpacing: 2 });
+      const result = await TabWriterService.writeTab({ instructions, rowsQuantity: 6, rowsSpacing: 2 });
 
       expect(result.success).toBe(false);
     });
 
-    it('should allow the identification of failed instructions', () => {
+    it('should allow the identification of failed instructions', async () => {
       const successInstruction = '1-2';
       const failedInstruction = '1-';
       const instructions = `${successInstruction} ${failedInstruction}`;
 
-      const result = TabWriterService.writeTab({ instructions, rowsQuantity: 6, rowsSpacing: 2 });
+      const result = await TabWriterService.writeTab({ instructions, rowsQuantity: 6, rowsSpacing: 2 });
       const failedInstructionResult = result.instructionsResults.filter((ir) => !ir.success);
 
       expect(failedInstructionResult.length).toBe(1);

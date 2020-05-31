@@ -1,11 +1,11 @@
 import request from 'supertest';
-import express, { Request, Response, Application } from 'express';
+import express, { Application } from 'express';
 import * as HttpStatus from 'http-status-codes';
 import { TabwriterServer } from './../../server';
 import { TabController } from './tab.controller';
-import { TabWriterInstructions, TabWriterService } from '../../../services/tabWriter.service';
 import { ErrorCode } from './../../models/errors/errorCodes.enum';
 import { ResponseErrorInvalidRequest } from './../../models/responses/responseErrorInvalidRequest.model';
+import { ResponseErrorInvalidInstructions } from './models/responseErrorInvalidInstructions.model';
 
 const getTestServer = (): Application => {
   const server = new TabwriterServer();
@@ -187,29 +187,28 @@ describe(`[${TabController.name}]`, () => {
         });
     });
 
-    it('should create a tab for the given params', () => {
-      const tabController = new TabController();
-      const tabWriterInstructions: TabWriterInstructions = {
-        instructions: '1-2',
-        rowsQuantity: 6,
-        rowsSpacing: 3,
-      };
+    it('should return an invalid instructions if there are falied instructions', async () => {
+      const invalidInstruction = '0-1';
+      const payload = { rowsSpacing: 1, rowsQuantity: 1, instructions: `1-2 ${invalidInstruction}` };
 
-      const tabCreationSpy = jest.spyOn(TabWriterService, 'writeTab');
+      return request(getTestServer())
+        .post('/tabs')
+        .send(payload)
+        .expect('Content-Type', /json/)
+        .expect(HttpStatus.UNPROCESSABLE_ENTITY)
+        .then((response) => {
+          const body = response.body as ResponseErrorInvalidInstructions;
 
-      const requestObj = {} as Request;
-      requestObj.body = tabWriterInstructions;
+          expect(body.errors.length).toBe(1);
+          expect(body.errors[0].code).toBe(ErrorCode.UNPROCESSABLE_TAB_INSTRUCTION);
+          expect(body.errors[0].instruction).toBe(invalidInstruction);
+        });
+    });
 
-      const responseObj = {} as Response;
-      responseObj.status = jest.fn().mockReturnThis();
-      responseObj.send = jest.fn().mockReturnThis();
+    it('should return the created tab on success', async () => {
+      const payload = { rowsSpacing: 1, rowsQuantity: 1, instructions: '1-2 1-1' };
 
-      tabController.createTab(requestObj, responseObj);
-
-      expect(tabCreationSpy).toHaveBeenCalledWith(tabWriterInstructions);
-      expect(responseObj.status).toHaveBeenCalledWith(HttpStatus.OK);
-
-      tabCreationSpy.mockRestore();
+      return request(getTestServer()).post('/tabs').send(payload).expect('Content-Type', /json/).expect(HttpStatus.OK);
     });
   });
 });

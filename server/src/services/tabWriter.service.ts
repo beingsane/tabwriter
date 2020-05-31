@@ -9,7 +9,7 @@ export interface TabWriterInstructions {
   rowsSpacing: number;
 }
 
-interface InstructionWriteResult {
+export interface InstructionWriteResult {
   success: boolean;
   instruction: string;
   readFromIdx: number;
@@ -25,27 +25,31 @@ export interface TabWriterResult {
 }
 
 export class TabWriterService {
-  public static writeTab({ instructions, rowsQuantity, rowsSpacing }: TabWriterInstructions): TabWriterResult {
+  public static async writeTab({
+    instructions,
+    rowsQuantity,
+    rowsSpacing,
+  }: TabWriterInstructions): Promise<TabWriterResult> {
     let successBuild = true;
 
     const parser = new Parser();
-    const parserResult = parser.parse(instructions);
+    return parser.parseAsync(instructions).then((parserResult) => {
+      const tab = new Tab({ rowsQuantity, rowsSpacing });
+      const instructionsResults: InstructionWriteResult[] = [];
 
-    const tab = new Tab({ rowsQuantity, rowsSpacing });
-    const instructionsResults: InstructionWriteResult[] = [];
+      parserResult.forEach((parsedInstruction) => {
+        const tabWriterInstructionResult = TabWriterService.writeParsedInstructionToTab(parsedInstruction, tab);
+        instructionsResults.push(tabWriterInstructionResult);
 
-    parserResult.forEach((parsedInstruction) => {
-      const tabWriterInstructionResult = TabWriterService.writeParsedInstructionToTab(parsedInstruction, tab);
-      instructionsResults.push(tabWriterInstructionResult);
+        if (successBuild && !tabWriterInstructionResult.success) successBuild = false;
+      });
 
-      if (successBuild && !tabWriterInstructionResult.success) successBuild = false;
+      return {
+        success: successBuild,
+        tab: tab.blocks,
+        instructionsResults,
+      };
     });
-
-    return {
-      success: successBuild,
-      tab: tab.blocks,
-      instructionsResults,
-    };
   }
 
   public static writeParsedInstructionToTab(parsedInstruction: ParserResult, tab: Tab): InstructionWriteResult {
