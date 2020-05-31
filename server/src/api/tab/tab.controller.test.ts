@@ -1,10 +1,10 @@
 import request from 'supertest';
 import express, { Application } from 'express';
 import * as HttpStatus from 'http-status-codes';
-import { TabwriterServer } from './../../server';
+import { TabwriterServer } from '../server';
 import { TabController } from './tab.controller';
-import { ErrorCode } from './../../models/errors/errorCodes.enum';
-import { ResponseErrorInvalidRequest } from './../../models/responses/responseErrorInvalidRequest.model';
+import { ErrorCode } from '../models/errors/errorCodes.enum';
+import { ResponseErrorInvalidRequest } from '../models/responses/responseErrorInvalidRequest.model';
 import { ResponseErrorInvalidInstructions } from './models/responseErrorInvalidInstructions.model';
 
 const getTestServer = (): Application => {

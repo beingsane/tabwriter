@@ -1,9 +1,9 @@
 import { ParamSchema } from 'express-validator';
-import { InvalidIntRange } from './../../../models/errors/invalidIntRange.model';
-import { EmptyParameter } from './../../../models/errors/emptyParameter.model';
-import { InvalidInputError } from '../../../models/errors/invalidInputError.model';
-import { InvalidType } from './../../../models/errors/invalidType.model';
-import { MissingParameter } from './../../../models/errors/missingParameter.model';
+import { InvalidIntRange } from '../../models/errors/invalidIntRange.model';
+import { EmptyParameter } from '../../models/errors/emptyParameter.model';
+import { InvalidInputError } from '../../models/errors/invalidInputError.model';
+import { InvalidType } from '../../models/errors/invalidType.model';
+import { MissingParameter } from '../../models/errors/missingParameter.model';
 
 export const MIN_ROWS_SPACING = 1;
 export const MIN_ROWS_QUANTITY = 1;

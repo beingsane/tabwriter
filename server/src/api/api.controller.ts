@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { BaseController } from '../models/base.controller';
-import { ResponseErrorResourceNotFound } from '../models/responses/responseErrorResourceNotFound.model';
+import { BaseController } from './models/base.controller';
+import { ResponseErrorResourceNotFound } from './models/responses/responseErrorResourceNotFound.model';
 
 export class ApiController extends BaseController {
   public readonly routePrefix = 'api';

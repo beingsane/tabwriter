@@ -1,9 +1,9 @@
 import request from 'supertest';
 import express, { Application } from 'express';
 import * as HttpStatus from 'http-status-codes';
-import { TabwriterServer } from '../server';
+import { TabwriterServer } from './server';
 import { ApiController } from './api.controller';
-import { ResponseErrorResourceNotFound } from './../models/responses/responseErrorResourceNotFound.model';
+import { ResponseErrorResourceNotFound } from './models/responses/responseErrorResourceNotFound.model';
 
 const getTestServer = (): Application => {
   const server = new TabwriterServer();

@@ -1,6 +1,6 @@
 import { ResponseErrorInvalidInstruction } from './responseErrorInvalidInstruction.model';
-import { InstructionWriteResult } from '../../../../services/tabWriter.service';
-import { ErrorCode } from '../../../models/errors/errorCodes.enum';
+import { InstructionWriteResult } from '../../../services/tabWriter.service';
+import { ErrorCode } from '../../models/errors/errorCodes.enum';
 
 const getDefaultInvalidInstructionWriteResult = (): InstructionWriteResult => ({
   success: false,

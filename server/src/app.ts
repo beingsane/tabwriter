@@ -4,8 +4,8 @@ import { TabwriterServer } from './api/server';
 import { tabwriterConfig } from './config/config';
 import { errorHandler } from './api/middlewares/errorHandler.middleware';
 import { WebController } from './api/web/web.controller';
-import { ApiController } from './api/api/api.controller';
-import { TabController } from './api/api/tab/tab.controller';
+import { ApiController } from './api/api.controller';
+import { TabController } from './api/tab/tab.controller';
 
 const twServer = new TabwriterServer(tabwriterConfig.serverPort);
 

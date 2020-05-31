@@ -1,5 +1,5 @@
-import { ErrorCode } from '../../../models/errors/errorCodes.enum';
-import { InstructionWriteResult } from '../../../../services/tabWriter.service';
+import { ErrorCode } from '../../models/errors/errorCodes.enum';
+import { InstructionWriteResult } from '../../../services/tabWriter.service';
 export class ResponseErrorInvalidInstruction {
   public readonly code = ErrorCode.UNPROCESSABLE_TAB_INSTRUCTION;
   public readonly message: string;

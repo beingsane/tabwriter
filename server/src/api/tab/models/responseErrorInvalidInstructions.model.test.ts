@@ -1,8 +1,8 @@
 import * as HttpStatus from 'http-status-codes';
 import { ResponseErrorInvalidInstructions } from './responseErrorInvalidInstructions.model';
 import { ResponseErrorInvalidInstruction } from './responseErrorInvalidInstruction.model';
-import { ErrorCode } from '../../../models/errors/errorCodes.enum';
-import { InstructionWriteResult } from '../../../../services/tabWriter.service';
+import { InstructionWriteResult } from '../../../services/tabWriter.service';
+import { ErrorCode } from '../../models/errors/errorCodes.enum';
 
 const getDefaultInvalidInstructionResponseErrors = (): ResponseErrorInvalidInstruction[] => {
   const invalidInstructionWriteResult: InstructionWriteResult = {
