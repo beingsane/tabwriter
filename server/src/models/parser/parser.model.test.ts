@@ -18,7 +18,7 @@ describe(`[${Parser.name}]`, () => {
         throw expectedError;
       });
 
-      return parser.parseAsync('').catch(e => expect(e).toBe(expectedError));
+      return parser.parseAsync('').catch((e) => expect(e).toBe(expectedError));
     });
 
     it('should parse no instructions if the given instructions string is empty', () => {
@@ -111,7 +111,7 @@ describe(`[${Parser.name}]`, () => {
       const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
-      const readTargetsValues = instructions[0].targets?.map(target => target.value);
+      const readTargetsValues = instructions[0].targets?.map((target) => target.value);
 
       expect(instructions.length).toBe(1);
       expect(readTargetsValues).toEqual(targets);
@@ -123,7 +123,7 @@ describe(`[${Parser.name}]`, () => {
       const parser = new Parser();
 
       const instructions = parser.parse(instructionsStr);
-      const readTargetsValues = instructions[0].targets?.map(target => target.value);
+      const readTargetsValues = instructions[0].targets?.map((target) => target.value);
 
       expect(instructions.length).toBe(1);
       expect(readTargetsValues).toEqual(targets);

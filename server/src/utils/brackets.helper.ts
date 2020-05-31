@@ -8,7 +8,7 @@ export class BracketsHelper {
   public static openingBrackets: string[] = Object.keys(BracketsHelper.openingClosingBracketsMap);
 
   public static closingBrackets: string[] = BracketsHelper.openingBrackets.map(
-    openingBracket => BracketsHelper.openingClosingBracketsMap[openingBracket],
+    (openingBracket) => BracketsHelper.openingClosingBracketsMap[openingBracket],
   );
 
   public static isOpeningBracket(char: string): boolean {
@@ -65,7 +65,7 @@ export class BracketsHelper {
   }
 
   private static hasBrackets(str: string, brackets: string[]): boolean {
-    const bracketsIdx = brackets.map(bracket => str.indexOf(bracket)).filter(bracketIdx => bracketIdx > -1);
+    const bracketsIdx = brackets.map((bracket) => str.indexOf(bracket)).filter((bracketIdx) => bracketIdx > -1);
     const firstBracketIdx = bracketsIdx.length > 0 ? Math.min(...bracketsIdx) : -1;
 
     return firstBracketIdx > -1;

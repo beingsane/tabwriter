@@ -197,7 +197,7 @@ describe(`[${Tab.name}]`, () => {
 
   it('should provide a method to add merged instructions to the last tab block', () => {
     const chordNoteMap: Record<number, string> = { 1: '1/2', 2: '2' };
-    const instructions = Object.keys(chordNoteMap).map(chordStr => {
+    const instructions = Object.keys(chordNoteMap).map((chordStr) => {
       const chord = parseInt(chordStr, 10);
       return new TabBlockWriteInstruction(chord, chordNoteMap[chord]);
     });
@@ -206,7 +206,7 @@ describe(`[${Tab.name}]`, () => {
     tab.addTabBlock();
     tab.writeInstructionsMerged(instructions);
 
-    Object.keys(chordNoteMap).map(chordStr => {
+    Object.keys(chordNoteMap).map((chordStr) => {
       const chord = parseInt(chordStr, 10);
       expect(tab.blocks[1][chord]).toContain(chordNoteMap[chord]);
     });

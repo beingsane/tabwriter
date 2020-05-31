@@ -176,7 +176,7 @@ export class TabBlock {
         ? this.internalFooter + this.getSectionsFiller(endBlockLength - this.internalFooter.length)
         : this.internalFooter.slice(0, endBlockLength);
 
-    const rows = this.internalRows.map(row =>
+    const rows = this.internalRows.map((row) =>
       row.length < endBlockLength ? row + this.getRowFiller(endBlockLength - row.length) : row,
     );
 
@@ -205,7 +205,7 @@ export class TabBlock {
     }, 0);
 
     this.internalRows.forEach((row, idx) => {
-      const instructionToWrite = instructions.find(instruction => instruction.chord === idx + 1);
+      const instructionToWrite = instructions.find((instruction) => instruction.chord === idx + 1);
       if (instructionToWrite) {
         const rowFillerLength = maxNoteLength - instructionToWrite.note.length;
         this.internalRows[idx] = row + instructionToWrite.note + this.getRowFiller(rowFillerLength);
@@ -227,8 +227,8 @@ export class TabBlock {
 
   private getInvalidChordsToWrite(instructions: TabBlockWriteInstruction[]): number[] {
     const invalidChords = instructions
-      .map(instruction => instruction.chord)
-      .filter(chord => !this.isChordValidToWrite(chord))
+      .map((instruction) => instruction.chord)
+      .filter((chord) => !this.isChordValidToWrite(chord))
       .filter((chord, idx, chords) => chords.indexOf(chord) === idx);
 
     return invalidChords;
@@ -245,8 +245,8 @@ export class TabBlock {
     }, {});
 
     const chordsWithMultipleInstructions = Object.keys(chord2InstructionCountMap)
-      .map(chordStr => parseInt(chordStr, 10))
-      .filter(chord => chord2InstructionCountMap[chord] > 1);
+      .map((chordStr) => parseInt(chordStr, 10))
+      .filter((chord) => chord2InstructionCountMap[chord] > 1);
 
     return chordsWithMultipleInstructions;
   }

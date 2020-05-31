@@ -28,11 +28,11 @@ describe(`[${RepeatInstruction.name}]`, () => {
     const instruction = new RepeatInstruction(repetitions, instructionsToRepeat);
 
     instructionsToRepeat.forEach(
-      instruction => (instruction.writeOnTab = jest.fn().mockReturnValue(new TabBlockWriteResult(true))),
+      (instruction) => (instruction.writeOnTab = jest.fn().mockReturnValue(new TabBlockWriteResult(true))),
     );
     instruction.writeOnTab(tab);
 
-    instructionsToRepeat.forEach(instruction => {
+    instructionsToRepeat.forEach((instruction) => {
       expect(instruction.writeOnTab).toHaveBeenCalledWith(tab);
     });
   });

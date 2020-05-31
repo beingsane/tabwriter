@@ -5,7 +5,7 @@ export abstract class BaseController {
   public router = Router();
 
   constructor(childControllers?: BaseController[]) {
-    childControllers?.forEach(childController => {
+    childControllers?.forEach((childController) => {
       this.router.use(`/${childController.routePrefix}`, childController.router);
     });
   }

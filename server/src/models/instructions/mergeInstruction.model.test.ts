@@ -26,7 +26,7 @@ describe(`[${MergeInstruction.name}]`, () => {
     const instructionsToMerge = [new DefaultInstruction(1, '1'), new DefaultInstruction(2, '2')];
     const instruction = new MergeInstruction(instructionsToMerge);
     const expectedInstructions = instructionsToMerge.map(
-      instruction => new TabBlockWriteInstruction(instruction.chord, instruction.note),
+      (instruction) => new TabBlockWriteInstruction(instruction.chord, instruction.note),
     );
 
     tab.writeInstructionsMerged = jest.fn();

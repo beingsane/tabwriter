@@ -63,7 +63,7 @@ export class Tab {
   }
 
   public get blocks(): string[][] {
-    return this.tabBlocks.map(tabBlock => tabBlock.block);
+    return this.tabBlocks.map((tabBlock) => tabBlock.block);
   }
 
   constructor({ rowsQuantity, rowsFiller, rowsSpacing, sectionSymbol, sectionFiller }: TabConfig = {}) {

@@ -45,7 +45,7 @@ describe(`[${TabBlock.name}]`, () => {
 
     const tabBlock = new TabBlock(tab);
 
-    tabBlock.rows.forEach(row => {
+    tabBlock.rows.forEach((row) => {
       expect(row).toBe(expectedRowValue);
     });
   });
@@ -109,7 +109,7 @@ describe(`[${TabBlock.name}]`, () => {
       const spacingToAdd = 10;
 
       const expectedFiller = Array(spacingToAdd + 1).join(tab.rowsFiller);
-      const expectedRowsFinalValue = tabBlock.rows.map(row => row + expectedFiller);
+      const expectedRowsFinalValue = tabBlock.rows.map((row) => row + expectedFiller);
       tabBlock.addSpacing(spacingToAdd);
 
       expect(tabBlock.rows).toEqual(expectedRowsFinalValue);
@@ -119,7 +119,7 @@ describe(`[${TabBlock.name}]`, () => {
       const { tab, tabBlock } = getDefaultSetup();
 
       const expectedFiller = Array(tab.rowsSpacing + 1).join(tab.rowsFiller);
-      const expectedRowsFinalValue = tabBlock.rows.map(row => row + expectedFiller);
+      const expectedRowsFinalValue = tabBlock.rows.map((row) => row + expectedFiller);
       tabBlock.addSpacing();
 
       expect(tabBlock.rows).toEqual(expectedRowsFinalValue);
@@ -147,7 +147,7 @@ describe(`[${TabBlock.name}]`, () => {
       const { tabBlock } = getDefaultSetup();
       const spacingToRemove = 1;
 
-      const expectedRowsFinalValue = tabBlock.rows.map(row => row.slice(0, row.length - spacingToRemove));
+      const expectedRowsFinalValue = tabBlock.rows.map((row) => row.slice(0, row.length - spacingToRemove));
       tabBlock.removeSpacing(spacingToRemove);
 
       expect(tabBlock.rows).toEqual(expectedRowsFinalValue);
@@ -156,7 +156,7 @@ describe(`[${TabBlock.name}]`, () => {
     it('should remove fillers from all rows for the tab rows spacing amount when no spacing value is given', () => {
       const { tab, tabBlock } = getDefaultSetup();
 
-      const expectedRowsFinalValue = tabBlock.rows.map(row => row.slice(0, row.length - tab.rowsSpacing));
+      const expectedRowsFinalValue = tabBlock.rows.map((row) => row.slice(0, row.length - tab.rowsSpacing));
       tabBlock.removeSpacing();
 
       expect(tabBlock.rows).toEqual(expectedRowsFinalValue);
@@ -239,7 +239,7 @@ describe(`[${TabBlock.name}]`, () => {
       const { chord, tabBlock } = getDefaultSetup();
       const notes = ['1/2', '2/3'];
 
-      const writeInstructions = notes.map(note => new TabBlockWriteInstruction(chord, note));
+      const writeInstructions = notes.map((note) => new TabBlockWriteInstruction(chord, note));
       const result = tabBlock.writeInstructionsMerged(writeInstructions);
 
       expect(result.success).toBe(false);
@@ -261,7 +261,7 @@ describe(`[${TabBlock.name}]`, () => {
       const { tab, tabBlock } = getDefaultSetup();
       const { chordsNoteMap, maxNotesLength } = getDefaultChordsNoteMap();
 
-      const writeInstructions = Object.keys(chordsNoteMap).map(chordStr => {
+      const writeInstructions = Object.keys(chordsNoteMap).map((chordStr) => {
         const { chord, note } = chordsNoteMapExtractor(chordsNoteMap, chordStr);
         return new TabBlockWriteInstruction(chord, note);
       });
@@ -275,7 +275,7 @@ describe(`[${TabBlock.name}]`, () => {
 
       tabBlock.writeInstructionsMerged(writeInstructions);
 
-      Object.keys(chordsNoteMap).forEach(chordStr => {
+      Object.keys(chordsNoteMap).forEach((chordStr) => {
         const { chord } = chordsNoteMapExtractor(chordsNoteMap, chordStr);
         expect(tabBlock.rows[chord - 1]).toBe(expectedFinalRowValues[chord]);
       });
@@ -285,7 +285,7 @@ describe(`[${TabBlock.name}]`, () => {
       const { tab, tabBlock } = getDefaultSetup();
       const { chordsNoteMap, maxNotesLength } = getDefaultChordsNoteMap();
 
-      const writeInstructions = Object.keys(chordsNoteMap).map(chordStr => {
+      const writeInstructions = Object.keys(chordsNoteMap).map((chordStr) => {
         const { chord, note } = chordsNoteMapExtractor(chordsNoteMap, chordStr);
         return new TabBlockWriteInstruction(chord, note);
       });
@@ -303,7 +303,7 @@ describe(`[${TabBlock.name}]`, () => {
 
       tabBlock.writeInstructionsMerged(writeInstructions);
 
-      Object.keys(expectedNonChordFinalRowValues).forEach(rowIdxStr => {
+      Object.keys(expectedNonChordFinalRowValues).forEach((rowIdxStr) => {
         const rowIdx = parseInt(rowIdxStr, 10);
         expect(tabBlock.rows[rowIdx]).toBe(expectedNonChordFinalRowValues[rowIdx]);
       });
@@ -342,7 +342,7 @@ describe(`[${TabBlock.name}]`, () => {
       const headerName = 'some header name';
 
       const expectedRows = tabBlock.rows.map(
-        row =>
+        (row) =>
           row +
           tab.sectionSymbol +
           Array(tab.sectionFiller.length + headerName.length + tab.rowsSpacing + 1).join(tab.rowsFiller),
@@ -421,7 +421,7 @@ describe(`[${TabBlock.name}]`, () => {
       const footer = 'some footer note';
 
       const expectedRows = tabBlock.rows.map(
-        row =>
+        (row) =>
           row +
           Array(footer.length + tab.sectionFiller.length + 1).join(tab.rowsFiller) +
           tab.sectionSymbol +
@@ -453,7 +453,7 @@ describe(`[${TabBlock.name}]`, () => {
       tabBlock.addSpacing(footer.length + 1);
 
       const expectedRows = tabBlock.rows.map(
-        row => row + tab.sectionSymbol + Array(tab.rowsSpacing + 1).join(tab.rowsFiller),
+        (row) => row + tab.sectionSymbol + Array(tab.rowsSpacing + 1).join(tab.rowsFiller),
       );
 
       tabBlock.writeFooter(footer);

@@ -18,7 +18,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult) as MergeableInstruction;
 
           expect(instruction).toBeInstanceOf(DefaultInstruction);
@@ -30,7 +30,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -44,7 +44,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(BreakInstruction);
@@ -58,7 +58,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(MergeInstruction);
@@ -70,7 +70,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -82,7 +82,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -94,7 +94,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -108,7 +108,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(RepeatInstruction);
@@ -120,7 +120,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -132,7 +132,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -144,7 +144,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -156,7 +156,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -170,7 +170,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(SetSpacingInstruction);
@@ -182,7 +182,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -194,7 +194,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -206,7 +206,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -220,7 +220,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(SectionInstruction);
@@ -232,7 +232,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -244,7 +244,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -258,7 +258,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(NoteInstruction);
@@ -270,7 +270,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);
@@ -282,7 +282,7 @@ describe(`[${InstructionFactory.name}]`, () => {
         const parser = new Parser();
         const parserResults = parser.parse(instructionStr);
 
-        parserResults.forEach(parserResult => {
+        parserResults.forEach((parserResult) => {
           const instruction = InstructionFactory.getInstruction(parserResult);
 
           expect(instruction).toBeInstanceOf(InvalidInstruction);

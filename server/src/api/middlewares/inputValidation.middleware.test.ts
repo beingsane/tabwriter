@@ -20,11 +20,7 @@ describe('[validateInputs]', () => {
 
   it('should not call next if there are validation errors', async () => {
     const testFieldName = 'testField';
-    const testValidators: ValidationChain[] = [
-      body(testFieldName)
-        .not()
-        .isEmpty(),
-    ];
+    const testValidators: ValidationChain[] = [body(testFieldName).not().isEmpty()];
     const validationMiddleware = validateInputs(testValidators);
 
     const requestObj = { body: {} } as Request;
@@ -40,11 +36,7 @@ describe('[validateInputs]', () => {
 
   it('should respond with a bad request status code if there are validation errors', async () => {
     const testFieldName = 'testField';
-    const testValidators: ValidationChain[] = [
-      body(testFieldName)
-        .not()
-        .isEmpty(),
-    ];
+    const testValidators: ValidationChain[] = [body(testFieldName).not().isEmpty()];
     const validationMiddleware = validateInputs(testValidators);
 
     const requestObj = { body: {} } as Request;
@@ -60,11 +52,7 @@ describe('[validateInputs]', () => {
 
   it('should respond with a invalid request error if there are validation errors', async () => {
     const testFieldName = 'testField';
-    const testValidators: ValidationChain[] = [
-      body(testFieldName)
-        .not()
-        .isEmpty(),
-    ];
+    const testValidators: ValidationChain[] = [body(testFieldName).not().isEmpty()];
     const validationMiddleware = validateInputs(testValidators);
 
     const requestObj = { body: {} } as Request;

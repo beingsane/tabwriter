@@ -13,7 +13,7 @@ export class MergeInstruction extends Instruction {
 
   public writeOnTab(tab: Tab): InstructionWriteResult {
     const writeInstructions = this.instructionsToMerge.map(
-      instruction => new TabBlockWriteInstruction(instruction.chord, instruction.note),
+      (instruction) => new TabBlockWriteInstruction(instruction.chord, instruction.note),
     );
 
     return tab.writeInstructionsMerged(writeInstructions);

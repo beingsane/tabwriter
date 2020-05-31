@@ -3,6 +3,10 @@ import { TabwriterConfig } from '../config/config';
 import { TabwriterServer } from './server';
 import { BaseController } from './models/base.controller';
 
+interface CallbackFunction {
+  (): void;
+}
+
 class TestController extends BaseController {
   public routePrefix = 'test';
 }
@@ -16,7 +20,7 @@ const getTestController = (): BaseController => new TestController();
 const getTestAssetHandler = (): Handler => jest.fn();
 
 const getServerListenMock = (): jest.Mock =>
-  jest.fn().mockImplementation((port: number, cb: Function) => {
+  jest.fn().mockImplementation((port: number, cb: CallbackFunction) => {
     cb();
   });
 

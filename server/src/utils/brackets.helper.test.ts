@@ -9,7 +9,7 @@ describe(`[${BracketsHelper.name}]`, () => {
         '{': null,
       };
 
-      Object.keys(isOpeningBracketMap).forEach(key => {
+      Object.keys(isOpeningBracketMap).forEach((key) => {
         isOpeningBracketMap[key] = BracketsHelper.isOpeningBracket(key);
       });
 
@@ -27,7 +27,7 @@ describe(`[${BracketsHelper.name}]`, () => {
         '}': null,
       };
 
-      Object.keys(isClosingBracketMap).forEach(key => {
+      Object.keys(isClosingBracketMap).forEach((key) => {
         isClosingBracketMap[key] = BracketsHelper.isClosingBracket(key);
       });
 

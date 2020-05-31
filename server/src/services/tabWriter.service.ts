@@ -34,7 +34,7 @@ export class TabWriterService {
     const tab = new Tab({ rowsQuantity, rowsSpacing });
     const instructionsResults: InstructionWriteResult[] = [];
 
-    parserResult.forEach(parsedInstruction => {
+    parserResult.forEach((parsedInstruction) => {
       const tabWriterInstructionResult = TabWriterService.writeParsedInstructionToTab(parsedInstruction, tab);
       instructionsResults.push(tabWriterInstructionResult);
 

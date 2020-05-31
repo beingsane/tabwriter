@@ -11,7 +11,7 @@ export const appValidationResult = validationResult.withDefaults({
 export const validateInputs = (validations: ValidationChain[]): Handler => {
   return asyncHandler(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      await Promise.all(validations.map(validation => validation.run(req)));
+      await Promise.all(validations.map((validation) => validation.run(req)));
       const errors = appValidationResult(req);
 
       if (errors.isEmpty()) return next();

@@ -73,7 +73,7 @@ export class InstructionFactory {
 
     const unmergeableTargets: ParserResult[] = [];
     const mergeableInstructions: MergeableInstruction[] = [];
-    parsedInstructionResult.targets.forEach(target => {
+    parsedInstructionResult.targets.forEach((target) => {
       const instruction = InstructionFactory.getInstruction(target);
       instruction.isMergeableInstruction()
         ? mergeableInstructions.push(instruction as MergeableInstruction)
@@ -81,7 +81,7 @@ export class InstructionFactory {
     });
 
     if (unmergeableTargets.length > 0) {
-      const unmergeableTargetsDesc = `< ${unmergeableTargets.map(target => target.value).join(' >, < ')} >`;
+      const unmergeableTargetsDesc = `< ${unmergeableTargets.map((target) => target.value).join(' >, < ')} >`;
       return new InvalidInstruction(`As seguintes instruções são inválidas para merge: ${unmergeableTargetsDesc}`);
     }
 
@@ -115,7 +115,7 @@ export class InstructionFactory {
     if (!parsedInstructionResult.targets || parsedInstructionResult.targets.length === 0)
       return new InvalidInstruction('Nenhuma instrução indicada para aplicação da instrução repeat');
 
-    const instructionsToRepeat = parsedInstructionResult.targets.map(target =>
+    const instructionsToRepeat = parsedInstructionResult.targets.map((target) =>
       InstructionFactory.getInstruction(target),
     );
 

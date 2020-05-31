@@ -13,7 +13,7 @@ export class RepeatInstruction extends Instruction {
     const writeErrors: InstructionWriteResult[] = [];
 
     for (let i = 0; i < this.repetitions; i++) {
-      this.instructionsToRepeat.forEach(instruction => {
+      this.instructionsToRepeat.forEach((instruction) => {
         const result = instruction.writeOnTab(tab);
 
         if (!result.success && i === 0) {
@@ -23,7 +23,7 @@ export class RepeatInstruction extends Instruction {
     }
 
     return writeErrors.length > 0
-      ? new InstructionWriteResult(false, writeErrors.map(err => err.description).join('. '))
+      ? new InstructionWriteResult(false, writeErrors.map((err) => err.description).join('. '))
       : new InstructionWriteResult(true);
   }
 }

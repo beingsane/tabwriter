@@ -94,8 +94,8 @@ export class Parser {
     toCheckInstrEndIndex: number,
   ): number {
     const openingBracketsIndexes = BracketsHelper.openingBrackets
-      .map(openingBracket => instructionsToParse.indexOf(openingBracket, instrStartIndex))
-      .filter(openingBracketIndex => openingBracketIndex > 0);
+      .map((openingBracket) => instructionsToParse.indexOf(openingBracket, instrStartIndex))
+      .filter((openingBracketIndex) => openingBracketIndex > 0);
     if (openingBracketsIndexes.length === 0) return toCheckInstrEndIndex;
 
     const firstOpeningBracketIndex = Math.min(...openingBracketsIndexes);
@@ -158,7 +158,7 @@ export class Parser {
   }
 
   private readInstructionArgs(parsedArgs: string): (string | number)[] {
-    return parsedArgs.split(Parser.INSTRUCTIONS_ARGS_SEPARATOR).map(arg => {
+    return parsedArgs.split(Parser.INSTRUCTIONS_ARGS_SEPARATOR).map((arg) => {
       const argNumber = Number(arg);
       return isNaN(argNumber) ? arg.trim() : argNumber;
     });
@@ -180,7 +180,7 @@ export class Parser {
     parsedInstruction: string,
     parsedInstructionStartIdx: number,
   ): ParserResult[] {
-    return targetsToUpdate.map(target => {
+    return targetsToUpdate.map((target) => {
       target.readFromIdx = parsedInstructionStartIdx + parsedInstruction.indexOf(target.value);
       target.readToIdx = target.readFromIdx + target.value.length - 1;
 

@@ -26,7 +26,7 @@ describe(`[${TabWriterService.name}]`, () => {
       const instructions = `${successInstruction} ${failedInstruction}`;
 
       const result = TabWriterService.writeTab({ instructions, rowsQuantity: 6, rowsSpacing: 2 });
-      const failedInstructionResult = result.instructionsResults.filter(ir => !ir.success);
+      const failedInstructionResult = result.instructionsResults.filter((ir) => !ir.success);
 
       expect(failedInstructionResult.length).toBe(1);
       expect(failedInstructionResult[0].instruction).toBe(failedInstruction);
