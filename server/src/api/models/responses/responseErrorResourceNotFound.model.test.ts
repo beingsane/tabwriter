@@ -1,12 +1,7 @@
 import * as HttpStatus from 'http-status-codes';
 import { ResponseErrorResourceNotFound } from './responseErrorResourceNotFound.model';
-import { ErrorCode } from '../errors/errorCodes.enum';
 
 describe(`[${ResponseErrorResourceNotFound.name}]`, () => {
-  it('should be mapped to the resource not found error code', () => {
-    expect(ResponseErrorResourceNotFound.ERROR_CODE).toBe(ErrorCode.RESOURCE_NOT_FOUND);
-  });
-
   it('should set the message', () => {
     const resource = '/resource';
     const responseError = new ResponseErrorResourceNotFound(resource);

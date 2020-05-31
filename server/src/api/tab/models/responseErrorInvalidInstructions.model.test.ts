@@ -1,10 +1,9 @@
 import * as HttpStatus from 'http-status-codes';
+import { InvalidInstructionError } from './invalidInstructionError.model';
 import { ResponseErrorInvalidInstructions } from './responseErrorInvalidInstructions.model';
-import { ResponseErrorInvalidInstruction } from './responseErrorInvalidInstruction.model';
 import { InstructionWriteResult } from '../../../services/tabWriter.service';
-import { ErrorCode } from '../../models/errors/errorCodes.enum';
 
-const getDefaultInvalidInstructionResponseErrors = (): ResponseErrorInvalidInstruction[] => {
+const getDefaultInvalidInstructionResponseErrors = (): InvalidInstructionError[] => {
   const invalidInstructionWriteResult: InstructionWriteResult = {
     success: false,
     error: 'test error',
@@ -13,14 +12,10 @@ const getDefaultInvalidInstructionResponseErrors = (): ResponseErrorInvalidInstr
     readToIdx: 2,
     name: 'instrução test',
   };
-  return [new ResponseErrorInvalidInstruction(invalidInstructionWriteResult)];
+  return [new InvalidInstructionError(invalidInstructionWriteResult)];
 };
 
 describe(`[${ResponseErrorInvalidInstructions.name}]`, () => {
-  it('should be mapped to the unprocessable instructions error code', () => {
-    expect(ResponseErrorInvalidInstructions.ERROR_CODE).toBe(ErrorCode.UNPROCESSABLE_TAB_INSTRUCTIONS);
-  });
-
   it('should set the message', () => {
     const responseError = new ResponseErrorInvalidInstructions(getDefaultInvalidInstructionResponseErrors());
 

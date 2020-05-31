@@ -6,7 +6,7 @@ import { BaseController } from '../models/base.controller';
 import { TabWriterService, TabWriterInstructions } from '../../services/tabWriter.service';
 import { validateInputs } from '../middlewares/inputValidation.middleware';
 import { tabCreationSchema } from './schemas/tabCreation.schema';
-import { ResponseErrorInvalidInstruction } from './models/responseErrorInvalidInstruction.model';
+import { InvalidInstructionError } from './models/invalidInstructionError.model';
 import { ResponseErrorInvalidInstructions } from './models/responseErrorInvalidInstructions.model';
 
 export class TabController extends BaseController {
@@ -28,7 +28,7 @@ export class TabController extends BaseController {
     } else {
       const failedInstructionsResponseErrors = tabWriterBuildResult.instructionsResults
         .filter((instructionResult) => !instructionResult.success)
-        .map((failedInstructionResult) => new ResponseErrorInvalidInstruction(failedInstructionResult));
+        .map((failedInstructionResult) => new InvalidInstructionError(failedInstructionResult));
 
       const response = new ResponseErrorInvalidInstructions(failedInstructionsResponseErrors);
       res.status(response.status).json(response);

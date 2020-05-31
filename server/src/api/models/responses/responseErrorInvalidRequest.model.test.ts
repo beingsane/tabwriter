@@ -1,13 +1,8 @@
 import * as HttpStatus from 'http-status-codes';
 import { ResponseErrorInvalidRequest } from './responseErrorInvalidRequest.model';
 import { InputValidationError } from '../inputValidationError.model';
-import { ErrorCode } from '../errors/errorCodes.enum';
 
 describe(`[${ResponseErrorInvalidRequest.name}]`, () => {
-  it('should be mapped to the invalid request error code', () => {
-    expect(ResponseErrorInvalidRequest.ERROR_CODE).toBe(ErrorCode.INVALID_REQUEST);
-  });
-
   it('should set the message', () => {
     const responseError = new ResponseErrorInvalidRequest([]);
 

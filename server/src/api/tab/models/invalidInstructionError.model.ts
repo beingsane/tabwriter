@@ -1,6 +1,7 @@
 import { ErrorCode } from '../../models/errors/errorCodes.enum';
 import { InstructionWriteResult } from '../../../services/tabWriter.service';
-export class ResponseErrorInvalidInstruction {
+
+export class InvalidInstructionError {
   public readonly code = ErrorCode.UNPROCESSABLE_TAB_INSTRUCTION;
   public readonly message: string;
   public readonly instruction: string;

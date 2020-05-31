@@ -1,4 +1,4 @@
-import { ResponseErrorInvalidInstruction } from './responseErrorInvalidInstruction.model';
+import { InvalidInstructionError } from './invalidInstructionError.model';
 import { InstructionWriteResult } from '../../../services/tabWriter.service';
 import { ErrorCode } from '../../models/errors/errorCodes.enum';
 
@@ -11,16 +11,16 @@ const getDefaultInvalidInstructionWriteResult = (): InstructionWriteResult => ({
   name: 'instrução test',
 });
 
-describe(`[${ResponseErrorInvalidInstruction.name}]`, () => {
+describe(`[${InvalidInstructionError.name}]`, () => {
   it('should be mapped to the unprocessable instruction error code', () => {
-    const responseError = new ResponseErrorInvalidInstruction(getDefaultInvalidInstructionWriteResult());
+    const responseError = new InvalidInstructionError(getDefaultInvalidInstructionWriteResult());
 
     expect(responseError.code).toBe(ErrorCode.UNPROCESSABLE_TAB_INSTRUCTION);
   });
 
   it('should set the message to the write result error if not null', () => {
     const invalidInstructionWriteResult = getDefaultInvalidInstructionWriteResult();
-    const responseError = new ResponseErrorInvalidInstruction(invalidInstructionWriteResult);
+    const responseError = new InvalidInstructionError(invalidInstructionWriteResult);
 
     expect(responseError.message).toBe(invalidInstructionWriteResult.error);
   });
@@ -29,35 +29,35 @@ describe(`[${ResponseErrorInvalidInstruction.name}]`, () => {
     const invalidInstructionWriteResult = getDefaultInvalidInstructionWriteResult();
     invalidInstructionWriteResult.error = null;
 
-    const responseError = new ResponseErrorInvalidInstruction(invalidInstructionWriteResult);
+    const responseError = new InvalidInstructionError(invalidInstructionWriteResult);
 
     expect(responseError.message).toBe('');
   });
 
   it('should set the instruction to the write result instruction', () => {
     const invalidInstructionWriteResult = getDefaultInvalidInstructionWriteResult();
-    const responseError = new ResponseErrorInvalidInstruction(invalidInstructionWriteResult);
+    const responseError = new InvalidInstructionError(invalidInstructionWriteResult);
 
     expect(responseError.instruction).toBe(invalidInstructionWriteResult.instruction);
   });
 
   it('should set the readFrom to the write result readFromIdx', () => {
     const invalidInstructionWriteResult = getDefaultInvalidInstructionWriteResult();
-    const responseError = new ResponseErrorInvalidInstruction(invalidInstructionWriteResult);
+    const responseError = new InvalidInstructionError(invalidInstructionWriteResult);
 
     expect(responseError.readFrom).toBe(invalidInstructionWriteResult.readFromIdx);
   });
 
   it('should set the readTo to the write result readToIdx', () => {
     const invalidInstructionWriteResult = getDefaultInvalidInstructionWriteResult();
-    const responseError = new ResponseErrorInvalidInstruction(invalidInstructionWriteResult);
+    const responseError = new InvalidInstructionError(invalidInstructionWriteResult);
 
     expect(responseError.readTo).toBe(invalidInstructionWriteResult.readToIdx);
   });
 
   it('should set the context to the write result name', () => {
     const invalidInstructionWriteResult = getDefaultInvalidInstructionWriteResult();
-    const responseError = new ResponseErrorInvalidInstruction(invalidInstructionWriteResult);
+    const responseError = new InvalidInstructionError(invalidInstructionWriteResult);
 
     expect(responseError.context).toBe(invalidInstructionWriteResult.name);
   });
