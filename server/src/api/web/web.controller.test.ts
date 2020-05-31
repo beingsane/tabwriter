@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { WebController } from './web.controller';
-import { WebService } from '../../services/web.service';
+import { WebService } from './web.service';
 
 describe(`[${WebController.name}]`, () => {
   describe('[sendWebIndex]', () => {

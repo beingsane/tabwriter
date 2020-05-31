@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as HttpStatus from 'http-status-codes';
 import { ApiController } from './api.controller';
-import { ResponseErrorResourceNotFound } from './../../models/httpResponseErrors/responseErrorResourceNotFound.model';
+import { ResponseErrorResourceNotFound } from '../models/responseErrorResourceNotFound.model';
 
 describe(`[${ApiController.name}]`, () => {
   describe('[resourceNotFound]', () => {

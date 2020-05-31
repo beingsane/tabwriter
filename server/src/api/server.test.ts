@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, Handler } from 'express';
-import { TabwriterConfig } from './config/config';
+import { TabwriterConfig } from '../config/config';
 import { TabwriterServer } from './server';
-import { BaseController } from './controllers/base.controller';
+import { BaseController } from './models/base.controller';
 
 class TestController extends BaseController {
   public routePrefix = 'test';

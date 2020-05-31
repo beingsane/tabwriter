@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { checkSchema } from 'express-validator';
 import * as HttpStatus from 'http-status-codes';
-import { BaseController } from '../base.controller';
-import { TabWriterService, TabWriterInstructions } from '../../services/tabWriter.service';
+import { BaseController } from '../../models/base.controller';
+import { TabWriterService, TabWriterInstructions } from '../../../services/tabWriter.service';
 import { validateInputs } from '../../middlewares/inputValidation.middleware';
-import { tabCreationSchema } from '../../schemas/tabCreation.schema';
+import { tabCreationSchema } from './schemas/tabCreation.schema';
 
 export class TabController extends BaseController {
   public readonly routePrefix = 'tabs';

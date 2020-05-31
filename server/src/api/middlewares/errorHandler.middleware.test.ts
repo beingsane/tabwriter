@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as HttpStatus from 'http-status-codes';
 import { errorHandler } from './errorHandler.middleware';
-import { ResponseErrorDefault } from './../models/httpResponseErrors/responseErrorDefault.model';
+import { ResponseErrorDefault } from '../models/responseErrorDefault.model';
 
 describe('[errorHandler]', () => {
   it('should return a 500 status code response by default', () => {

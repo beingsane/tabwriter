@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { BaseController } from '../base.controller';
-import { WebService } from '../../services/web.service';
+import { BaseController } from '../models/base.controller';
+import { WebService } from './web.service';
 
 export class WebController extends BaseController {
   public readonly routePrefix = '*';

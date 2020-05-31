@@ -1,5 +1,5 @@
 import { ParamSchema } from 'express-validator';
-import { ErrorCode } from './../models/httpResponseErrors/errorCodes.enum';
+import { ErrorCode } from '../../../models/errorCodes.enum';
 
 export const MIN_ROWS_SPACING = 1;
 export const MIN_ROWS_QUANTITY = 1;

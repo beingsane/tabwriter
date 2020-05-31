@@ -1,7 +1,7 @@
 import * as HttpStatus from 'http-status-codes';
+import { ResponseErrorDefault } from './responseErrorDefault.model';
 import { ErrorCode } from './errorCodes.enum';
 import { errorCodesToMessageMap } from './errorCodesToMessage.map';
-import { ResponseErrorDefault } from './responseErrorDefault.model';
 
 describe(`[${ResponseErrorDefault.name}]`, () => {
   it('should set the message for the default error code', () => {

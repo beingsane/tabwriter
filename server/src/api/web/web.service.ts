@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { tabwriterConfig } from '../config/config';
+import { tabwriterConfig } from '../../config/config';
 
 export class WebService {
   private static index: Buffer;

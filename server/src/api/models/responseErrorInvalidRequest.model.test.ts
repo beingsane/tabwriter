@@ -1,8 +1,8 @@
 import * as HttpStatus from 'http-status-codes';
-import { ErrorCode } from './errorCodes.enum';
-import { errorCodesToMessageMap } from './errorCodesToMessage.map';
 import { ResponseErrorInvalidRequest } from './responseErrorInvalidRequest.model';
 import { InputValidationError } from './inputValidationError.model';
+import { ErrorCode } from './errorCodes.enum';
+import { errorCodesToMessageMap } from './errorCodesToMessage.map';
 
 describe(`[${ResponseErrorInvalidRequest.name}]`, () => {
   it('should set the message for the invalid request error', () => {

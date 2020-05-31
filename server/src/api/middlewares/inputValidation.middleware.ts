@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction, Handler } from 'express';
 import { ValidationChain, validationResult, ValidationError } from 'express-validator';
 import asyncHandler from 'express-async-handler';
-import { InputValidationError } from '../models/httpResponseErrors/inputValidationError.model';
-import { ResponseErrorInvalidRequest } from '../models/httpResponseErrors/responseErrorInvalidRequest.model';
+import { InputValidationError } from '../models/inputValidationError.model';
+import { ResponseErrorInvalidRequest } from '../models/responseErrorInvalidRequest.model';
 
 export const appValidationResult = validationResult.withDefaults({
   formatter: (error: ValidationError) => new InputValidationError(error),

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as HttpStatus from 'http-status-codes';
 import { TabController } from './tab.controller';
-import { TabWriterInstructions, TabWriterService } from '../../services/tabWriter.service';
+import { TabWriterInstructions, TabWriterService } from '../../../services/tabWriter.service';
 
 describe(`[${TabController.name}]`, () => {
   describe('[createTab]', () => {

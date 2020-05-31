@@ -1,11 +1,11 @@
 import express from 'express';
 import morgan from 'morgan';
-import { TabwriterServer } from './server';
+import { TabwriterServer } from './api/server';
 import { tabwriterConfig } from './config/config';
-import { errorHandler } from './middlewares/errorHandler.middleware';
-import { WebController } from './controllers/web/web.controller';
-import { ApiController } from './controllers/api/api.controller';
-import { TabController } from './controllers/api/tab.controller';
+import { errorHandler } from './api/middlewares/errorHandler.middleware';
+import { WebController } from './api/web/web.controller';
+import { ApiController } from './api/api/api.controller';
+import { TabController } from './api/api/tab/tab.controller';
 
 const twServer = new TabwriterServer(tabwriterConfig.serverPort);
 

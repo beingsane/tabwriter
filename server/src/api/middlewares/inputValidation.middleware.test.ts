@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ValidationChain, body } from 'express-validator';
 import * as HttpStatus from 'http-status-codes';
 import { validateInputs } from './inputValidation.middleware';
-import { ResponseErrorInvalidRequest } from './../models/httpResponseErrors/responseErrorInvalidRequest.model';
+import { ResponseErrorInvalidRequest } from '../models/responseErrorInvalidRequest.model';
 
 describe('[validateInputs]', () => {
   it('should call next if there are not validation errors', async () => {

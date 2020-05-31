@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { WebService } from './web.service';
-import { tabwriterConfig } from '../config/config';
+import { tabwriterConfig } from '../../config/config';
 
 const INDEX_TEST_BUUFER = Buffer.from('test');
 

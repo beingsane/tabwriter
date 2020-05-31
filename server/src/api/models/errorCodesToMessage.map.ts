@@ -1,5 +1,5 @@
 import { ErrorCode } from './errorCodes.enum';
-import { MIN_ROWS_QUANTITY, MAX_ROWS_QUANTITY, MIN_ROWS_SPACING } from '../../schemas/tabCreation.schema';
+import { MIN_ROWS_QUANTITY, MAX_ROWS_QUANTITY, MIN_ROWS_SPACING } from '../../api/api/tab/schemas/tabCreation.schema';
 
 export const errorCodesToMessageMap: Record<ErrorCode, string> = {
   [ErrorCode.INVALID_REQUEST]: 'Requisição Inválida',
