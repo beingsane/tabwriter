@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response, ErrorRequestHandler, NextFunction } from 'express';
-import { ResponseErrorDefault } from '../models/responseErrorDefault.model';
+import { ResponseErrorDefault } from '../models/responses/responseErrorDefault.model';
 
 export const errorHandler: ErrorRequestHandler = (
   err: Error,

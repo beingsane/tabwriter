@@ -1,7 +1,6 @@
 import * as HttpStatus from 'http-status-codes';
 import { ResponseError } from './responseError.model';
-import { ErrorCode } from './errorCodes.enum';
-import { errorCodesToMessageMap } from './errorCodesToMessage.map';
+import { ErrorCode } from '../errors/errorCodes.enum';
 
 export class ResponseErrorDefault extends ResponseError {
   public static readonly ERROR_CODE = ErrorCode.ERROR_DEFAULT;
@@ -11,6 +10,6 @@ export class ResponseErrorDefault extends ResponseError {
   }
 
   constructor() {
-    super(errorCodesToMessageMap[ResponseErrorDefault.ERROR_CODE]);
+    super('Erro inesperado');
   }
 }

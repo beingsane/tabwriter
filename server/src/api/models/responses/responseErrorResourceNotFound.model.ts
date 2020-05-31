@@ -1,7 +1,6 @@
 import * as HttpStatus from 'http-status-codes';
 import { ResponseError } from './responseError.model';
-import { ErrorCode } from './errorCodes.enum';
-import { errorCodesToMessageMap } from './errorCodesToMessage.map';
+import { ErrorCode } from '../errors/errorCodes.enum';
 
 export class ResponseErrorResourceNotFound extends ResponseError {
   public static readonly ERROR_CODE = ErrorCode.RESOURCE_NOT_FOUND;
@@ -10,7 +9,7 @@ export class ResponseErrorResourceNotFound extends ResponseError {
     return HttpStatus.NOT_FOUND;
   }
 
-  constructor() {
-    super(errorCodesToMessageMap[ResponseErrorResourceNotFound.ERROR_CODE]);
+  constructor(requestedResource: string) {
+    super(`Não foi possível encontrar o recurso solicitado: ${requestedResource}`);
   }
 }

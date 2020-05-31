@@ -1,14 +1,18 @@
 import * as HttpStatus from 'http-status-codes';
 import { ResponseErrorInvalidRequest } from './responseErrorInvalidRequest.model';
-import { InputValidationError } from './inputValidationError.model';
-import { ErrorCode } from './errorCodes.enum';
-import { errorCodesToMessageMap } from './errorCodesToMessage.map';
+import { InputValidationError } from '../inputValidationError.model';
+import { ErrorCode } from '../errors/errorCodes.enum';
 
 describe(`[${ResponseErrorInvalidRequest.name}]`, () => {
-  it('should set the message for the invalid request error', () => {
+  it('should be mapped to the invalid request error code', () => {
+    expect(ResponseErrorInvalidRequest.ERROR_CODE).toBe(ErrorCode.INVALID_REQUEST);
+  });
+
+  it('should set the message', () => {
     const responseError = new ResponseErrorInvalidRequest([]);
 
-    expect(responseError.message).toBe(errorCodesToMessageMap[ErrorCode.INVALID_REQUEST]);
+    expect(responseError.message).toBeDefined();
+    expect(responseError.message.trim().length).toBeGreaterThan(0);
   });
 
   it('should return a bad request status code', () => {

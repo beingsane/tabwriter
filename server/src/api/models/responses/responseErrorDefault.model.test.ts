@@ -1,13 +1,17 @@
 import * as HttpStatus from 'http-status-codes';
+import { ErrorCode } from './../errors/errorCodes.enum';
 import { ResponseErrorDefault } from './responseErrorDefault.model';
-import { ErrorCode } from './errorCodes.enum';
-import { errorCodesToMessageMap } from './errorCodesToMessage.map';
 
 describe(`[${ResponseErrorDefault.name}]`, () => {
-  it('should set the message for the default error code', () => {
+  it('should be mapped to the default error code', () => {
+    expect(ResponseErrorDefault.ERROR_CODE).toBe(ErrorCode.ERROR_DEFAULT);
+  });
+
+  it('should set the message', () => {
     const responseError = new ResponseErrorDefault();
 
-    expect(responseError.message).toBe(errorCodesToMessageMap[ErrorCode.ERROR_DEFAULT]);
+    expect(responseError.message).toBeDefined();
+    expect(responseError.message.trim().length).toBeGreaterThan(0);
   });
 
   it('should return a internal server error status code', () => {

@@ -1,18 +1,17 @@
 import { ValidationError } from 'express-validator';
 import { InputValidationError } from './inputValidationError.model';
-import { ErrorCode } from './errorCodes.enum';
-import { errorCodesToMessageMap } from './errorCodesToMessage.map';
+import { InvalidInputError } from './errors/invalidInputError.model';
+import { ErrorCode } from './errors/errorCodes.enum';
 
 describe(`[${InputValidationError.name}]`, () => {
-  it('should set code and message based on msg if it is an error code', () => {
-    const errorCode = ErrorCode.ERROR_DEFAULT;
-    const validationError = { msg: errorCode } as ValidationError;
-    const expectedMessage = errorCodesToMessageMap[errorCode];
+  it('should set code and message based on msg if it is an invalid input error', () => {
+    const invalidInputError = new InvalidInputError();
+    const validationError = { msg: invalidInputError } as ValidationError;
 
     const inputValidationError = new InputValidationError(validationError);
 
-    expect(inputValidationError.code).toBe(errorCode);
-    expect(inputValidationError.message).toBe(expectedMessage);
+    expect(inputValidationError.code).toBe(invalidInputError.code);
+    expect(inputValidationError.message).toBe(invalidInputError.message);
   });
 
   it('should set code to the default validation error code if msg is not an error code', () => {

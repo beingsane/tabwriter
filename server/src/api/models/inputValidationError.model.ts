@@ -1,6 +1,6 @@
 import { Location, ValidationError } from 'express-validator';
-import { ErrorCode } from './errorCodes.enum';
-import { errorCodesToMessageMap } from './errorCodesToMessage.map';
+import { ErrorCode } from './errors/errorCodes.enum';
+import { InvalidInputError } from './errors/invalidInputError.model';
 
 export class InputValidationError {
   public readonly code: ErrorCode;
@@ -10,9 +10,9 @@ export class InputValidationError {
   public readonly value: unknown;
 
   constructor(validationError: ValidationError) {
-    if (validationError.msg in ErrorCode) {
-      this.code = validationError.msg;
-      this.message = errorCodesToMessageMap[this.code];
+    if (validationError.msg instanceof InvalidInputError) {
+      this.code = validationError.msg.code;
+      this.message = validationError.msg.message;
     } else {
       this.code = ErrorCode.VALIDATION_DEFAULT;
       this.message = validationError.msg;

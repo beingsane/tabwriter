@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { BaseController } from '../models/base.controller';
-import { ResponseErrorResourceNotFound } from './../models/responseErrorResourceNotFound.model';
+import { ResponseErrorResourceNotFound } from '../models/responses/responseErrorResourceNotFound.model';
 
 export class ApiController extends BaseController {
   public readonly routePrefix = 'api';
@@ -12,7 +12,7 @@ export class ApiController extends BaseController {
   }
 
   public resourceNotFound(req: Request, res: Response): void {
-    const response = new ResponseErrorResourceNotFound();
+    const response = new ResponseErrorResourceNotFound(req.originalUrl);
     res.status(response.status).json(response);
   }
 }
