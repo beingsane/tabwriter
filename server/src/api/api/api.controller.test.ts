@@ -1,24 +1,32 @@
-import { Request, Response } from 'express';
+import request from 'supertest';
+import express, { Application } from 'express';
 import * as HttpStatus from 'http-status-codes';
+import { TabwriterServer } from '../server';
 import { ApiController } from './api.controller';
 import { ResponseErrorResourceNotFound } from './../models/responses/responseErrorResourceNotFound.model';
 
+const getTestServer = (): Application => {
+  const server = new TabwriterServer();
+  server.useMiddleware(express.json());
+  server.useController(new ApiController());
+
+  return server.app;
+};
+
 describe(`[${ApiController.name}]`, () => {
-  describe('[resourceNotFound]', () => {
-    it('should return a not found response', () => {
-      const resource = '/resource';
-      const apiController = new ApiController();
-      const expectedErrorResponse = new ResponseErrorResourceNotFound(resource);
+  describe('/api/*', () => {
+    it('should return a not found response', async () => {
+      const requestedResource = '/api/some/unknown/resource';
 
-      const requestObj = { originalUrl: resource } as Request;
-      const responseObj = {} as Response;
-      responseObj.status = jest.fn().mockReturnThis();
-      responseObj.json = jest.fn().mockReturnThis();
+      return request(getTestServer())
+        .get(requestedResource)
+        .expect('Content-Type', /json/)
+        .expect(HttpStatus.NOT_FOUND)
+        .then((response) => {
+          const body = response.body as ResponseErrorResourceNotFound;
 
-      apiController.resourceNotFound(requestObj, responseObj);
-
-      expect(responseObj.status).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
-      expect(responseObj.json).toHaveBeenCalledWith(expectedErrorResponse);
+          expect(body).toEqual(new ResponseErrorResourceNotFound(requestedResource));
+        });
     });
   });
 });
