@@ -1,4 +1,5 @@
 import express from 'express';
+import helmet from 'helmet';
 import morgan from 'morgan';
 import { TabwriterServer } from './api/server';
 import { tabwriterConfig } from './config/config';
@@ -9,6 +10,7 @@ import { TabController } from './api/tab/tab.controller';
 
 const twServer = new TabwriterServer(tabwriterConfig.serverPort);
 
+twServer.useMiddleware(helmet());
 twServer.useMiddleware(express.json());
 twServer.useMiddleware(express.urlencoded({ extended: false }));
 if (!tabwriterConfig.isProduction) twServer.useMiddleware(morgan('dev'));

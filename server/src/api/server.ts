@@ -1,5 +1,4 @@
-import express from 'express';
-import { Application, Handler, RequestHandler, ErrorRequestHandler } from 'express';
+import express, { Application, Handler, RequestHandler, ErrorRequestHandler } from 'express';
 import { TabwriterConfig } from '../config/config';
 import { BaseController } from './models/base.controller';
 
@@ -9,7 +8,6 @@ export class TabwriterServer {
 
   constructor(port?: number) {
     this.app = express();
-    this.app.disable('x-powered-by');
 
     this.port = port ? port : TabwriterConfig.DEFAULT_SERVER_PORT;
   }
