@@ -2,21 +2,6 @@
   "name": "tabwriter",
   "version": "1.0.0",
   "description": "Uma aplicação web para escrever tablaturas",
-  "scripts": {
-    "postinstall": "run-s server:install client:install",
-    "server:install": "cd server && npm install",
-    "server:build": "cd server && npm run build",
-    "server:clean": "cd server && npm run clean",
-    "server:dev": "cd server && npm run dev",
-    "server:start": "cd server && npm run start",
-    "client:install": "cd client && npm install",
-    "client:build": "cd client && npm run build",
-    "client:clean": "cd client && npm run clean",
-    "client:dev": "cd client && npm run dev",
-    "build": "run-s server:build client:build",
-    "clean": "run-s server:clean client:clean",
-    "start": "run-s build server:start"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/raphael-jorge/tabwriter.git"
@@ -27,8 +12,5 @@
   "bugs": {
     "url": "https://github.com/raphael-jorge/tabwriter/issues"
   },
-  "homepage": "https://github.com/raphael-jorge/tabwriter#readme",
-  "devDependencies": {
-    "npm-run-all": "^4.1.5"
-  }
+  "homepage": "https://github.com/raphael-jorge/tabwriter#readme"
 }
