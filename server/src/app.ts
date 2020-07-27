@@ -1,6 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
-import morgan from 'morgan';
+// import morgan from 'morgan';
 import { TabwriterServer } from './api/server';
 import { tabwriterConfig } from './config/config';
 import { errorHandler } from './api/middlewares/errorHandler.middleware';
@@ -13,7 +13,7 @@ const twServer = new TabwriterServer(tabwriterConfig.serverPort);
 twServer.useMiddleware(helmet());
 twServer.useMiddleware(express.json());
 twServer.useMiddleware(express.urlencoded({ extended: false }));
-if (!tabwriterConfig.isProduction) twServer.useMiddleware(morgan('dev'));
+// if (!tabwriterConfig.isProduction) twServer.useMiddleware(morgan('dev'));
 
 twServer.useAsset(express.static(tabwriterConfig.clientDistFolderPath));
 
