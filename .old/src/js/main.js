@@ -2,23 +2,23 @@ require('babel-polyfill');
 const index = require('./index.js');
 const about = require('./about.js');
 
-
 const tabwriter = {
-  init: function() {
+  init: function () {
     const namespace = $('body').attr('id');
-    if (namespace in this &&
-        'init' in this[namespace] &&
-        typeof this[namespace]['init'] === 'function'){
+    if (
+      namespace in this &&
+      'init' in this[namespace] &&
+      typeof this[namespace]['init'] === 'function'
+    ) {
       this[namespace].init();
     }
   },
 
   index: index,
 
-  about: about
-
+  about: about,
 };
 
-$(function() {
+$(function () {
   tabwriter.init();
 });

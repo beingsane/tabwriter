@@ -94,7 +94,8 @@ $bts-xsmall-width: 576px;
   outline: none !important;
   margin: $btn-custom-margin;
 
-  &:focus, &:active {
+  &:focus,
+  &:active {
     @include box-shadow(none);
   }
 }

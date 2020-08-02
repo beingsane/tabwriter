@@ -13,24 +13,30 @@ class Formatter {
 
   _extractCore(tabObject, blockArr, extracData) {
     // Extract core
-    extracData.chords.forEach( (chord, i) => {
-
+    extracData.chords.forEach((chord, i) => {
       let intro = chord + this.CHORD_SEPARATOR;
       if (intro.length < extracData.introLength) {
-        intro = Array(extracData.introLength - intro.length + 1).join(this.INTRO_FILLER) + intro;
+        intro =
+          Array(extracData.introLength - intro.length + 1).join(
+            this.INTRO_FILLER
+          ) + intro;
       }
 
       const content = tabObject.core[i].slice(0, extracData.contentEnd);
       const border = Array(this.TAB_BORDER_SPACE + 1).join(this.TAB_FILLER);
       let blockRow = intro + border + content + border;
       if (blockRow.length < extracData.rowLength) {
-        const filler = Array(extracData.rowLength - blockRow.length + 1)
-                           .join(this.TAB_FILLER);
+        const filler = Array(extracData.rowLength - blockRow.length + 1).join(
+          this.TAB_FILLER
+        );
         blockRow += filler;
       }
 
       blockArr.push(blockRow);
-      tabObject.core[i] = tabObject.core[i].slice(extracData.contentEnd, tabObject.core[i].length);
+      tabObject.core[i] = tabObject.core[i].slice(
+        extracData.contentEnd,
+        tabObject.core[i].length
+      );
     });
   }
 
@@ -40,14 +46,15 @@ class Formatter {
     } else if (tabObject[key] === null) {
       return;
     } else {
-
       const intro = Array(extractData.introLength + 1).join(this.SEC_FILLER);
       const border = Array(this.TAB_BORDER_SPACE + 1).join(this.SEC_FILLER);
       const content = tabObject[key].slice(0, extractData.contentEnd);
 
       let row = intro + border + content + border;
       if (row.length < extractData.rowLength) {
-        const filler = Array(extractData.rowLength - row.length + 1).join(this.SEC_FILLER);
+        const filler = Array(extractData.rowLength - row.length + 1).join(
+          this.SEC_FILLER
+        );
         row += filler;
       }
 
@@ -57,17 +64,24 @@ class Formatter {
         blockArr.push(row);
       }
 
-      tabObject[key] = tabObject[key].slice(extractData.contentEnd, tabObject[key].length);
+      tabObject[key] = tabObject[key].slice(
+        extractData.contentEnd,
+        tabObject[key].length
+      );
     }
   }
 
   _extractBlock(tabObject, extractData) {
     const block = [];
-    const introLength = extractData.chords.length.toString().length + this.CHORD_SEPARATOR.length;
+    const introLength =
+      extractData.chords.length.toString().length + this.CHORD_SEPARATOR.length;
 
-    let contentEnd = extractData.rowLength - introLength - 2 * this.TAB_BORDER_SPACE;
-    while (!this._isTabBreakable(tabObject, contentEnd - 1, this.TAB_FILLER) &&
-           contentEnd > this.MIN_ROW_LENGTH) {
+    let contentEnd =
+      extractData.rowLength - introLength - 2 * this.TAB_BORDER_SPACE;
+    while (
+      !this._isTabBreakable(tabObject, contentEnd - 1, this.TAB_FILLER) &&
+      contentEnd > this.MIN_ROW_LENGTH
+    ) {
       contentEnd--;
     }
 
@@ -86,8 +100,10 @@ class Formatter {
     // Check if break point is after tab's end
     if (idx > tabObject.core[0].length - 1) {
       // Check if it is also after sections' and notes' end
-      if ((tabObject.sections === null || idx > tabObject.sections.length - 1) &&
-          (tabObject.notes === null || idx > tabObject.notes.length - 1)) {
+      if (
+        (tabObject.sections === null || idx > tabObject.sections.length - 1) &&
+        (tabObject.notes === null || idx > tabObject.notes.length - 1)
+      ) {
         return breakable;
       }
     }
@@ -106,7 +122,7 @@ class Formatter {
       }
     }
     // Check core to be breakable at idx
-    tabObject.core.forEach( (row) => {
+    tabObject.core.forEach((row) => {
       if (row[idx] !== this.TAB_FILLER && row[idx + 1] !== this.TAB_FILLER) {
         breakable = false;
       }
@@ -120,17 +136,19 @@ class Formatter {
       return;
     }
 
-    tabArr.forEach( (tabObject) => {
+    tabArr.forEach((tabObject) => {
       if (utils.isEmptyTab(tabObject, this.TAB_FILLER)) {
         return;
       }
       // Deep object cloning
       const tab = JSON.parse(JSON.stringify(tabObject));
       const chordsNumber = tab.core.length;
-      const chordsArr = Array.from({length: chordsNumber}, (val, i) => (i + 1).toString());
+      const chordsArr = Array.from({ length: chordsNumber }, (val, i) =>
+        (i + 1).toString()
+      );
       const extractData = {
         rowLength: maxLength,
-        chords: chordsArr
+        chords: chordsArr,
       };
 
       let extractedBlock;
@@ -153,7 +171,6 @@ class Formatter {
     const filename = data.filename || 'tabwriter.pdf';
 
     if (tabBlocks.length) {
-
       if (data.title) {
         pdfWriter.writeTitle(data.title);
       }
@@ -162,7 +179,7 @@ class Formatter {
         pdfWriter.writeDescription(data.description);
       }
 
-      tabBlocks.forEach( (block) => {
+      tabBlocks.forEach((block) => {
         pdfWriter.writeTabBlock(block);
       });
 
@@ -202,7 +219,6 @@ class Formatter {
       this.TAB_FILLER = character;
     }
   }
-
 }
 
 module.exports = Formatter;

@@ -59,12 +59,13 @@ footer {
     ul {
       margin-bottom: 0;
       li {
-        display:inline-block;
+        display: inline-block;
       }
     }
   }
 
-  .brand, .nav-side {
+  .brand,
+  .nav-side {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,7 +79,8 @@ footer {
   @include box-shadow-default($color-red-dark);
   @include transition(background-color 0.3s);
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: $color-red-dark;
     @include box-shadow-default($color-red-dark);
   }
@@ -93,7 +95,8 @@ footer {
   @include transition(color 0.3s);
   @include transition(border-color 0.3s);
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $color-red-dark;
     border-color: $color-red-dark;
     @include box-shadow(0 0 5px $color-red-dark);
@@ -176,7 +179,8 @@ footer {
       margin: 0 $margin-large;
       @include transition(color 0.3s);
 
-      &:hover, &.nav-active {
+      &:hover,
+      &.nav-active {
         color: $color-red-dark;
       }
     }
@@ -185,7 +189,8 @@ footer {
       @extend %brand-style;
     }
 
-    .nav-header, .nav-body-left {
+    .nav-header,
+    .nav-body-left {
       float: left;
     }
 
@@ -193,7 +198,9 @@ footer {
       float: right;
     }
 
-    .nav-header, .nav-body-left, .nav-body-right {
+    .nav-header,
+    .nav-body-left,
+    .nav-body-right {
       line-height: $nav-header-height;
     }
 

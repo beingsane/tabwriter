@@ -1,7 +1,6 @@
 const utils = require('./utils.js');
 
 class Interpreter {
-
   constructor(chordsNumber, mainSpacing) {
     this.CHORD_FRET_SEPARATOR = '-';
     this.TAB_FILLER = '-';
@@ -15,39 +14,45 @@ class Interpreter {
     this.currentSpacing = this.mainSpacing;
 
     this.methods = {
-      default: function(noteStr, tabArr, errorArr) {
+      default: function (noteStr, tabArr, errorArr) {
         const tabObject = tabArr[this.currentTabArrIdx];
         this._writeNotes([noteStr], tabObject, errorArr);
       },
 
-      break: function(data, tabArr, errorArr) {
+      break: function (data, tabArr, errorArr) {
         // Check data
-        this._isDataSet(data, {args: false, instr: false}, errorArr);
+        this._isDataSet(data, { args: false, instr: false }, errorArr);
         tabArr.push({
           core: Array(this.chordsNumber).fill(''),
           sections: null,
-          notes: null
+          notes: null,
         });
         this.currentTabArrIdx++;
       },
 
-      repeat: function(data, tabArr, errorArr) {
+      repeat: function (data, tabArr, errorArr) {
         // Check data
-        if (!this._isDataSet(data, {args: true, instr: true}, errorArr)) {
+        if (!this._isDataSet(data, { args: true, instr: true }, errorArr)) {
           return;
         }
         // Check if arg is a valid number
         const n = Number(data.args);
         if (isNaN(n) || !Number.isInteger(n) || n < 1) {
-          errorArr.push('Erro ao usar o método <' + data.funcName + '>: O valor de repetições ' +
-                        'fornecido <' + data.args + '> não é válido.');
+          errorArr.push(
+            'Erro ao usar o método <' +
+              data.funcName +
+              '>: O valor de repetições ' +
+              'fornecido <' +
+              data.args +
+              '> não é válido.'
+          );
           return;
         }
         const errorLengthPrev = errorArr.length;
         // Read instructions
         const notes = this._parseInstructions(data.instr);
         for (let i = 0; i < n; i++) {
-          notes.forEach( (note) => {
+          notes.forEach((note) => {
             this._readInstruction(note, tabArr, errorArr);
           });
         }
@@ -55,21 +60,27 @@ class Interpreter {
         const errorLengthAfter = errorArr.length;
         if (errorLengthAfter !== errorLengthPrev) {
           const newErrors = errorLengthAfter - errorLengthPrev;
-          errorArr.splice(errorLengthPrev, (n - 1) * newErrors / n);
+          errorArr.splice(errorLengthPrev, ((n - 1) * newErrors) / n);
         }
       },
 
-      merge: function(data, tabArr, errorArr) {
+      merge: function (data, tabArr, errorArr) {
         // Check data
-        if (!this._isDataSet(data, {args: false, instr: true}, errorArr)) {
+        if (!this._isDataSet(data, { args: false, instr: true }, errorArr)) {
           return;
         }
         // Check if there is a function call nested inside
         const functionElements = data.instr.match(/[a-zA-Z]+\s*\(/g);
         if (functionElements) {
-          errorArr.push('Erro ao usar o método <' + data.funcName + '>: Não foi possível ' +
-                        'avaliar a expressão <' + functionElements[0] + '>. Métodos não ' +
-                        'podem ser chamados dentro desse método.');
+          errorArr.push(
+            'Erro ao usar o método <' +
+              data.funcName +
+              '>: Não foi possível ' +
+              'avaliar a expressão <' +
+              functionElements[0] +
+              '>. Métodos não ' +
+              'podem ser chamados dentro desse método.'
+          );
           return;
         }
         // Read instructions
@@ -78,12 +89,18 @@ class Interpreter {
 
         // Check for multiple entries in the same chord
         if (notesData.chords.length) {
-          const multipleChords = notesData.chords.filter( (chord, i, chords) => {
-            return (chords.indexOf(chord) !== chords.lastIndexOf(chord)) ? true: false;
+          const multipleChords = notesData.chords.filter((chord, i, chords) => {
+            return chords.indexOf(chord) !== chords.lastIndexOf(chord)
+              ? true
+              : false;
           });
           if (multipleChords.length) {
-            errorArr.push('Erro ao usar o método <' + data.funcName + '>: Detectada mais ' +
-                          'de uma instrução referente à mesma corda.');
+            errorArr.push(
+              'Erro ao usar o método <' +
+                data.funcName +
+                '>: Detectada mais ' +
+                'de uma instrução referente à mesma corda.'
+            );
             return;
           }
         }
@@ -92,17 +109,23 @@ class Interpreter {
         this._writeNotes(notesData, tabObject, errorArr);
       },
 
-      space: function(data, tabArr, errorArr) {
+      space: function (data, tabArr, errorArr) {
         // Check data
-        if (!this._isDataSet(data, {args: true, instr: false}, errorArr)) {
+        if (!this._isDataSet(data, { args: true, instr: false }, errorArr)) {
           return;
         }
         // Check if arg is a valid number
         const newSpace = Number(data.args);
         if (isNaN(newSpace) || !Number.isInteger(newSpace) || newSpace < 1) {
-          errorArr.push('Erro ao usar o método <' + data.funcName + '>: O valor de ' +
-                        'espaçamento fornecido <' + data.args + '> não é válido. ' +
-                        'Para usar o espaçamento padrão use <space(2)>.');
+          errorArr.push(
+            'Erro ao usar o método <' +
+              data.funcName +
+              '>: O valor de ' +
+              'espaçamento fornecido <' +
+              data.args +
+              '> não é válido. ' +
+              'Para usar o espaçamento padrão use <space(2)>.'
+          );
           return;
         }
         // Correct last tab space if necessary
@@ -110,7 +133,7 @@ class Interpreter {
         if (tabObject.core[0].length) {
           const diffSpace = newSpace - this.currentSpacing;
           if (diffSpace > 0) {
-            tabObject.core.forEach( (row, i) => {
+            tabObject.core.forEach((row, i) => {
               tabObject.core[i] += Array(diffSpace + 1).join(this.TAB_FILLER);
             });
             // correct secions
@@ -118,7 +141,7 @@ class Interpreter {
               tabObject.sections += Array(diffSpace + 1).join(' ');
             }
           } else if (diffSpace < 0) {
-            tabObject.core.forEach( (row, i) => {
+            tabObject.core.forEach((row, i) => {
               tabObject.core[i] = row.slice(0, diffSpace);
             });
             // correct secions
@@ -131,9 +154,9 @@ class Interpreter {
         this.currentSpacing = newSpace;
       },
 
-      section: function(data, tabArr, errorArr) {
+      section: function (data, tabArr, errorArr) {
         // Check data
-        if (!this._isDataSet(data, {args: true, instr: false}, errorArr)) {
+        if (!this._isDataSet(data, { args: true, instr: false }, errorArr)) {
           return;
         }
         const tabObject = tabArr[this.currentTabArrIdx];
@@ -147,7 +170,7 @@ class Interpreter {
           if (secLength > rowLength) {
             const fillerLength = secLength - rowLength;
             const filler = Array(fillerLength + 1).join(this.TAB_FILLER);
-            tabObject.core.forEach( (row, i) => {
+            tabObject.core.forEach((row, i) => {
               tabObject.core[i] += filler;
             });
           }
@@ -156,20 +179,26 @@ class Interpreter {
         this._appendSection(tabObject, data.args);
       },
 
-      note: function(data, tabArr, errorArr) {
+      note: function (data, tabArr, errorArr) {
         // Check data
-        if (!this._isDataSet(data, {args: true, instr: false}, errorArr)) {
+        if (!this._isDataSet(data, { args: true, instr: false }, errorArr)) {
           return;
         }
         const tabObject = tabArr[this.currentTabArrIdx];
         const rowLength = tabObject.core[0].length;
-        const notesContent = Array(this.DEFAULT_SEC_SPACE + 1).join(' ') + data.args + ' ';
+        const notesContent =
+          Array(this.DEFAULT_SEC_SPACE + 1).join(' ') + data.args + ' ';
 
         // Set section and core rows properly
-        if (tabObject.sections !== null && tabObject.sections.length > rowLength) {
+        if (
+          tabObject.sections !== null &&
+          tabObject.sections.length > rowLength
+        ) {
           const secLength = tabObject.sections.length;
-          tabObject.core.forEach( (row, i) => {
-            tabObject.core[i] += Array(secLength - rowLength + 1).join(this.TAB_FILLER);
+          tabObject.core.forEach((row, i) => {
+            tabObject.core[i] += Array(secLength - rowLength + 1).join(
+              this.TAB_FILLER
+            );
           });
         }
 
@@ -182,17 +211,20 @@ class Interpreter {
         }
 
         // Set symbol and spaces on core, notes and sections
-        tabObject.notes += this.SEC_SYMBOL + Array(this.currentSpacing + 1).join(' ');
+        tabObject.notes +=
+          this.SEC_SYMBOL + Array(this.currentSpacing + 1).join(' ');
         tabObject.notesIdx.push(tabObject.notes.length);
-        tabObject.core.forEach( (row, i) => {
-          tabObject.core[i] += this.SEC_SYMBOL + Array(this.currentSpacing + 1)
-                                                      .join(this.TAB_FILLER);
+        tabObject.core.forEach((row, i) => {
+          tabObject.core[i] +=
+            this.SEC_SYMBOL +
+            Array(this.currentSpacing + 1).join(this.TAB_FILLER);
         });
         if (tabObject.sections !== null) {
-          tabObject.sections += Array(this.currentSpacing + this.SEC_SYMBOL.length + 1).join(' ');
+          tabObject.sections += Array(
+            this.currentSpacing + this.SEC_SYMBOL.length + 1
+          ).join(' ');
         }
-      }
-
+      },
     };
 
     // Set methods' short notations
@@ -214,7 +246,7 @@ class Interpreter {
     } else {
       // Fill core and sections to match notes' length
       const filler = Array(note.length - rowLength + 1).join(this.TAB_FILLER);
-      tabObject.core.forEach( (row, i) => {
+      tabObject.core.forEach((row, i) => {
         tabObject.core[i] += filler;
       });
       if (tabObject.sections !== null) {
@@ -240,11 +272,13 @@ class Interpreter {
     } else {
       // Fill core and sections to match notes' length
       filler = Array(expectedNoteLength - rowLength + 1).join(this.TAB_FILLER);
-      tabObject.core.forEach( (row, i) => {
+      tabObject.core.forEach((row, i) => {
         tabObject.core[i] += filler;
       });
       if (tabObject.sections !== null) {
-        tabObject.sections += Array(expectedNoteLength - rowLength + 1).join(' ');
+        tabObject.sections += Array(expectedNoteLength - rowLength + 1).join(
+          ' '
+        );
       }
       tabObject.notes = tabObject.notes.slice(0, lastNoteIdx + 1);
       tabObject.notes += note;
@@ -259,35 +293,49 @@ class Interpreter {
     // Check if there is a note right before
     if (rowLength > this.currentSpacing) {
       // Count number of | at the expected postion of a note right before
-      const vertBars = tabObject.core.reduce( (total, row) => {
+      const vertBars = tabObject.core.reduce((total, row) => {
         let isVertBar = false;
-        const previousCharIdx = utils.getFirstDifferentFrom(row, this.TAB_FILLER,
-                                                            row.length - 1, -1);
+        const previousCharIdx = utils.getFirstDifferentFrom(
+          row,
+          this.TAB_FILLER,
+          row.length - 1,
+          -1
+        );
         const previousChar = row[previousCharIdx];
         const expectVertBarIdx = row.length - 1 - this.currentSpacing;
-        if (previousCharIdx === expectVertBarIdx &&
-            previousChar === this.SEC_SYMBOL) {
+        if (
+          previousCharIdx === expectVertBarIdx &&
+          previousChar === this.SEC_SYMBOL
+        ) {
           isVertBar = true;
         }
         return isVertBar + total;
       }, 0);
       // If there is a note right before
-      if(vertBars === this.chordsNumber) {
+      if (vertBars === this.chordsNumber) {
         // Remove note notation from core
-        tabObject.core.forEach( (row, i) => {
-          tabObject.core[i] = row.slice(0, row.length - this.currentSpacing - 1);
+        tabObject.core.forEach((row, i) => {
+          tabObject.core[i] = row.slice(
+            0,
+            row.length - this.currentSpacing - 1
+          );
         });
         // Remove note notation spaces from section
-        tabObject.sections = tabObject.sections
-                  .slice(0, tabObject.sections.length - this.currentSpacing - 1);
+        tabObject.sections = tabObject.sections.slice(
+          0,
+          tabObject.sections.length - this.currentSpacing - 1
+        );
       }
     }
     // Set section symbol and spaces on core and sections
-    tabObject.sections += this.SEC_SYMBOL + ' ' + section +
-        Array(this.DEFAULT_SEC_SPACE + 1).join(' ');
-    tabObject.core.forEach( (row, i) => {
-      tabObject.core[i] += this.SEC_SYMBOL + Array(this.currentSpacing + 1)
-                                                  .join(this.TAB_FILLER);
+    tabObject.sections +=
+      this.SEC_SYMBOL +
+      ' ' +
+      section +
+      Array(this.DEFAULT_SEC_SPACE + 1).join(' ');
+    tabObject.core.forEach((row, i) => {
+      tabObject.core[i] +=
+        this.SEC_SYMBOL + Array(this.currentSpacing + 1).join(this.TAB_FILLER);
     });
   }
 
@@ -299,22 +347,38 @@ class Interpreter {
     for (let key in expectedData) {
       if (expectedData[key]) {
         // key is expected to be non empty in data
-        if (!(key in data) || data[key] === null || data[key] === '' &&
-            data[key] === Array(data[key].length + 1).join(' ')) {
-              dataSet = false;
-            }
+        if (
+          !(key in data) ||
+          data[key] === null ||
+          (data[key] === '' &&
+            data[key] === Array(data[key].length + 1).join(' '))
+        ) {
+          dataSet = false;
+        }
       } else {
         // key is not expected to be in data
         if (key in data && data[key] !== null) {
-          errorArr.push('Atenção ao usar o método <' + data.funcName + '>: Este ' +
-                        'método não faz uso de ' + data[key + 'Name'] + '. O valor ' +
-                        'fornecido <' + data[key] + '> não foi utilizado.');
+          errorArr.push(
+            'Atenção ao usar o método <' +
+              data.funcName +
+              '>: Este ' +
+              'método não faz uso de ' +
+              data[key + 'Name'] +
+              '. O valor ' +
+              'fornecido <' +
+              data[key] +
+              '> não foi utilizado.'
+          );
         }
       }
     }
     if (!dataSet) {
-      errorArr.push('Erro ao usar o método <' + data.funcName + '>: ' +
-                    'Verifique argumentos e instruções.');
+      errorArr.push(
+        'Erro ao usar o método <' +
+          data.funcName +
+          '>: ' +
+          'Verifique argumentos e instruções.'
+      );
     }
     return dataSet;
   }
@@ -352,12 +416,12 @@ class Interpreter {
       if (thisLetter === '}' && openCurlyBraces !== 0) {
         openCurlyBraces--;
       }
-      if (onInstruction && (openParenthesis === 0 && openCurlyBraces === 0)) {
+      if (onInstruction && openParenthesis === 0 && openCurlyBraces === 0) {
         lookForEnd = true;
       }
       if (lookForEnd && thisLetter === ' ') {
         // Check for end of string
-        if (i  === (n - 1)) {
+        if (i === n - 1) {
           foundEnd = true;
         } else {
           // Check next non space character
@@ -385,7 +449,7 @@ class Interpreter {
     return [instruction, instructionEnd];
   }
 
-  _parseInstructions(instructionStr){
+  _parseInstructions(instructionStr) {
     let thisInstrStr = instructionStr.replace(/\n/g, ' ');
     const instructions = [];
     let currentIdx = 0;
@@ -393,7 +457,10 @@ class Interpreter {
     let controlVariable = 0;
     let n = thisInstrStr.length;
     while (currentIdx <= n - 1 && controlVariable <= n - 1) {
-      [newInstruction, currentIdx] = this._extractNextInstruction(thisInstrStr, currentIdx);
+      [newInstruction, currentIdx] = this._extractNextInstruction(
+        thisInstrStr,
+        currentIdx
+      );
       if (newInstruction) {
         instructions.push(newInstruction);
       }
@@ -414,7 +481,8 @@ class Interpreter {
     if (funcStr.includes('(') && funcStr.includes('{')) {
       parenthesisIdx = funcStr.indexOf('(');
       curlyBracesIdx = funcStr.indexOf('{');
-      funcNameEnd = parenthesisIdx < curlyBracesIdx ? parenthesisIdx : curlyBracesIdx;
+      funcNameEnd =
+        parenthesisIdx < curlyBracesIdx ? parenthesisIdx : curlyBracesIdx;
       hasArgs = true;
       hasInstr = true;
     } else if (funcStr.includes('(')) {
@@ -431,12 +499,24 @@ class Interpreter {
 
     const funcName = funcStr.slice(0, funcNameEnd).replace(/ /g, '');
     if (hasArgs) {
-      args = funcStr.slice(parenthesisIdx + 1,
-              utils.getCloseIndexOf(funcStr, {open: '(', close: ')'}, parenthesisIdx));
+      args = funcStr.slice(
+        parenthesisIdx + 1,
+        utils.getCloseIndexOf(
+          funcStr,
+          { open: '(', close: ')' },
+          parenthesisIdx
+        )
+      );
     }
     if (hasInstr) {
-      instr = funcStr.slice(curlyBracesIdx + 1,
-              utils.getCloseIndexOf(funcStr, {open: '{', close: '}'}, curlyBracesIdx));
+      instr = funcStr.slice(
+        curlyBracesIdx + 1,
+        utils.getCloseIndexOf(
+          funcStr,
+          { open: '{', close: '}' },
+          curlyBracesIdx
+        )
+      );
     }
 
     return {
@@ -446,7 +526,7 @@ class Interpreter {
       argsName: 'argumento',
       hasInstr: hasInstr,
       instr: instr,
-      instrName: 'instrução'
+      instrName: 'instrução',
     };
   }
 
@@ -454,7 +534,7 @@ class Interpreter {
     const frets = [];
     const chords = [];
 
-    notesArr.forEach( (note) => {
+    notesArr.forEach((note) => {
       const separatorIdx = note.indexOf(this.CHORD_FRET_SEPARATOR);
       const currentChord = Number(note.slice(0, separatorIdx));
       const currentFret = note.slice(separatorIdx + 1, note.length);
@@ -463,19 +543,29 @@ class Interpreter {
       // Check if a valid chord
       if (!Number.isInteger(currentChord)) {
         validChord = false;
-        errorArr.push('Erro ao usar a instrução típica: A corda indicada em <' + note +
-                      '> não é um número inteiro.');
+        errorArr.push(
+          'Erro ao usar a instrução típica: A corda indicada em <' +
+            note +
+            '> não é um número inteiro.'
+        );
       }
       if (currentChord > this.chordsNumber || currentChord < 1) {
         validChord = false;
-        errorArr.push('Erro ao usar a instrução típica: A corda indicada em <' + note +
-                      '> extrapola o limite de cordas disponíveis.');
+        errorArr.push(
+          'Erro ao usar a instrução típica: A corda indicada em <' +
+            note +
+            '> extrapola o limite de cordas disponíveis.'
+        );
       }
       // Check for non empty fret
       if (currentFret === '') {
         validFret = false;
-        errorArr.push('Erro ao usar a instrução típica: O parâmetro referente à ' +
-                      'casa inexiste na instrução <' + note + '>.');
+        errorArr.push(
+          'Erro ao usar a instrução típica: O parâmetro referente à ' +
+            'casa inexiste na instrução <' +
+            note +
+            '>.'
+        );
       }
       if (validChord && validFret) {
         chords.push(currentChord);
@@ -485,8 +575,8 @@ class Interpreter {
 
     let maxFretLength;
     if (chords.length) {
-      const fretsLength = frets.map( x => x.length );
-      maxFretLength = fretsLength.reduce( (a, b) => {
+      const fretsLength = frets.map((x) => x.length);
+      maxFretLength = fretsLength.reduce((a, b) => {
         return Math.max(a, b);
       });
     } else {
@@ -496,7 +586,7 @@ class Interpreter {
     return {
       chords: chords,
       frets: frets,
-      maxFretLength: maxFretLength
+      maxFretLength: maxFretLength,
     };
   }
 
@@ -507,13 +597,17 @@ class Interpreter {
     }
     if (notesData.chords.length) {
       // Write notes
-      tabObject.core.forEach( (row, i) => {
+      tabObject.core.forEach((row, i) => {
         const index = notesData.chords.indexOf(i + 1);
         let fillerLength;
         if (index !== -1) {
-          fillerLength = this.currentSpacing + 1 + notesData.maxFretLength -
-                         notesData.frets[index].length;
-          tabObject.core[i] += notesData.frets[index] + Array(fillerLength).join(this.TAB_FILLER);
+          fillerLength =
+            this.currentSpacing +
+            1 +
+            notesData.maxFretLength -
+            notesData.frets[index].length;
+          tabObject.core[i] +=
+            notesData.frets[index] + Array(fillerLength).join(this.TAB_FILLER);
         } else {
           fillerLength = notesData.maxFretLength + this.currentSpacing + 1;
           tabObject.core[i] += Array(fillerLength).join(this.TAB_FILLER);
@@ -532,8 +626,15 @@ class Interpreter {
 
   _readInstruction(instructionStr, tabArr, errorArr) {
     // Check if instruction has a separator and expected chord is a number
-    if (instructionStr.includes(this.CHORD_FRET_SEPARATOR) &&
-         !isNaN(instructionStr.slice(0, instructionStr.indexOf(this.CHORD_FRET_SEPARATOR)))) {
+    if (
+      instructionStr.includes(this.CHORD_FRET_SEPARATOR) &&
+      !isNaN(
+        instructionStr.slice(
+          0,
+          instructionStr.indexOf(this.CHORD_FRET_SEPARATOR)
+        )
+      )
+    ) {
       // Default note instruction
       this.methods.default.apply(this, [instructionStr, tabArr, errorArr]);
     } else {
@@ -542,8 +643,12 @@ class Interpreter {
       if (method.funcName in this.methods) {
         this.methods[method.funcName].apply(this, [method, tabArr, errorArr]);
       } else {
-        errorArr.push('Erro ao usar método: Não existe correspondência para o ' +
-                      'método indicado <' + method.funcName + '>.');
+        errorArr.push(
+          'Erro ao usar método: Não existe correspondência para o ' +
+            'método indicado <' +
+            method.funcName +
+            '>.'
+        );
       }
     }
   }
@@ -553,21 +658,23 @@ class Interpreter {
     this.currentSpacing = this.mainSpacing;
     const instructions = this._parseInstructions(instructionsStr);
     const errorArr = [];
-    const tabArr = [{
-      core: Array(this.chordsNumber).fill(''),
-      sections: null,
-      notes: null
-    }];
+    const tabArr = [
+      {
+        core: Array(this.chordsNumber).fill(''),
+        sections: null,
+        notes: null,
+      },
+    ];
 
     if (instructions.length) {
-      instructions.forEach( (instruction) => {
+      instructions.forEach((instruction) => {
         this._readInstruction(instruction, tabArr, errorArr);
       });
     }
 
     return {
       tabArr: tabArr,
-      errorArr: errorArr
+      errorArr: errorArr,
     };
   }
 
@@ -597,7 +704,6 @@ class Interpreter {
       this.TAB_FILLER = character;
     }
   }
-
 }
 
 module.exports = Interpreter;

@@ -16,16 +16,17 @@ gulp.task('default', ['watch']);
 gulp.task('build', ['build-css', 'build-js']);
 
 gulp.task('build-css', function () {
-  return gulp.src('./src/sass/**/*.scss')
+  return gulp
+    .src('./src/sass/**/*.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(cssnano())
     .pipe(gulp.dest('./public/css'))
     .pipe(browserSync.stream());
 });
 
-gulp.task('build-js', function() {
+gulp.task('build-js', function () {
   return browserify('./src/js/main.js')
-    .transform('babelify', {presets: ['env']})
+    .transform('babelify', { presets: ['env'] })
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
@@ -34,27 +35,33 @@ gulp.task('build-js', function() {
     .pipe(browserSync.stream());
 });
 
-gulp.task('lint', function() {
-  return gulp.src(['./**/*.js', '!node_modules/**', '!./public/**', '!./src/js/logourl.js'])
+gulp.task('lint', function () {
+  return gulp
+    .src([
+      './**/*.js',
+      '!node_modules/**',
+      '!./public/**',
+      '!./src/js/logourl.js',
+    ])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('browser-sync', ['nodemon'], function() {
+gulp.task('browser-sync', ['nodemon'], function () {
   browserSync.init({
     proxy: 'localhost:3000',
     port: '3001',
-    ui:{
-      port: '3002'
+    ui: {
+      port: '3002',
     },
-    reloadDelay: 1000
+    reloadDelay: 1000,
   });
 });
 
-gulp.task('nodemon', function() {
+gulp.task('nodemon', function () {
   nodemon({
-    script: 'app.js'
+    script: 'app.js',
   });
 });
 

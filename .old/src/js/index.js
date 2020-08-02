@@ -3,12 +3,12 @@ const Interpreter = require('./interpreter.js');
 const utils = require('./utils.js');
 
 const index = {
-  init: function() {
+  init: function () {
     this.control.init();
   },
 
   model: {
-    init: function() {
+    init: function () {
       this.interpreter = new Interpreter();
 
       if (sessionStorage.getItem('tabwriter-data')) {
@@ -23,7 +23,7 @@ const index = {
           chordsNumber: this.interpreter.DEFAULT_CHORDS_NUMBER,
           mainSpacing: this.interpreter.DEFAULT_SPACING,
           error: null,
-          tab: null
+          tab: null,
         };
         sessionStorage.setItem('tabwriter-data', JSON.stringify(this.data));
       }
@@ -33,45 +33,43 @@ const index = {
       this.data.tabArr = interpreterData.tabArr;
     },
 
-    update: function(data) {
+    update: function (data) {
       for (let key in data) {
         if (key in this.data && key != 'error' && key != 'tab') {
           this.data[key] = data[key];
         }
       }
       this.interpreter.chordsNumber = this.data.chordsNumber;
-      this.interpreter.mainSpacing =  this.data.mainSpacing;
+      this.interpreter.mainSpacing = this.data.mainSpacing;
 
       const interpreterData = this.interpreter.convert(this.data.instructions);
       this.data.errorArr = interpreterData.errorArr;
       this.data.tabArr = interpreterData.tabArr;
       sessionStorage.setItem('tabwriter-data', JSON.stringify(this.data));
-    }
-
+    },
   },
 
   control: {
-    init: function() {
+    init: function () {
       index.model.init();
       index.view.init();
       index.configView.init();
     },
 
-    getData: function() {
+    getData: function () {
       const data = index.model.data;
       return data;
     },
 
-    updateData: function(data) {
+    updateData: function (data) {
       index.model.update(data);
       index.view.render();
       index.configView.render();
-    }
-
+    },
   },
 
   view: {
-    init: function() {
+    init: function () {
       this.formatter = new Formatter();
       this.window = $(window);
       this.input = $('#input');
@@ -90,7 +88,7 @@ const index = {
       this.render();
     },
 
-    render: function() {
+    render: function () {
       const data = index.control.getData();
       const tabBlocks = this.formatter.format(data.tabArr, this.maxStrLength);
       this.dashboard.html('');
@@ -100,9 +98,11 @@ const index = {
       this.renderError(data);
     },
 
-    calibrateWindow: function() {
+    calibrateWindow: function () {
       const singleCellTable = utils.appendTable(this.dashboard, 1, 1);
-      const maxStrLen = utils.maxStrLenNoWrap(singleCellTable.find('td').slice(-1));
+      const maxStrLen = utils.maxStrLenNoWrap(
+        singleCellTable.find('td').slice(-1)
+      );
       this.dashboard.html('');
       return maxStrLen;
     },
@@ -123,7 +123,7 @@ const index = {
       this.buttonCreate.on('click', () => {
         const newInstructions = this.input.val();
         index.control.updateData({
-          instructions: newInstructions
+          instructions: newInstructions,
         });
         this.buttonCreate.blur();
       });
@@ -131,7 +131,7 @@ const index = {
       this.buttonDelete.on('click', () => {
         this.input.val('');
         index.control.updateData({
-          instructions: ''
+          instructions: '',
         });
         this.buttonDelete.blur();
       });
@@ -146,9 +146,9 @@ const index = {
       });
     },
 
-    renderTabs: function(tabBlocks, data) {
+    renderTabs: function (tabBlocks, data) {
       if (tabBlocks.length) {
-        let htmlStr =  '';
+        let htmlStr = '';
         if (data.title) {
           htmlStr += '<h3>' + data.title + '</h3>';
         }
@@ -156,9 +156,9 @@ const index = {
           htmlStr += '<p>' + data.description + '</p>';
         }
         this.dashboard.html(htmlStr);
-        tabBlocks.forEach( (block) => {
+        tabBlocks.forEach((block) => {
           const table = utils.appendTable(this.dashboard, block.length, 1);
-          block.forEach( (blockRow, i) => {
+          block.forEach((blockRow, i) => {
             const td = $(table.find('td').get(i));
             td.html('<pre></pre>');
             const pre = td.find('pre');
@@ -171,12 +171,14 @@ const index = {
       }
     },
 
-    renderError: function(data) {
+    renderError: function (data) {
       const totalErrors = data.errorArr.length;
       if (totalErrors > 0) {
-        this.error.append('<h4>Problemas foram identificados (' + totalErrors + '):</h4>');
+        this.error.append(
+          '<h4>Problemas foram identificados (' + totalErrors + '):</h4>'
+        );
         this.error.append('<ol></ol>');
-        data.errorArr.forEach( (errorMsg) => {
+        data.errorArr.forEach((errorMsg) => {
           this.error.find('ol').append('<li></li>');
           this.error.find('li').slice(-1).text(errorMsg);
         });
@@ -184,12 +186,11 @@ const index = {
       } else {
         this.error.css('display', 'none');
       }
-    }
-
+    },
   },
 
   configView: {
-    init: function() {
+    init: function () {
       this.buttonConfig = $('#btn-config');
       this.buttonSaveConfig = $('#btn-save-config');
       this.buttonResetConfig = $('#btn-reset-config');
@@ -205,7 +206,7 @@ const index = {
       this.render();
     },
 
-    render: function() {
+    render: function () {
       const data = index.control.getData();
       this.configTitle.val(data.title);
       this.configDescription.val(data.description);
@@ -215,7 +216,7 @@ const index = {
       this.configChordsNumber.next('.form-error').text('');
     },
 
-    setEventListeners: function() {
+    setEventListeners: function () {
       this.buttonConfig.on('click', () => {
         this.configArea.slideToggle();
         this.render();
@@ -228,8 +229,14 @@ const index = {
         const newTitle = this.configTitle.val();
         const newDescription = this.configDescription.val();
         let error = false;
-        if (isNaN(newChordsNumber) || newChordsNumber < 1 || newChordsNumber > 20 ) {
-          this.configChordsNumber.next('.form-error').text('Mínimo de 1 corda e máximo de 20.');
+        if (
+          isNaN(newChordsNumber) ||
+          newChordsNumber < 1 ||
+          newChordsNumber > 20
+        ) {
+          this.configChordsNumber
+            .next('.form-error')
+            .text('Mínimo de 1 corda e máximo de 20.');
           error = true;
         } else {
           this.configChordsNumber.next('.form-error').text('');
@@ -249,7 +256,7 @@ const index = {
             title: newTitle,
             description: newDescription,
             chordsNumber: newChordsNumber,
-            mainSpacing: newSpace
+            mainSpacing: newSpace,
           });
         }
         this.configArea.slideToggle();
@@ -268,10 +275,8 @@ const index = {
         this.render();
         this.buttonCloseConfig.blur();
       });
-    }
-
-  }
-
+    },
+  },
 };
 
 module.exports = index;

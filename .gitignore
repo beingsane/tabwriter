@@ -1,5 +1,13 @@
+# dependencies
 node_modules
-build
+
+# testing
 coverage
+
+# production
+build
+
+# misc
+*.log
 .env
 .vscode

@@ -1,10 +1,11 @@
 const utils = {
-  isEmptyTab: function(tabObject, tabFiller) {
+  isEmptyTab: function (tabObject, tabFiller) {
     let emptyTab = true;
 
     // Check number of empty rows
     const emptyRows = tabObject.core.reduce((total, row) => {
-      const empty = (!row.length || row === Array(row.length + 1).join(tabFiller)) ? 1 : 0;
+      const empty =
+        !row.length || row === Array(row.length + 1).join(tabFiller) ? 1 : 0;
       return total + empty;
     }, 0);
 
@@ -12,20 +13,26 @@ const utils = {
       emptyTab = false;
     } else {
       // Check sections
-      if (tabObject.sections !== null && tabObject.sections.length &&
-          tabObject.sections !== Array(tabObject.sections.length + 1).join(' ')) {
+      if (
+        tabObject.sections !== null &&
+        tabObject.sections.length &&
+        tabObject.sections !== Array(tabObject.sections.length + 1).join(' ')
+      ) {
         emptyTab = false;
       }
       // Check notes
-      if (tabObject.notes !== null && tabObject.notes.length &&
-          tabObject.notes !== Array(tabObject.notes.length + 1).join(' ')) {
+      if (
+        tabObject.notes !== null &&
+        tabObject.notes.length &&
+        tabObject.notes !== Array(tabObject.notes.length + 1).join(' ')
+      ) {
         emptyTab = false;
       }
     }
     return emptyTab;
   },
 
-  maxStrLenNoWrap: function(element) {
+  maxStrLenNoWrap: function (element) {
     const FILLER = '-';
     const MAX_ITER = 200;
     const elementText = element.text();
@@ -38,13 +45,12 @@ const utils = {
       element.text(fillerText);
       [lineHeight, height] = this.getElementHeights(element);
       fillerText += FILLER;
-
     } while (height === lineHeight && i < MAX_ITER);
     element.text(elementText);
-    return (fillerText.length - 2);
+    return fillerText.length - 2;
   },
 
-  getElementHeights: function(element) {
+  getElementHeights: function (element) {
     const boxSizing = element.css('box-sizing');
     let height = parseInt(element.css('height'));
 
@@ -65,7 +71,7 @@ const utils = {
     return heights;
   },
 
-  appendTable: function(element, nRows, nCols) {
+  appendTable: function (element, nRows, nCols) {
     let htmlStr = '<table><tbody>';
 
     for (let i = 0; i < nRows; i++) {
@@ -131,8 +137,7 @@ const utils = {
       }
     }
     return ret;
-  }
-
+  },
 };
 
 module.exports = utils;

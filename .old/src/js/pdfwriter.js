@@ -8,7 +8,7 @@ class PdfWriter {
     this.MARGIN = 20;
     this.LOGO_Y_POSITION = 15;
     this.LOGO_HEIGHT = 10;
-    this.LOGO_WIDTH = this.LOGO_HEIGHT * 297/55;
+    this.LOGO_WIDTH = (this.LOGO_HEIGHT * 297) / 55;
     this.PAGE_X_POSITION = 181;
     this.PAGE_Y_POSITION = 23;
     this.FOOTER_Y_POSITION = 280;
@@ -21,7 +21,7 @@ class PdfWriter {
     this.doc = new jsPDF();
     this.doc.addFont('NovaMono.ttf', 'NovaMono', 'normal');
     this.doc.addFont('NotoSans-Regular.ttf', 'NotoSans', 'normal');
-    
+
     this.pages = 1;
     this.fontType = null;
     this.xPosition = this.MARGIN;
@@ -58,7 +58,10 @@ class PdfWriter {
     if (style) {
       style();
     }
-    const splitTitle = this.doc.splitTextToSize(content, this.width - 2 * this.MARGIN);
+    const splitTitle = this.doc.splitTextToSize(
+      content,
+      this.width - 2 * this.MARGIN
+    );
     this.doc.text(this.xPosition, this.yPosition, splitTitle);
     this.yPosition += splitTitle.length * this.LINE_SPACE;
     this._setDefaultStyle();
@@ -79,7 +82,10 @@ class PdfWriter {
   }
 
   writeTabBlock(block) {
-    if (this.yPosition + this.LINE_SPACE * (block.length + 1) > this.FOOTER_Y_POSITION) {
+    if (
+      this.yPosition + this.LINE_SPACE * (block.length + 1) >
+      this.FOOTER_Y_POSITION
+    ) {
       this.doc.addPage();
       this.yPosition = this.INITIAL_Y_POSITION;
       this.pages += 1;
@@ -87,7 +93,7 @@ class PdfWriter {
       this.yPosition += this.LINE_SPACE;
     }
 
-    block.forEach( (blockRow) => {
+    block.forEach((blockRow) => {
       this.doc.text(this.xPosition, this.yPosition, blockRow);
       this.yPosition += this.LINE_SPACE;
     });
@@ -96,16 +102,27 @@ class PdfWriter {
   writeNotes() {
     this._setNoteStyle();
     const date = new Date();
-    const footer = 'Criado com Tab-Writer (tabwriter.herokuapp.com) em ' +
-                   date.toLocaleDateString() + '.';
+    const footer =
+      'Criado com Tab-Writer (tabwriter.herokuapp.com) em ' +
+      date.toLocaleDateString() +
+      '.';
 
     for (let i = 0; i < this.pages; i++) {
       this.doc.setPage(i + 1);
-      this.doc.addImage(logoURL, 'JPEG', this.xPosition, this.LOGO_Y_POSITION,
-                        this.LOGO_WIDTH, this.LOGO_HEIGHT);
+      this.doc.addImage(
+        logoURL,
+        'JPEG',
+        this.xPosition,
+        this.LOGO_Y_POSITION,
+        this.LOGO_WIDTH,
+        this.LOGO_HEIGHT
+      );
 
-      this.doc.text(this.PAGE_X_POSITION, this.PAGE_Y_POSITION,
-                    (i + 1).toString() + '/' + this.pages.toString());
+      this.doc.text(
+        this.PAGE_X_POSITION,
+        this.PAGE_Y_POSITION,
+        (i + 1).toString() + '/' + this.pages.toString()
+      );
 
       this.doc.text(this.xPosition, this.FOOTER_Y_POSITION, footer);
     }
@@ -120,7 +137,6 @@ class PdfWriter {
   get maxBlockLength() {
     return this.MAX_BLOCK_LENGTH;
   }
-
 }
 
 module.exports = PdfWriter;
