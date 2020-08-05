@@ -1,5 +1,5 @@
 import express, { Application, Handler, ErrorRequestHandler } from 'express';
-import { TabwriterConfig } from '../config/config';
+import { TabwriterServerConfig } from '../config/config';
 import { BaseController } from './models/base.controller';
 
 export class TabwriterServer {
@@ -9,7 +9,8 @@ export class TabwriterServer {
   constructor(port?: number) {
     this.app = express();
 
-    this.port = port ? port : TabwriterConfig.DEFAULT_SERVER_PORT;
+    const config = TabwriterServerConfig.getConfig();
+    this.port = port ? port : config.serverPort;
   }
 
   public useMiddleware(middleware: Handler | ErrorRequestHandler): void {

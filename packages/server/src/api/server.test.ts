@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction, Handler } from 'express';
-import { TabwriterConfig } from '../config/config';
+import { TabwriterServerConfig } from '../config/config';
 import { TabwriterServer } from './server';
 import { BaseController } from './models/base.controller';
+jest.mock('../config/config.ts');
 
 interface CallbackFunction {
   (): void;
@@ -79,9 +80,10 @@ describe(`[${TabwriterServer.name}]`, () => {
     );
   });
 
-  it('should listen for requests on the default port if none is provided', () => {
+  it('should listen for requests on the config port if none is provided', () => {
     const startupCallback = jest.fn();
     const twServer = new TabwriterServer();
+    const config = TabwriterServerConfig.getConfig();
 
     twServer.app.listen = getServerListenMock();
     twServer.onStartup = startupCallback;
@@ -89,7 +91,7 @@ describe(`[${TabwriterServer.name}]`, () => {
     twServer.start();
 
     expect(twServer.app.listen).toHaveBeenCalledWith(
-      TabwriterConfig.DEFAULT_SERVER_PORT,
+      config.serverPort,
       startupCallback
     );
   });

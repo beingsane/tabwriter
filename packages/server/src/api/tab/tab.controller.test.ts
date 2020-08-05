@@ -6,6 +6,7 @@ import { TabController } from './tab.controller';
 import { ErrorCode } from '../models/errors/errorCodes.enum';
 import { ResponseErrorInvalidRequest } from '../models/responses/responseErrorInvalidRequest.model';
 import { ResponseErrorInvalidInstructions } from './models/responseErrorInvalidInstructions.model';
+jest.mock('../../config/config.ts');
 
 const getTestServer = (): Application => {
   const server = new TabwriterServer();

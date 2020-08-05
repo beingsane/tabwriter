@@ -4,6 +4,7 @@ import * as HttpStatus from 'http-status-codes';
 import { TabwriterServer } from './server';
 import { ApiController } from './api.controller';
 import { ResponseErrorResourceNotFound } from './models/responses/responseErrorResourceNotFound.model';
+jest.mock('../config/config');
 
 const getTestServer = (): Application => {
   const server = new TabwriterServer();

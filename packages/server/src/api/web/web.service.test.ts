@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { WebService } from './web.service';
-import { tabwriterConfig } from '../../config/config';
+import { TabwriterServerConfig } from '../../config/config';
+jest.mock('../../config/config.ts');
 
 const INDEX_TEST_BUUFER = Buffer.from('test');
 
@@ -23,11 +24,10 @@ describe(`[${WebService.name}]`, () => {
         .mockReturnValue(INDEX_TEST_BUUFER);
 
       const webPagePath = await WebService.getIndex();
+      const config = TabwriterServerConfig.getConfig();
 
       expect(fsExistsSyncSpy).toHaveBeenCalled();
-      expect(fsReadFileSpy).toHaveBeenCalledWith(
-        tabwriterConfig.clientDistEntryPath
-      );
+      expect(fsReadFileSpy).toHaveBeenCalledWith(config.clientDistEntryPath);
       expect(webPagePath).toBe(INDEX_TEST_BUUFER);
     });
 

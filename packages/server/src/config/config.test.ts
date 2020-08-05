@@ -1,67 +1,133 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
-import { TabwriterConfig } from './config';
 
-const EXPECTED_CLIENT_DIST_FOLDER_PATH = '../../../client/build';
+interface TesteEnv {
+  TABWRITER_SERVER_PORT: number;
+  TABWRITER_CLIENT_DIST_PATH: string;
+  TABWRITER_CLIENT_ENTRY_FILE_PATH: string;
+}
 
-describe(`[${TabwriterConfig.name}]`, () => {
+const setupTestEnv = (): TesteEnv => {
+  const TABWRITER_SERVER_PORT = 1234;
+  const TABWRITER_CLIENT_DIST_PATH = './test/client/dist/folder';
+  const TABWRITER_CLIENT_ENTRY_FILE_PATH =
+    './test/client/dist/folder/index.html';
+
+  process.env.TABWRITER_SERVER_PORT = TABWRITER_SERVER_PORT.toString();
+  process.env.TABWRITER_CLIENT_DIST_PATH = TABWRITER_CLIENT_DIST_PATH;
+  process.env.TABWRITER_CLIENT_ENTRY_FILE_PATH = TABWRITER_CLIENT_ENTRY_FILE_PATH;
+
+  return {
+    TABWRITER_SERVER_PORT,
+    TABWRITER_CLIENT_DIST_PATH,
+    TABWRITER_CLIENT_ENTRY_FILE_PATH,
+  };
+};
+
+describe('[tabwriterServerConfig]', () => {
   const INITIAL_ENV = process.env;
 
   beforeEach(() => {
     process.env = { ...INITIAL_ENV };
+    jest.resetModules();
   });
 
   it('should set up property clientDistFolderPath properly', () => {
-    const config = new TabwriterConfig();
+    const { TabwriterServerConfig } = require('./config');
 
-    const expectedPath = path.join(__dirname, EXPECTED_CLIENT_DIST_FOLDER_PATH);
+    const { TABWRITER_CLIENT_DIST_PATH: clientDistFolderPath } = setupTestEnv();
+    const expectedResolvedPath = path.resolve(clientDistFolderPath);
 
-    expect(config.clientDistFolderPath).toBe(expectedPath);
+    const config = TabwriterServerConfig.getConfig();
+
+    expect(config.clientDistFolderPath).toBe(expectedResolvedPath);
+  });
+
+  it('should throw if environment variable TABWRITER_CLIENT_DIST_PATH is not set', () => {
+    const { TabwriterServerConfig } = require('./config');
+
+    setupTestEnv();
+    delete process.env.TABWRITER_CLIENT_DIST_PATH;
+
+    expect(() => TabwriterServerConfig.getConfig()).toThrow();
   });
 
   it('should set up property clientDistEntryPath properly', () => {
-    const config = new TabwriterConfig();
+    const { TabwriterServerConfig } = require('./config');
 
-    const expectedEntryPath = path.join(
-      __dirname,
-      EXPECTED_CLIENT_DIST_FOLDER_PATH,
-      '/index.html'
-    );
+    const {
+      TABWRITER_CLIENT_ENTRY_FILE_PATH: clientDistEntryPath,
+    } = setupTestEnv();
+    const expectedResolvedPath = path.resolve(clientDistEntryPath);
 
-    expect(config.clientDistEntryPath).toBe(expectedEntryPath);
+    const config = TabwriterServerConfig.getConfig();
+
+    expect(config.clientDistEntryPath).toBe(expectedResolvedPath);
+  });
+
+  it('should throw if environment variable TABWRITER_CLIENT_ENTRY_FILE_PATH is not set', () => {
+    const { TabwriterServerConfig } = require('./config');
+
+    setupTestEnv();
+    delete process.env.TABWRITER_CLIENT_ENTRY_FILE_PATH;
+
+    expect(() => TabwriterServerConfig.getConfig()).toThrow();
   });
 
   it('should set up property serverPort to environment variable TABWRITER_SERVER_PORT when available', () => {
-    const expectedPort = 9876;
+    const { TabwriterServerConfig } = require('./config');
 
-    process.env.TABWRITER_SERVER_PORT = expectedPort.toString();
-    const config = new TabwriterConfig();
+    const { TABWRITER_SERVER_PORT: expectedServerPort } = setupTestEnv();
 
-    expect(config.serverPort).toBe(expectedPort);
+    const config = TabwriterServerConfig.getConfig();
+
+    expect(config.serverPort).toBe(expectedServerPort);
   });
 
   it('should set up property serverPort to default port when environment varibale TABWRITER_SERVER_PORT is not available', () => {
-    if (process.env.TABWRITER_SERVER_PORT) {
-      delete process.env.TABWRITER_SERVER_PORT;
-    }
+    const { TabwriterServerConfig } = require('./config');
 
-    const config = new TabwriterConfig();
+    setupTestEnv();
+    delete process.env.TABWRITER_SERVER_PORT;
 
-    expect(config.serverPort).toBe(TabwriterConfig.DEFAULT_SERVER_PORT);
+    const config = TabwriterServerConfig.getConfig();
+
+    expect(config.serverPort).toBe(TabwriterServerConfig.DEFAULT_SERVER_PORT);
   });
 
-  it('should set up property isProduction to true when TABWRITER_PRODUCTION environment variable is 1', () => {
-    process.env.TABWRITER_PRODUCTION = '1';
+  it('should set up property isProduction to true when NODE_ENV environment variable is production', () => {
+    const { TabwriterServerConfig } = require('./config');
 
-    const config = new TabwriterConfig();
+    setupTestEnv();
+    process.env.NODE_ENV = TabwriterServerConfig.PRODUCTION_ENVIRONMENT_NAME;
+
+    const config = TabwriterServerConfig.getConfig();
 
     expect(config.isProduction).toBe(true);
   });
 
-  it('should set up property isProduction to false when TABWRITER_PRODUCTION environment variable is not 1', () => {
-    process.env.TABWRITER_PRODUCTION = '0';
+  it('should set up property isProduction to false when NODE_ENV environment variable is not production', () => {
+    const { TabwriterServerConfig } = require('./config');
 
-    const config = new TabwriterConfig();
+    setupTestEnv();
+    process.env.NODE_ENV = 'development';
+
+    const config = TabwriterServerConfig.getConfig();
 
     expect(config.isProduction).toBe(false);
+  });
+
+  it('should configuration from cache after loaded', () => {
+    const { TabwriterServerConfig } = require('./config');
+
+    setupTestEnv();
+    const oldConfig = TabwriterServerConfig.getConfig();
+
+    delete process.env.TABWRITER_SERVER_PORT;
+    delete process.env.TABWRITER_CLIENT_DIST_PATH;
+    delete process.env.TABWRITER_CLIENT_ENTRY_FILE_PATH;
+    const newConfig = TabwriterServerConfig.getConfig();
+
+    expect(newConfig).toBe(oldConfig);
   });
 });

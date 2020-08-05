@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { tabwriterConfig } from '../../config/config';
+import { TabwriterServerConfig } from '../../config/config';
 
 export class WebService {
   private static index: Buffer;
@@ -13,8 +13,9 @@ export class WebService {
 
   private static async loadIndex(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (fs.existsSync(tabwriterConfig.clientDistEntryPath)) {
-        WebService.index = fs.readFileSync(tabwriterConfig.clientDistEntryPath);
+      const config = TabwriterServerConfig.getConfig();
+      if (fs.existsSync(config.clientDistEntryPath)) {
+        WebService.index = fs.readFileSync(config.clientDistEntryPath);
         WebService.isIndexLoaded = true;
         resolve();
       } else {

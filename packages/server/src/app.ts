@@ -2,20 +2,21 @@ import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { TabwriterServer } from './api/server';
-import { tabwriterConfig } from './config/config';
+import { TabwriterServerConfig } from './config/config';
 import { errorHandler } from './api/middlewares/errorHandler.middleware';
 import { WebController } from './api/web/web.controller';
 import { ApiController } from './api/api.controller';
 import { TabController } from './api/tab/tab.controller';
 
-const twServer = new TabwriterServer(tabwriterConfig.serverPort);
+const config = TabwriterServerConfig.getConfig();
+const twServer = new TabwriterServer(config.serverPort);
 
 twServer.useMiddleware(helmet());
 twServer.useMiddleware(express.json());
 twServer.useMiddleware(express.urlencoded({ extended: false }));
-if (!tabwriterConfig.isProduction) twServer.app.use(morgan('dev'));
+if (!config.isProduction) twServer.app.use(morgan('dev'));
 
-twServer.useAsset(express.static(tabwriterConfig.clientDistFolderPath));
+twServer.useAsset(express.static(config.clientDistFolderPath));
 
 const tabController = new TabController();
 const apiController = new ApiController([tabController]);
