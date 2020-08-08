@@ -1,36 +1,43 @@
-import express, { Application, Handler, ErrorRequestHandler } from 'express';
-import { TabwriterServerConfig } from '../config/config';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import express, { Application } from 'express';
 import { BaseController } from './models/base.controller';
+
+export interface TabwriterServerParams {
+  port: number;
+  middlewares: any[];
+  controllers: BaseController[];
+}
 
 export class TabwriterServer {
   public readonly app: Application;
-  public port: number;
+  public readonly port: number;
 
-  constructor(port?: number) {
+  constructor(serverParams: TabwriterServerParams) {
     this.app = express();
+    this.port = serverParams.port;
 
-    const config = TabwriterServerConfig.getConfig();
-    this.port = port ? port : config.serverPort;
+    this.useMiddlewares(serverParams.middlewares);
+    this.useControllers(serverParams.controllers);
   }
 
-  public useMiddleware(middleware: Handler | ErrorRequestHandler): void {
+  public useMiddlewares(middlewares: any[]): void {
+    middlewares.forEach((middleware) => this.useMiddleware(middleware));
+  }
+
+  public useMiddleware(middleware: any): void {
     this.app.use(middleware);
+  }
+
+  public useControllers(controllers: BaseController[]): void {
+    controllers.forEach((controller) => this.useController(controller));
   }
 
   public useController(controller: BaseController): void {
     this.app.use(`/${controller.routePrefix}`, controller.router);
   }
 
-  public useAsset(assetHandler: Handler): void {
-    this.app.use(assetHandler);
-  }
-
-  public onStartup = (): void =>
-    console.log(
-      `[${TabwriterServer.name}] Running at http://localhost:${this.port}`
-    );
-
-  public start(): void {
-    this.app.listen(this.port, this.onStartup);
+  public start(cb?: () => void): void {
+    this.app.listen(this.port, cb);
   }
 }

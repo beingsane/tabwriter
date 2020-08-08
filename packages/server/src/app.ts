@@ -9,22 +9,29 @@ import { ApiController } from './api/api.controller';
 import { TabController } from './api/tab/tab.controller';
 
 const config = TabwriterServerConfig.getConfig();
-const twServer = new TabwriterServer(config.serverPort);
-
-twServer.useMiddleware(helmet());
-twServer.useMiddleware(express.json());
-twServer.useMiddleware(express.urlencoded({ extended: false }));
-if (!config.isProduction) twServer.app.use(morgan('dev'));
-
-twServer.useAsset(express.static(config.clientDistFolderPath));
 
 const tabController = new TabController();
 const apiController = new ApiController([tabController]);
-twServer.useController(apiController);
-
 const webController = new WebController();
-twServer.useController(webController);
 
-twServer.useMiddleware(errorHandler);
+const twServer = new TabwriterServer({
+  port: config.serverPort,
+  middlewares: [
+    helmet(),
+    ...(config.isProduction ? [] : [morgan('dev')]),
+    express.json(),
+    express.urlencoded({ extended: false }),
+  ],
+  controllers: [apiController, webController],
+});
 
-twServer.start();
+twServer.useMiddlewares([
+  errorHandler,
+  express.static(config.clientDistFolderPath),
+]);
+
+twServer.start(() =>
+  console.log(
+    `[${TabwriterServer.name}] Listening on port: ${config.serverPort}`
+  )
+);

@@ -2,16 +2,20 @@ import request from 'supertest';
 import express, { Application } from 'express';
 import * as HttpStatus from 'http-status-codes';
 import { TabwriterServer } from './server';
+import { TabwriterServerConfig } from '../config/config';
 import { ApiController } from './api.controller';
 import { ResponseErrorResourceNotFound } from './models/responses/responseErrorResourceNotFound.model';
+
 jest.mock('../config/config');
 
 const getTestServer = (): Application => {
-  const server = new TabwriterServer();
-  server.useMiddleware(express.json());
-  server.useController(new ApiController());
+  const config = TabwriterServerConfig.getConfig();
 
-  return server.app;
+  return new TabwriterServer({
+    port: config.serverPort,
+    middlewares: [express.json()],
+    controllers: [new ApiController()],
+  }).app;
 };
 
 describe(`[${ApiController.name}]`, () => {

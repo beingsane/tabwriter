@@ -1,117 +1,118 @@
-import { Request, Response, NextFunction, Handler } from 'express';
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Handler } from 'express';
 import { TabwriterServerConfig } from '../config/config';
 import { TabwriterServer } from './server';
 import { BaseController } from './models/base.controller';
 jest.mock('../config/config.ts');
 
-interface CallbackFunction {
-  (): void;
-}
-
 class TestController extends BaseController {
   public routePrefix = 'test';
 }
 
-const getTestMiddleware = (): Handler => (
-  _req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
-  next();
-};
-
 const getTestController = (): BaseController => new TestController();
 
-const getTestAssetHandler = (): Handler => jest.fn();
+const getTestMiddleware = (): Handler => () => {};
 
-const getServerListenMock = (): jest.Mock =>
-  jest.fn().mockImplementation((port: number, cb: CallbackFunction) => {
-    cb();
+const getTestServer = (
+  serverParams: {
+    port?: number;
+    middlewares?: any[];
+    controllers?: BaseController[];
+  } = {}
+): TabwriterServer => {
+  const config = TabwriterServerConfig.getConfig();
+
+  return new TabwriterServer({
+    port: serverParams.port ?? config.serverPort,
+    middlewares: serverParams.middlewares ?? [],
+    controllers: serverParams.controllers ?? [],
   });
+};
 
 describe(`[${TabwriterServer.name}]`, () => {
-  it('should use a given middleware', () => {
-    const twServer = new TabwriterServer();
-    twServer.app.use = jest.fn();
+  it('should listen for requests on the given port', () => {
+    const config = TabwriterServerConfig.getConfig();
+    const port = config.serverPort;
+    const twServer = getTestServer({ port });
 
+    twServer.app.listen = jest.fn();
+    twServer.start();
+
+    expect(twServer.app.listen).toHaveBeenCalledWith(port, undefined);
+  });
+
+  it('should use the given middlewares on instantiation', () => {
+    const middlewares = [getTestMiddleware()];
+    const useMiddlewaresSpy = jest.spyOn(
+      TabwriterServer.prototype,
+      'useMiddlewares'
+    );
+
+    getTestServer({
+      middlewares,
+    });
+
+    expect(useMiddlewaresSpy).toHaveBeenCalledWith(middlewares);
+    useMiddlewaresSpy.mockRestore();
+  });
+
+  it('should use the given controllers on instantiation', () => {
+    const controllers = [getTestController()];
+    const useControllersSpy = jest.spyOn(
+      TabwriterServer.prototype,
+      'useControllers'
+    );
+
+    getTestServer({
+      controllers,
+    });
+
+    expect(useControllersSpy).toHaveBeenCalledWith(controllers);
+    useControllersSpy.mockRestore();
+  });
+
+  it('should use a given middleware', () => {
     const middleware = getTestMiddleware();
+    const twServer = getTestServer();
+
+    twServer.app.use = jest.fn();
     twServer.useMiddleware(middleware);
 
     expect(twServer.app.use).toHaveBeenCalledWith(middleware);
   });
 
+  it('should use the given middlewares', () => {
+    const middleware = getTestMiddleware();
+    const twServer = getTestServer();
+
+    twServer.useMiddleware = jest.fn().mockReturnThis();
+    twServer.useMiddlewares([middleware]);
+
+    expect(twServer.useMiddleware).toHaveBeenCalledWith(middleware);
+  });
+
   it('should use a given controller', () => {
-    const twServer = new TabwriterServer();
-    twServer.app.use = jest.fn();
-
     const controller = getTestController();
+    const expectedRoute = `/${controller.routePrefix}`;
+    const twServer = getTestServer();
 
+    twServer.app.use = jest.fn();
     twServer.useController(controller);
 
     expect(twServer.app.use).toHaveBeenCalledWith(
-      `/${controller.routePrefix}`,
+      expectedRoute,
       controller.router
     );
   });
 
-  it('should use a given asset handler', () => {
-    const twServer = new TabwriterServer();
-    twServer.app.use = jest.fn();
+  it('should use the given controllers', () => {
+    const controller = getTestController();
+    const twServer = getTestServer();
 
-    const assetHandler = getTestAssetHandler();
+    twServer.useController = jest.fn();
+    twServer.useControllers([controller]);
 
-    twServer.useAsset(assetHandler);
-
-    expect(twServer.app.use).toHaveBeenCalledWith(assetHandler);
-  });
-
-  it('should listen for requests on the given port when provided', () => {
-    const expectedPort = 1234;
-    const startupCallback = jest.fn();
-    const twServer = new TabwriterServer(expectedPort);
-
-    twServer.app.listen = getServerListenMock();
-    twServer.onStartup = startupCallback;
-    twServer.start();
-
-    expect(twServer.app.listen).toHaveBeenCalledWith(
-      expectedPort,
-      startupCallback
-    );
-  });
-
-  it('should listen for requests on the config port if none is provided', () => {
-    const startupCallback = jest.fn();
-    const twServer = new TabwriterServer();
-    const config = TabwriterServerConfig.getConfig();
-
-    twServer.app.listen = getServerListenMock();
-    twServer.onStartup = startupCallback;
-
-    twServer.start();
-
-    expect(twServer.app.listen).toHaveBeenCalledWith(
-      config.serverPort,
-      startupCallback
-    );
-  });
-
-  it('should call method onStartup once server is started', () => {
-    const twServer = new TabwriterServer();
-    twServer.app.listen = getServerListenMock();
-    twServer.onStartup = jest.fn();
-
-    twServer.start();
-
-    expect(twServer.onStartup).toHaveBeenCalled();
-  });
-
-  it('should log server initialization on onStartup call', () => {
-    const twServer = new TabwriterServer();
-    console.log = jest.fn();
-
-    twServer.onStartup();
-
-    expect(console.log).toHaveBeenCalled();
+    expect(twServer.useController).toHaveBeenCalledWith(controller);
   });
 });

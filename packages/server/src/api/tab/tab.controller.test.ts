@@ -1,19 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import request from 'supertest';
 import express, { Application } from 'express';
 import * as HttpStatus from 'http-status-codes';
 import { TabwriterServer } from '../server';
+import { TabwriterServerConfig } from '../../config/config';
 import { TabController } from './tab.controller';
 import { ErrorCode } from '../models/errors/errorCodes.enum';
 import { ResponseErrorInvalidRequest } from '../models/responses/responseErrorInvalidRequest.model';
 import { ResponseErrorInvalidInstructions } from './models/responseErrorInvalidInstructions.model';
+
 jest.mock('../../config/config.ts');
 
 const getTestServer = (): Application => {
-  const server = new TabwriterServer();
-  server.useMiddleware(express.json());
-  server.useController(new TabController());
+  const config = TabwriterServerConfig.getConfig();
 
-  return server.app;
+  return new TabwriterServer({
+    port: config.serverPort,
+    middlewares: [express.json()],
+    controllers: [new TabController()],
+  }).app;
 };
 
 describe(`[${TabController.name}]`, () => {
