@@ -21,14 +21,12 @@ const twServer = new TabwriterServer({
     ...(config.isProduction ? [] : [morgan('dev')]),
     express.json(),
     express.urlencoded({ extended: false }),
+    express.static(config.clientDistFolderPath),
   ],
   controllers: [apiController, webController],
 });
 
-twServer.useMiddlewares([
-  errorHandler,
-  express.static(config.clientDistFolderPath),
-]);
+twServer.useMiddlewares([errorHandler]);
 
 twServer.start(() =>
   console.log(
