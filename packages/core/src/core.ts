@@ -1,0 +1,11 @@
+export * from './parser/parser';
+export * from './tab/tab';
+export * from './instructions/instructionFactory';
+export { DefaultInstruction } from './instructions/defaultInstruction';
+export { BreakInstruction } from './instructions/breakInstruction';
+export { MergeInstruction } from './instructions/mergeInstruction';
+export { RepeatInstruction } from './instructions/repeatInstruction';
+export { SetSpacingInstruction } from './instructions/setSpacingInstruction';
+export { NoteInstruction } from './instructions/noteInstruction';
+export { SectionInstruction } from './instructions/sectionInstruction';
+export { InvalidInstruction } from './instructions/invalidInstruction';

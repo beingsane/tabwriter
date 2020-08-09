@@ -1,7 +1,4 @@
-import { ParserResult } from '../models/parser/parserResult.model';
-import { InstructionFactory } from '../models/instructions/instructionFactory.model';
-import { Parser } from '../models/parser/parser.model';
-import { Tab } from '../models/tab/tab.model';
+import { Parser, ParserResult, InstructionFactory, Tab } from '@tabwriter/core';
 
 export interface TabWriterInstructions {
   instructions: string;

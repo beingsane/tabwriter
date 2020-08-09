@@ -1,6 +1,5 @@
-import { ParserResult } from '../models/parser/parserResult.model';
 import { TabWriterService } from './tabWriter.service';
-import { Tab } from '../models/tab/tab.model';
+import { Tab, ParserResult } from '@tabwriter/core';
 
 describe(`[${TabWriterService.name}]`, () => {
   describe('[writeTab]', () => {

@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@tabwriter/client": "file:packages/client",
+    "@tabwriter/core": "file:packages/core",
     "@tabwriter/server": "file:packages/server"
   },
   "config": {

@@ -1,0 +1,27 @@
+{
+  "name": "@tabwriter/core",
+  "version": "1.0.0",
+  "private": true,
+  "main": "build/core.js",
+  "types": "build/core.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:clean": "rimraf build",
+    "test": "jest --no-cache",
+    "test:coverage": "jest --no-cache --coverage",
+    "test:clean": "rimraf coverage",
+    "lint": "eslint \"src/**/*.{js,ts}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,ts}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raphael-jorge/tabwriter.git",
+    "directory": "packages/core"
+  },
+  "dependencies": {
+    "typescript": "^3.9.7"
+  }
+}
